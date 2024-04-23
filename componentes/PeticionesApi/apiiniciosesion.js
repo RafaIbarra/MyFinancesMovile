@@ -15,10 +15,7 @@ async function Iniciarsesion(usuario,password){
                     password: password,
                   }),
         }
-    console.log(JSON.stringify({
-        username: usuario.toLowerCase(),
-        password: password,
-      }))
+    
     const response = await fetch(`${APIBASE}/${endpoint}`, requestOptions);  
         data= await response.json();
         resp= response.status;

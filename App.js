@@ -17,7 +17,7 @@ export default function App() {
           
           {/* <Navigation></Navigation> */}
           
-          { activarsesion ? <Navigation></Navigation>: <Login setActivarsesion={setActivarsesion}></Login>}
+          { activarsesion ? <Navigation setActivarsesion={setActivarsesion}></Navigation>: <Login setActivarsesion={setActivarsesion}></Login>}
         </View>
       </SafeAreaView>
     );

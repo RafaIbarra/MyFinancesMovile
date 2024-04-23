@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
-import { Image, Pressable, useColorScheme,StyleSheet  } from "react-native";
+import { Image, Pressable, useColorScheme,StyleSheet,Button  } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, View,Text,TouchableOpacity } from "react-native";
 import Home from "./screens/Home";
@@ -21,7 +21,8 @@ import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
 import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
 import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
-
+import CloseSesion from "./componentes/Closesesion/closesesion";
+import Handelstorage from "./Storage/handelstorage";
 
 //////////////iconos///////////////////////////////
 import { Ionicons } from "@expo/vector-icons";
@@ -32,29 +33,45 @@ import { Feather } from '@expo/vector-icons';
 
 
 const Drawer = createDrawerNavigator();
-function DrawerGroup() {
+const DrawerContent = ({setActivarsesion,navigation }) => {
+
+  const navigateToHome = () => {
+    navigation.navigate('Home');
+  };
+
+  const navigateToConceptosGastos = () => {
+    navigation.navigate('ConceptosGastos');
+  };
+  const cerrar=async ()=>{
+    await Handelstorage('borrar')
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    setActivarsesion(false)
+  }
+  return (
+    <View  style={styles.drawerContent}>
+      <Button title="Home" onPress={navigateToHome} />
+      <Button title="Conceptos Gastos" onPress={navigateToConceptosGastos} />
+      <Button title="Cerrar Sesion" onPress={cerrar} />
+    </View>
+  );
+};
+function DrawerGroup({setActivarsesion}) {
     return (
       <Drawer.Navigator 
-      
-      
-      // screenOptions={{headerTitle:'HOLa'}}
+      drawerContent={(props) => <DrawerContent {...props} setActivarsesion={setActivarsesion} />}
       screenOptions={{
         headerTitle: ({}) => (
-          <View >
-            <Text >UserName </Text>
+          <View>
+            <Text>UserName</Text>
           </View>
         ),
-        headerTitleAlign:'center'
+        headerTitleAlign: 'center'
       }}
-      >
-        {/* <Drawer.Screen name="TabsGroup" component={TabsGroup} /> */}
-        <Drawer.Screen name="Home" 
-        component={HomeStackGroup} 
-        
-        />
-        <Drawer.Screen name="ConceptosGastos" component={ConceptosGastos} />
-        
-      </Drawer.Navigator>
+    >
+      <Drawer.Screen name="Home" component={HomeStackGroup} />
+      <Drawer.Screen name="ConceptosGastos" component={ConceptosGastos} />
+    </Drawer.Navigator>
     );
   }
 function TabsGroup({ navigation }) {
@@ -254,11 +271,11 @@ function TabsIngresosGroup({ navigation }) {
   )
 }
 
-function Navigation(){
+function Navigation( {setActivarsesion}){
 return(
     <NavigationContainer>
         {/* <StatusBar style="auto"></StatusBar> */}
-        <DrawerGroup />
+        <DrawerGroup setActivarsesion={setActivarsesion} />
     </NavigationContainer>
 )
 }
@@ -270,6 +287,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     paddingTop:7
+  },
+  drawerContent: {
+    flex: 1, // Esto asegura que DrawerContent ocupe solo el espacio necesario
+    paddingTop: 20, // Espacio en la parte superior para evitar solapamiento con el header del drawer
+    
+    height:10
   },
 });
 

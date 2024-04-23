@@ -66,6 +66,14 @@ async function  Handelstorage (opcion,item,valor){
       }
     }
 
+  const borrar= async()=>{
+      
+    await AsyncStorage.removeItem("userdate")
+    await AsyncStorage.removeItem("userData")
+    await AsyncStorage.removeItem("userstats")
+    }
+
+
     if (opcion === 'agregar') {
         agregar(item);
       }
@@ -76,6 +84,9 @@ async function  Handelstorage (opcion,item,valor){
     else if(opcion === 'obtenerdate') {
         let resultado=obtenerdate()
         return resultado
+      }
+    else if(opcion === 'borrar') {
+        borrar()
       }
 
 }
