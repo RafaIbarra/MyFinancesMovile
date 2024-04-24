@@ -3,67 +3,61 @@ import {NavigationContainer} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { StyleSheet,Button  } from "react-native";
+import { View,Text,TouchableOpacity } from "react-native";
 
-import { Image, Pressable, useColorScheme,StyleSheet,Button  } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, View,Text,TouchableOpacity } from "react-native";
-import Home from "./screens/Home";
-import DetalleIngreso from "./screens/DetalleIngreso";
+//Componentes///////////////
 import Resumen from "./componentes/Resumen/Resumen";
-
 import Gastos from "./componentes/Gastos/Gastos";
-import { useNavigation } from "@react-navigation/native";
-
+import GastosDetalle from "./componentes/GastosDetalle/GastosDetalle";
 import Ingresos from "./componentes/Ingresos/Ingresos";
 import IngresosAgregar from "./componentes/Ingresos/IngresosAgregar";
 import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
 import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
 import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
-import CloseSesion from "./componentes/Closesesion/closesesion";
+
+////////////Storage
 import Handelstorage from "./Storage/handelstorage";
 
 //////////////iconos///////////////////////////////
 import { Ionicons } from "@expo/vector-icons";
-import { Fontisto } from '@expo/vector-icons';
-import { Foundation } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 
 
 const Drawer = createDrawerNavigator();
+
 const DrawerContent = ({setActivarsesion,navigation }) => {
+    const navigateToHome = () => {
+      navigation.navigate('Home');
+    };
 
-  const navigateToHome = () => {
-    navigation.navigate('Home');
-  };
-
-  const navigateToConceptosGastos = () => {
-    navigation.navigate('ConceptosGastos');
-  };
-  const cerrar=async ()=>{
-    await Handelstorage('borrar')
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    setActivarsesion(false)
-  }
-  return (
-    <View  style={styles.drawerContent}>
-      <Button title="Home" onPress={navigateToHome} />
-      <Button title="Conceptos Gastos" onPress={navigateToConceptosGastos} />
-      <Button title="Cerrar Sesion" onPress={cerrar} />
-    </View>
-  );
+    const navigateToConceptosGastos = () => {
+      navigation.navigate('ConceptosGastos');
+    };
+    const cerrar=async ()=>{
+      await Handelstorage('borrar')
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      setActivarsesion(false)
+    }
+    return (
+      <View  style={styles.drawerContent}>
+        <Button title="Home" onPress={navigateToHome} />
+        <Button title="Conceptos Gastos" onPress={navigateToConceptosGastos} />
+        <Button title="Cerrar Sesion" onPress={cerrar} />
+      </View>
+    );
 };
-function DrawerGroup({setActivarsesion}) {
+function DrawerGroup({setActivarsesion,sesionname}) {
     return (
       <Drawer.Navigator 
       drawerContent={(props) => <DrawerContent {...props} setActivarsesion={setActivarsesion} />}
       screenOptions={{
         headerTitle: ({}) => (
           <View>
-            <Text>UserName</Text>
+            <Text>{sesionname}</Text>
           </View>
         ),
         headerTitleAlign: 'center'
@@ -71,43 +65,15 @@ function DrawerGroup({setActivarsesion}) {
     >
       <Drawer.Screen name="Home" component={HomeStackGroup} />
       <Drawer.Screen name="ConceptosGastos" component={ConceptosGastos} />
+      {/* <Drawer.Screen name="GastosDetalle" component={GastosDetalle} /> */}
+
     </Drawer.Navigator>
     );
   }
-function TabsGroup({ navigation }) {
-    return (
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-           headerTitleAlign: "center",
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            if (route.name === "Home2") {
-              iconName = focused ? "home" : "home-outline";
-            } else if (route.name === "Settings") {
-              iconName = focused ? "settings" : "settings";
-            } else if (route.name === "Notifications") {
-              iconName = focused ? "notifications-outline" : "notifications-outline";
-            }
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: "#1DA1F2",
-          tabBarInactiveTintColor: "gray",
-        })}
-      >
-        <Tab.Screen
-          name="Home2" component={Resumen}
-         
-          
-          
-        />
-        <Tab.Screen name="Notifications" component={Ingresos} />
-        <Tab.Screen name="Settings" component={Gastos} />
-      </Tab.Navigator>
-    );
-  }
 
-  function TabsGroupv2({ navigation }) {
+
+
+  function TabsGroup({ navigation }) {
     return (
       <Tab.Navigator 
       screenOptions={{ headerShown: false }} 
@@ -206,37 +172,23 @@ const HomeStack = createNativeStackNavigator();
 function HomeStackGroup(){
   return(
 
-    <HomeStack.Navigator screenOptions={{ headerShown: false }}
-    
-    >
-    <HomeStack.Screen name="Resumen" component={TabsGroupv2}/>
+    <HomeStack.Navigator >
+    <HomeStack.Screen name="Resumen" component={TabsGroup} options={{ headerShown: false }}/>
     <HomeStack.Screen name="ResumenDatos" component={Resumen}/>
-    {/* <HomeStack.Screen name="IngresosGroup" component={TabsIngresosGroup} /> */}
     <HomeStack.Screen name="IngresosGroup" component={Ingresos} />
     <HomeStack.Screen name="Gastos" component={Gastos} />
+    <HomeStack.Screen name="GastosDetalle" 
+      component={GastosDetalle} 
+      options={{headerTitle:'Detalle del Gasto',
+      headerTitleAlign:'center'
+    }}
+      />
     
   </HomeStack.Navigator>
   )
 }
 
-function OpcionesHome({ navigation }) {
-  return (
-    
-      <View  style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-          
-          <TouchableOpacity onPress={() => navigation.navigate('ResumenDatos')}>
-           <Text>Resumen del mes </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('IngresosGroup')}>
-           <Text>Ingresos</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Gastos')}>
-           <Text>Gastos</Text>
-          </TouchableOpacity>
-      </View>
-  
-  );
-}
+
 
 const TabIngresos = createBottomTabNavigator();
 function TabsIngresosGroup({ navigation }) {
@@ -271,11 +223,11 @@ function TabsIngresosGroup({ navigation }) {
   )
 }
 
-function Navigation( {setActivarsesion}){
+function Navigation( {setActivarsesion,sesionname}){
 return(
     <NavigationContainer>
         {/* <StatusBar style="auto"></StatusBar> */}
-        <DrawerGroup setActivarsesion={setActivarsesion} />
+        <DrawerGroup setActivarsesion={setActivarsesion} sesionname={sesionname} />
     </NavigationContainer>
 )
 }

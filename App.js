@@ -8,6 +8,7 @@ import Home from "./screens/Home";
 
 export default function App() {
   const [activarsesion,setActivarsesion]=useState(false)
+  const [sesionname,setSesionname]=useState('')
   
     return (
 
@@ -17,7 +18,7 @@ export default function App() {
           
           {/* <Navigation></Navigation> */}
           
-          { activarsesion ? <Navigation setActivarsesion={setActivarsesion}></Navigation>: <Login setActivarsesion={setActivarsesion}></Login>}
+          { activarsesion ? <Navigation setActivarsesion={setActivarsesion} sesionname={sesionname}></Navigation>: <Login setActivarsesion={setActivarsesion} setSesionname={setSesionname}></Login>}
         </View>
       </SafeAreaView>
     );

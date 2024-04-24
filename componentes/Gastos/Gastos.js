@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-
+import { useNavigation } from "@react-navigation/native";
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated   } from "react-native";
 import { IconButton } from 'react-native-paper';
 import { StatusBar } from 'react-native';
@@ -15,8 +15,11 @@ function Gastos (){
     const [cargacompleta,setCargacopleta]=useState(false)
     const [dataegresos,setDataegresos]=useState([])
     const [rotationValue] = useState(new Animated.Value(0));
+    const { navigate } = useNavigation();
 
-
+    const verdetalle =()=>{
+        navigate("GastosDetalle");
+    }
     const handlePress = () => {
         // Realiza una animación de rotación cuando se presiona el botón
         Animated.timing(rotationValue, {
@@ -87,7 +90,8 @@ function Gastos (){
                         data={dataegresos}
                         renderItem={({item}) =>{
                             return(
-                                <TouchableOpacity  style={styles.contenedordatos} onPress={() => console.log('FlatList')} >
+                                <TouchableOpacity  style={styles.contenedordatos}  onPress={() => {navigate("GastosDetalle", { item});}}
+                                >
                                     <View style={[styles.columna, { flex: 7 }]}> 
 
                                         <Text> Concepto: {item.NombreGasto}</Text>

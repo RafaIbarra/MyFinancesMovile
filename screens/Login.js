@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Iniciarsesion from "../componentes/PeticionesApi/apiiniciosesion";
 import Handelstorage from "../Storage/handelstorage";
 import ComprobarStorage from "../Storage/verificarstorage";
-function Login ({setActivarsesion}){
+function Login ({setActivarsesion,setSesionname}){
     const[username,setUsername]=useState('')
     const[password,setPassword]=useState('')
 
@@ -26,7 +26,7 @@ function Login ({setActivarsesion}){
                 user_name:datos['data']['user_name'],
             }
             await Handelstorage('agregar',userdata,'')
-
+            setSesionname(datos['data']['user_name'])
             setActivarsesion(true)
             
            
@@ -46,10 +46,11 @@ function Login ({setActivarsesion}){
            const credenciales=datosstarage['datosesion']
            if (credenciales) {
             setActivarsesion(true)
-          
+            setSesionname(datosstarage['user_name'])
         
         } else {
             setActivarsesion(false)
+            setSesionname('')
         }
         }
         cargardatos()
