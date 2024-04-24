@@ -16,6 +16,7 @@ import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
 import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
 import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
+import DrawerContent from "./componentes/DrawerContent/DrawerContent";
 
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
@@ -28,28 +29,28 @@ import { Feather } from '@expo/vector-icons';
 
 const Drawer = createDrawerNavigator();
 
-const DrawerContent = ({setActivarsesion,navigation }) => {
-    const navigateToHome = () => {
-      navigation.navigate('Home');
-    };
+// const DrawerContent = ({setActivarsesion,navigation }) => {
+//     const navigateToHome = () => {
+//       navigation.navigate('Home');
+//     };
 
-    const navigateToConceptosGastos = () => {
-      navigation.navigate('ConceptosGastos');
-    };
-    const cerrar=async ()=>{
-      await Handelstorage('borrar')
-      await new Promise(resolve => setTimeout(resolve, 1000))
+//     const navigateToConceptosGastos = () => {
+//       navigation.navigate('ConceptosGastos');
+//     };
+//     const cerrar=async ()=>{
+//       await Handelstorage('borrar')
+//       await new Promise(resolve => setTimeout(resolve, 1000))
       
-      setActivarsesion(false)
-    }
-    return (
-      <View  style={styles.drawerContent}>
-        <Button title="Home" onPress={navigateToHome} />
-        <Button title="Conceptos Gastos" onPress={navigateToConceptosGastos} />
-        <Button title="Cerrar Sesion" onPress={cerrar} />
-      </View>
-    );
-};
+//       setActivarsesion(false)
+//     }
+//     return (
+//       <View  style={styles.drawerContent}>
+//         <Button title="Home" onPress={navigateToHome} />
+//         <Button title="Conceptos Gastos" onPress={navigateToConceptosGastos} />
+//         <Button title="Cerrar Sesion" onPress={cerrar} />
+//       </View>
+//     );
+// };
 function DrawerGroup({setActivarsesion,sesionname}) {
     return (
       <Drawer.Navigator 
