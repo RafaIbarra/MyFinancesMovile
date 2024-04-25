@@ -5,6 +5,7 @@ import { Modal, Portal,  PaperProvider } from 'react-native-paper';
 import { IconButton } from 'react-native-paper';
 import { StatusBar } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
@@ -13,9 +14,12 @@ import GastoModal from "./GastoModal";
 
 
 function Gastos (){
+    const [recargadatos,setRecargadatos]=useState(false)
     const [cargacompleta,setCargacopleta]=useState(false)
     const [dataegresos,setDataegresos]=useState([])
     const [rotationValue] = useState(new Animated.Value(0));
+    const [rotationValueedit] = useState(new Animated.Value(0));
+    const [rotationValuedel] = useState(new Animated.Value(0));
     const { navigate } = useNavigation();
     const [visible, setVisible] = useState(false);
 
@@ -39,11 +43,44 @@ function Gastos (){
       };
     
       // Interpola el valor de rotación para aplicarlo al estilo de transformación del icono
-      const spin = rotationValue.interpolate({
+    const spin = rotationValue.interpolate({
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'],
-      }
-      
+      } 
+    );
+
+    const editar=()=>{
+        // Realiza una animación de rotación cuando se presiona el botón
+        Animated.timing(rotationValueedit, {
+            toValue: 1,
+            duration: 200, // Duración de la animación en milisegundos
+            useNativeDriver: true,
+          }).start(() => {
+            // Restaura la animación a su estado original
+            rotationValueedit.setValue(0);
+          });
+    }
+    const spinedit = rotationValueedit.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg'],
+      } 
+    );
+
+    const eliminar=()=>{
+        // Realiza una animación de rotación cuando se presiona el botón
+        Animated.timing(rotationValuedel, {
+            toValue: 1,
+            duration: 200, // Duración de la animación en milisegundos
+            useNativeDriver: true,
+          }).start(() => {
+            // Restaura la animación a su estado original
+            rotationValuedel.setValue(0);
+          });
+    }
+    const spindel = rotationValuedel.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg'],
+      } 
     );
 
     useEffect(() => {
@@ -76,7 +113,7 @@ function Gastos (){
            
         }
         cargardatos()
-      }, []);
+      }, [recargadatos]);
     if(cargacompleta){
 
         return(
@@ -88,7 +125,7 @@ function Gastos (){
                         {/* <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                         <Text>Example Modal.  Click outside this area to dismiss.</Text>
                         </Modal> */}
-                      {visible&&(<GastoModal visible={visible} setVisible={setVisible}></GastoModal>)}  
+                      {visible&&(<GastoModal visible={visible} setVisible={setVisible} recargadatos={recargadatos} setRecargadatos={setRecargadatos}  ></GastoModal>)}  
                     </Portal>
                     <View style={styles.cabeceracontainer}>
                         <Text style={styles.titulocabecera}>Registro Gastos</Text>
@@ -115,8 +152,20 @@ function Gastos (){
                                         </View>
 
                                         <View style={[styles.columna, { flex: 1 }]}> 
-                                            <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/>
-                                            <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/>
+
+                                            {/* <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/> */}
+                                            <TouchableOpacity style={[styles.botonaccion, { marginBottom:10}]} onPress={eliminar}>
+                                                <Animated.View style={{ transform: [{ rotate: spindel }] }}>
+                                                    <AntDesign name="delete" size={30} color="red" />
+                                                </Animated.View>
+                                            </TouchableOpacity>
+
+                                            {/* <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/> */}
+                                            <TouchableOpacity style={[styles.botonaccion]} onPress={editar}>
+                                                <Animated.View style={{ transform: [{ rotate: spinedit }] }}>
+                                                    <AntDesign name="edit" size={30} color="black" />
+                                                </Animated.View>
+                                            </TouchableOpacity>
                                         </View>
                                     </TouchableOpacity >
                                 )
@@ -125,6 +174,15 @@ function Gastos (){
                             keyExtractor={item => item.key}
                         />
                         
+                    </View>
+
+                    <View style={styles.cabeceracontainer}>
+                        <Text style={styles.titulocabecera}>RESUMEN</Text>
+                        <TouchableOpacity style={styles.botoncabecera} onPress={handlePress}>
+                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                                <FontAwesome6 name="add" size={24} color="black" />
+                            </Animated.View>
+                        </TouchableOpacity>
                     </View>
                 </PaperProvider>
 
@@ -171,6 +229,16 @@ const styles = StyleSheet.create({
         borderRadius: 20, // Define la mitad de la dimensión del botón para obtener una forma circular
         justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
         alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
+      },
+
+    botonaccion: {
+        
+        width: 40, // Define el ancho del botón
+        height: 40  , // Define la altura del botón
+        borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
+        justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
+        alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
+        
       },
     textoBoton: {
         color: 'white',
