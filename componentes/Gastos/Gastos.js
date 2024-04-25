@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from "react";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated   } from "react-native";
+import { Modal, Portal,  PaperProvider } from 'react-native-paper';
 import { IconButton } from 'react-native-paper';
 import { StatusBar } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -8,7 +9,7 @@ import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
-
+import GastoModal from "./GastoModal";
 
 
 function Gastos (){
@@ -16,10 +17,12 @@ function Gastos (){
     const [dataegresos,setDataegresos]=useState([])
     const [rotationValue] = useState(new Animated.Value(0));
     const { navigate } = useNavigation();
+    const [visible, setVisible] = useState(false);
 
-    const verdetalle =()=>{
-        navigate("GastosDetalle");
-    }
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+    const containerStyle = {backgroundColor: 'white', padding: 20};
+   
     const handlePress = () => {
         // Realiza una animación de rotación cuando se presiona el botón
         Animated.timing(rotationValue, {
@@ -30,7 +33,7 @@ function Gastos (){
           // Restaura la animación a su estado original
           rotationValue.setValue(0);
         });
-    
+        setVisible(true)
         // Ejecuta la función onPressBoton si se proporciona
         // onPressBoton && onPressBoton();
       };
@@ -39,7 +42,9 @@ function Gastos (){
       const spin = rotationValue.interpolate({
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'],
-      });
+      }
+      
+    );
 
     useEffect(() => {
 
@@ -77,42 +82,59 @@ function Gastos (){
         return(
             <SafeAreaView style={{ flex: 1 }}>
                 <StatusBar />
-                <View style={styles.cabeceracontainer}>
-                    <Text style={styles.titulocabecera}>Registro Gastos</Text>
-                    <TouchableOpacity style={styles.botoncabecera} onPress={handlePress}>
-                        <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                            <FontAwesome6 name="add" size={24} color="black" />
-                        </Animated.View>
-                    </TouchableOpacity>
-                </View>
-                <View  style={styles.container}>
-                    <FlatList  onPress={() => console.log('FlatList')}
-                        data={dataegresos}
-                        renderItem={({item}) =>{
-                            return(
-                                <TouchableOpacity  style={styles.contenedordatos}  onPress={() => {navigate("GastosDetalle", { item});}}
-                                >
-                                    <View style={[styles.columna, { flex: 7 }]}> 
 
-                                        <Text> Concepto: {item.NombreGasto}</Text>
-                                        <Text> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
-                                        {/* <Text> Total: {item.monto_gasto}</Text> */}
-                                        <Text> Total: {Number(item.monto_gasto).toLocaleString('es-ES')} Gs.</Text>
-                                        <Text> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
-                                    </View>
+                <PaperProvider>
+                    <Portal>
+                        {/* <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                        <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                        </Modal> */}
+                      {visible&&(<GastoModal visible={visible} setVisible={setVisible}></GastoModal>)}  
+                    </Portal>
+                    <View style={styles.cabeceracontainer}>
+                        <Text style={styles.titulocabecera}>Registro Gastos</Text>
+                        <TouchableOpacity style={styles.botoncabecera} onPress={handlePress}>
+                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                                <FontAwesome6 name="add" size={24} color="black" />
+                            </Animated.View>
+                        </TouchableOpacity>
+                    </View>
+                    <View  style={styles.container}>
+                        <FlatList  onPress={() => console.log('FlatList')}
+                            data={dataegresos}
+                            renderItem={({item}) =>{
+                                return(
+                                    <TouchableOpacity  style={styles.contenedordatos}  onPress={() => {navigate("GastosDetalle", { item});}}
+                                    >
+                                        <View style={[styles.columna, { flex: 7 }]}> 
 
-                                    <View style={[styles.columna, { flex: 1 }]}> 
-                                        <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/>
-                                        <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/>
-                                    </View>
-                                </TouchableOpacity >
-                            )
+                                            <Text> Concepto: {item.NombreGasto}</Text>
+                                            <Text> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
+                                            {/* <Text> Total: {item.monto_gasto}</Text> */}
+                                            <Text> Total: {Number(item.monto_gasto).toLocaleString('es-ES')} Gs.</Text>
+                                            <Text> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                        </View>
+
+                                        <View style={[styles.columna, { flex: 1 }]}> 
+                                            <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/>
+                                            <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/>
+                                        </View>
+                                    </TouchableOpacity >
+                                )
+                            }
                         }
-                    }
-                        keyExtractor={item => item.key}
-                    />
-                    
-                </View>
+                            keyExtractor={item => item.key}
+                        />
+                        
+                    </View>
+                </PaperProvider>
+
+
+
+
+
+
+
+
             </SafeAreaView>
     
             

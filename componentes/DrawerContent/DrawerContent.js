@@ -1,15 +1,21 @@
 import React,{useState,useEffect} from "react";
 import { StyleSheet,Button,View,Image,TouchableOpacity,Text  } from "react-native";
 import { Divider } from 'react-native-paper';
-import DropDownPicker from 'react-native-dropdown-picker';
+
 import Handelstorage from "../../Storage/handelstorage";
 import { Feather } from '@expo/vector-icons'; // Importa un icono de Feather
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+
 const sizeicon=30
 function DrawerContent({setActivarsesion,navigation} ){
+  const [expanded, setExpanded] = useState(true);
 
+  const handlePress = () => {
+    
+    setExpanded(!expanded)
+  };
     const navigateToHome = () => {
         navigation.navigate('Home');
       };
@@ -73,28 +79,25 @@ function DrawerContent({setActivarsesion,navigation} ){
                     <AntDesign name="barschart" size={sizeicon} color="black" />  
                     <Text style={styles.text}> Estadisticas  </Text>
                 </TouchableOpacity>
+                
+
+
                 <Divider />
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                     <Ionicons name="person-outline" size={sizeicon} color="black" />  
                     <Text style={styles.text}> Datos Personales  </Text>
                 </TouchableOpacity>
+
+                <Divider />
                 <Divider />
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                     <AntDesign name="setting" size={sizeicon} color="black" />
                     <Text style={styles.text}> Configuracion  </Text>
                 </TouchableOpacity>
-                {/* <DropDownPicker
-                    items={[
-                    { label: 'Opción 1', value: 'opcion1' },
-                    { label: 'Opción 2', value: 'opcion2' },
-                    { label: 'Opción 3', value: 'opcion3' },
-                    ]}
-                    defaultValue={'opcion1'}
-                    containerStyle={{ height: 40, width: 150 }}
-                    onChangeItem={(item) => console.log(item.value)}
-                /> */}
+                
+                <Divider />
                 <Divider />
             </View>
 
