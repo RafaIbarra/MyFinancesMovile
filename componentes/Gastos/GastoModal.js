@@ -1,6 +1,8 @@
 import React,{useState,useEffect} from "react";
+
 import { Modal, Portal,  PaperProvider,Text,Divider } from 'react-native-paper';
-import {  StyleSheet,Button,View,TouchableOpacity,TextInput } from "react-native";
+import {  StyleSheet,View,TouchableOpacity,TextInput } from "react-native";
+import { Button } from 'react-native-paper';
 import { TextInputMask } from 'react-native-masked-text';
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
@@ -9,6 +11,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 
 import { AntDesign } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel}){
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -31,6 +35,8 @@ function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel
     const [fechaegreso, setFechaegreso] = useState('');
     const [titulomodal,setTitulomodal]=useState('')
     const [realizado,setRealizado]=useState(false)
+
+    const [focus, setFocus] = useState(false)
 
     const containerStyle = {backgroundColor: 'white', padding: 20,borderRadius:30,width:'90%',marginLeft:'5%'};
     const cerrar=()=>{
@@ -69,6 +75,14 @@ function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel
         setFechaegreso(fechaFormateada)
         hideDatePicker();
       };
+    const textoanotacion=(valor)=>{
+      setAnotacion(valor)
+      if (!focus && valor !== '') {
+        setFocus(true);
+      } else if (focus && valor === '') {
+        setFocus(false);
+      }
+    }
     useEffect(() => {
 
         const cargardatos=async()=>{
@@ -173,10 +187,10 @@ function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel
 
         return(
             <Modal visible={visible} onDismiss={cerrar} contentContainerStyle={containerStyle}>
-                <Text style={{fontSize:22, fontWeight:'bold' }}>{titulomodal}</Text>
-                <Divider />
+                <Text style={{fontSize:22, fontWeight:'bold',paddingBottom:5 }}>{titulomodal}</Text>
+                
     
-                <View style={{padding:15}}>
+                <View style={{padding:10,borderTopWidth:1,borderBottomWidth:1,borderColor:'gray'}}>
     
                     
     
@@ -249,12 +263,13 @@ function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel
                     
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     
-                      <Text style={[styles.input, { width:'80%'}]}>
+                      <Text style={[styles.input, { width:'80%'}]} onPress={showDatePicker} >
                         {fechaegreso ? moment(fechaegreso).format('DD/MM/YYYY') : 'Fecha Gasto'}
+                        
                         </Text>
     
                       <TouchableOpacity style={styles.botonfecha} onPress={showDatePicker}>         
-                          <AntDesign name="calendar" size={24} color="white" />
+                          <AntDesign name="calendar" size={24} color="black" />
                       </TouchableOpacity>
     
                       <DateTimePickerModal
@@ -267,28 +282,64 @@ function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel
     
                     </View>
     
-                    
-                    <TextInput style={styles.input}
-                            placeholder='Observacion' 
-                            value={anotacion}
-                            onChangeText={anotacion => setAnotacion(anotacion)}/>
+
+
+                    <View style={styles.containertext}>
+                      <Text style={[styles.placeholder, focus || anotacion !== '' ? styles.placeholderFocus : null]}>
+                        Observación
+                      </Text>
+                      <TextInput style={styles.input}
+                              // placeholder='Observacion' 
+                              //label='Obserbacion'
+                              value={anotacion}
+                              // textAlignVertical="center"
+                              onChangeText={anotacion => textoanotacion(anotacion)}
+                              onFocus={() => setFocus(true)}
+                              onBlur={() => setFocus(anotacion !== '')}
+                              />
+                    </View>
     
                               
                 </View>
-                <Divider />
-                <Divider />
-                <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:'15%',marginTop:15}}>
+                
+                <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:'2.5%',marginTop:5}}>
     
-                  <TouchableOpacity style={styles.botoncomando} onPress={cerrar}>         
+                  {/* <TouchableOpacity style={styles.botoncomando} onPress={cerrar}>         
                       <AntDesign name="closecircleo" size={30} color="white" />
                   </TouchableOpacity>
     
                   <TouchableOpacity style={styles.botoncomando} onPress={registrar_egreso}>         
                         <AntDesign name="save" size={30} color="white" />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
+                  <Button 
+                        style={{backgroundColor:'rgb(182, 212, 212)'}} 
+                        icon={() => {
+                          return <Ionicons name="chevron-back-outline" size={30} color="white" />
+
+                          //return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
+                        }} 
+                        mode="elevated" 
+                        textColor="white"
+                        onPress={cerrar}
+                        >CANCELAR 
+                  </Button>
+                  <Button 
+                        style={{marginBottom:5,marginTop:5,marginLeft:10
+                           ,backgroundColor:'rgb(182, 212, 212)'
+                        }} 
+                        // icon="content-save-check" 
+                        icon={() => {
+                          // return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
+
+                          return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
+                        }}
+                        mode="elevated" 
+                        textColor="white"
+                        onPress={registrar_egreso}>REGISTRAR 
+                  </Button>
+               
                 </View>
-    
-    
+                
     
                 
     
@@ -302,21 +353,42 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginBottom: 5,
       },
+    containertext:{
+      position: 'relative',
+    marginBottom: 20, 
+    }
+    ,
     input: {
-      borderWidth: 1,
+      borderBottomWidth: 1,
       borderColor: 'gray',
-      backgroundColor:'rgba(128, 128, 128,0.3)',
+      backgroundColor: 'rgba(128, 128, 128, 0.3)',
       borderRadius: 5,
-      padding: 5,
-      fontSize: 12.5,
-      height: 30,
-      marginBottom:15
+      fontSize: 15,
+      height: 40,
+      marginBottom: 7,
+      //paddingHorizontal: 5, // Espacio interno horizontal
     },
+    
+  placeholder: {
+    position: 'absolute',
+    left: 10,
+    top: 10,
+    fontSize: 15,
+    color: 'gray',
+    zIndex: -1,
+  },
+  placeholderFocus: {
+    top: -10,
+    fontSize: 12,
+    color: 'black',
+  },
     botonfecha:{
-      backgroundColor: 'blue',
+      // backgroundColor: 'blue',
       width: 40, // Define el ancho del botón
-      height: 30, // Define la altura del botón
-      borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
+      height: 35, // Define la altura del botón
+      //borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
+      borderWidth:1,
+      borderColor:'black',
       justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
       alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
       marginLeft:'5%',
