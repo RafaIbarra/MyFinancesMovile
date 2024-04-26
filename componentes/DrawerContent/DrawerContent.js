@@ -49,31 +49,31 @@ function DrawerContent({setActivarsesion,navigation} ){
                     <AntDesign name="home" size={sizeicon} color="black" />
                     <Text style={styles.text}> Inicio  </Text>
                 </TouchableOpacity>
-                <Divider />
+                
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                 <Feather name="trending-up" size={sizeicon} color="black" />
                     <Text style={styles.text}> Conceptos Ingresos  </Text>
                 </TouchableOpacity>
-                <Divider />
+                
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                     <Feather name="align-left" size={sizeicon} color="black" />
                     <Text style={styles.text}> Categoria Gastos  </Text>
                 </TouchableOpacity>
-                <Divider />
+                
 
                 <TouchableOpacity style={styles.button} onPress={navigateToConceptosGastos}>
                     <Feather name="trending-down" size={sizeicon} color="black" />
                     <Text style={styles.text}> Conceptos Gastos  </Text>
                 </TouchableOpacity>
-                <Divider />
+                
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                     <AntDesign name="home" size={sizeicon} color="black" />
                     <Text style={styles.text}> Historico Movimientos  </Text>
                 </TouchableOpacity>
-                <Divider />
+                
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                     <AntDesign name="barschart" size={sizeicon} color="black" />  
@@ -82,36 +82,28 @@ function DrawerContent({setActivarsesion,navigation} ){
                 
 
 
-                <Divider />
+             
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                     <Ionicons name="person-outline" size={sizeicon} color="black" />  
                     <Text style={styles.text}> Datos Personales  </Text>
                 </TouchableOpacity>
 
-                <Divider />
-                <Divider />
+              
 
                 <TouchableOpacity style={styles.button} onPress={navigateToHome}>
                     <AntDesign name="setting" size={sizeicon} color="black" />
                     <Text style={styles.text}> Configuracion  </Text>
                 </TouchableOpacity>
-                
-                <Divider />
-                <Divider />
+               
             </View>
 
             <TouchableOpacity style={styles.buttonclose} onPress={cerrar}>
                 <Entypo name="log-out" size={sizeicon} color="white" />
                 <Text style={styles.textclose}> Cerrar Sesion  </Text>
             </TouchableOpacity>
-            <Divider />
+            
 
-
-            {/* <Button title="Home" onPress={navigateToHome} />
-            <Button title="Conceptos Gastos" onPress={navigateToConceptosGastos} />
-            <Button title="Cerrar Sesion" onPress={cerrar} />
-            <Button title="Boton de prueba" onPress={navigateToHome} /> */}
         </View>
       );
 
@@ -123,12 +115,14 @@ const styles = StyleSheet.create({
       flex: 1, // Esto asegura que DrawerContent ocupe solo el espacio necesario
       paddingTop: 10, // Espacio en la parte superior para evitar solapamiento con el header del drawer
       
-      height:10
+      height:10,
+      justifyContent: 'space-between', 
+      paddingVertical: 20
     },
     containercabecera:{
-    borderBottomWidth:1,
-    borderColor:'#e9e9e9',
-    paddingBottom:10
+      borderBottomWidth:1,
+      borderColor:'#e9e9e9',
+      paddingBottom:10
 
     }
     ,
@@ -150,15 +144,17 @@ const styles = StyleSheet.create({
 
     button: {
         // backgroundColor: 'blue', // Color de fondo del botón
-        borderRadius: 20, // Bordes curvos
+        //borderRadius: 20, // Bordes curvos
         padding: 10, // Espaciado interno
         flexDirection: 'row', // Alinea los elementos horizontalmente
         alignItems: 'center', // Centra verticalmente los elementos
+        borderBottomWidth:0.5,
+        borderBottomColor:'gray'
       },
 
       buttonclose: {
         backgroundColor: 'black', // Color de fondo del botón
-        marginTop:'70%',
+        // marginTop:'70%',
         borderRadius: 10, // Bordes curvos
         padding: 10, // Espaciado interno
         flexDirection: 'row', // Alinea los elementos horizontalmente
@@ -177,7 +173,11 @@ const styles = StyleSheet.create({
         fontSize:20
       },
     contenedoracciones:{
-        marginTop:'10%',
+        // marginTop:'10%',
+        justifyContent: 'space-between',
+        borderBottomWidth:0.5,
+        borderBottomColor:'gray'
+        // paddingVertical: 20
         // backgroundColor:'red'
     }
   });

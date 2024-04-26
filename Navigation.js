@@ -91,7 +91,8 @@ function DrawerGroup({setActivarsesion,sesionname}) {
                 </View>
                   )
             },
-            tabBarLabel: ''
+            tabBarLabel: '',
+            unmountOnBlur: true
           }}
           
         />
@@ -107,7 +108,8 @@ function DrawerGroup({setActivarsesion,sesionname}) {
                       </View>
                     )
           },
-          tabBarLabel: ''
+          tabBarLabel: '',
+          unmountOnBlur: true
         }}
 
          />
@@ -123,7 +125,8 @@ function DrawerGroup({setActivarsesion,sesionname}) {
                     </View>
                     )
           },
-          tabBarLabel: ''
+          tabBarLabel: '',
+          unmountOnBlur: true
         }}
          />
 
@@ -139,7 +142,8 @@ function DrawerGroup({setActivarsesion,sesionname}) {
                     </View>
                     )
             },
-            tabBarLabel: ''
+            tabBarLabel: '',
+            unmountOnBlur: true
           }}
          />
 
@@ -155,7 +159,8 @@ function DrawerGroup({setActivarsesion,sesionname}) {
                       </View>
                     )
             },
-            tabBarLabel: ''
+            tabBarLabel: '',
+            unmountOnBlur: true
           }}
         />
 
