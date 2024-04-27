@@ -1,10 +1,12 @@
-import * as React from "react";
+import React,{useState,useEffect,useContext } from "react";
 import { ActivityIndicator, View,Text } from "react-native";
 
+
 function Resumen (){
+    
     return(
-        <View  style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text> Resumen del mes </Text>
+        <View  style={{ flex: 1 }}>
+            <Text style={{color:'white'}}> Resumen del mes aca dsdsd</Text>
         </View>
     )
 }

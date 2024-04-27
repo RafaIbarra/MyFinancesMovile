@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     imagenFondo: {
         flex: 1,
         justifyContent: 'center', // Alinear la imagen en el centro
-        backgroundColor:'rgb(182, 212, 212)',
+        // backgroundColor:'rgb(182, 212, 212)',
         width: '100%',
         height: '100%',
         

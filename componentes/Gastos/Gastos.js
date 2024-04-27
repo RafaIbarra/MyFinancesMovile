@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated   } from "react-native";
 import { Modal, Portal,  PaperProvider,Dialog,Button } from 'react-native-paper';
+import { LinearGradient } from 'expo-linear-gradient';
 import { IconButton } from 'react-native-paper';
 import { StatusBar } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -191,58 +192,69 @@ function Gastos (){
 
                       
                     </Portal>
-                    <View style={styles.cabeceracontainer}>
-                        <Text style={styles.titulocabecera}>Registro Gastos</Text>
-                        <TouchableOpacity style={styles.botoncabecera} onPress={handlePress}>
-                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                <FontAwesome6 name="add" size={24} color="black" />
-                            </Animated.View>
-                        </TouchableOpacity>
-                    </View>
+
+                  <View style={{ flex: 1 }}>
+
+                        <LinearGradient colors={['#101134','#248ebc',]} 
+                          // style={styles.gradient}
+                          >
+
+                            <View style={styles.cabeceracontainer}>
+                                <Text style={styles.titulocabecera}>Registro Gastos</Text>
+                                <TouchableOpacity style={styles.botoncabecera} onPress={handlePress}>
+                                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                                        <FontAwesome6 name="add" size={24} color="black" />
+                                    </Animated.View>
+                                </TouchableOpacity>
+                            </View>
+
+                      </LinearGradient>
                     <View  style={styles.container}>
-                        <FlatList  onPress={() => console.log('FlatList')}
-                            data={dataegresos}
-                            renderItem={({item}) =>{
-                                return(
-                                    <TouchableOpacity  style={styles.contenedordatos}  onPress={() => {navigate("GastosDetalle", { item});}}
-                                    >
-                                        <View style={[styles.columna, { flex: 7 }]}> 
 
-                                            <Text style={styles.textocontenido}> Concepto: {item.NombreGasto}</Text>
-                                            <Text style={styles.textocontenido}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
-                                            {/* <Text> Total: {item.monto_gasto}</Text> */}
-                                            <Text style={styles.textocontenido}> Total: {Number(item.monto_gasto).toLocaleString('es-ES')} Gs.</Text>
-                                            <Text style={styles.textocontenido}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
-                                        </View>
+                          <FlatList 
+                              data={dataegresos}
+                              renderItem={({item}) =>{
+                                  return(
+                                      <TouchableOpacity  style={styles.contenedordatos}  onPress={() => {navigate("GastosDetalle", { item});}}
+                                      >
+                                          <View style={[styles.columna, { flex: 7 }]}> 
 
-                                        <View style={[styles.columna, { flex: 1 }]}> 
+                                              <Text style={styles.textocontenido}> Concepto: {item.NombreGasto}</Text>
+                                              <Text style={styles.textocontenido}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
+                                              {/* <Text> Total: {item.monto_gasto}</Text> */}
+                                              <Text style={styles.textocontenido}> Total: {Number(item.monto_gasto).toLocaleString('es-ES')} Gs.</Text>
+                                              <Text style={styles.textocontenido}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                          </View>
 
-                                            {/* <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/> */}
-                                            <TouchableOpacity style={[styles.botonaccion, { marginBottom:10}]} onPress={() => eliminar(item)}>
-                                                <Animated.View style={{ transform: [{ rotate: spindel }] }}>
-                                                    <AntDesign name="delete" size={30} color="red" />
-                                                </Animated.View>
-                                            </TouchableOpacity>
+                                          <View style={[styles.columna, { flex: 1 }]}> 
 
-                                            {/* <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/> */}
-                                            <TouchableOpacity style={[styles.botonaccion]} onPress={() => editar(item)}>
-                                                <Animated.View style={{ transform: [{ rotate: spinedit }] }}>
-                                                    <AntDesign name="edit" size={30} color="black" />
-                                                </Animated.View>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </TouchableOpacity >
-                                )
-                            }
-                        }
-                            keyExtractor={item => item.key}
-                        />
+                                              {/* <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/> */}
+                                              <TouchableOpacity style={[styles.botonaccion, { marginBottom:10}]} onPress={() => eliminar(item)}>
+                                                  <Animated.View style={{ transform: [{ rotate: spindel }] }}>
+                                                      <AntDesign name="delete" size={30} color="#cddae8cb" />
+                                                  </Animated.View>
+                                              </TouchableOpacity>
+
+                                              {/* <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/> */}
+                                              <TouchableOpacity style={[styles.botonaccion]} onPress={() => editar(item)}>
+                                                  <Animated.View style={{ transform: [{ rotate: spinedit }] }}>
+                                                      <AntDesign name="edit" size={30} color="#cddae8cb" />
+                                                  </Animated.View>
+                                              </TouchableOpacity>
+                                          </View>
+                                      </TouchableOpacity >
+                                  )
+                              }
+                          }
+                              keyExtractor={item => item.key}
+                          />
                         
                     </View>
 
+
+                    
                     <View style={styles.resumencontainer}>
 
-                        {/* <Text style={styles.Tituloresumen}>RESUMEN</Text> */}
                         <Text style={styles.contenedortexto}>
                           <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
                             {Number(canttotalegreso).toLocaleString('es-ES')}
@@ -253,6 +265,9 @@ function Gastos (){
                         </Text>
                         
                     </View>
+
+                  </View>
+                    
                 </PaperProvider>
             </SafeAreaView>
     
@@ -274,18 +289,25 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderBottomWidth: 1,
-        borderBottomColor: 'lightgray',
+        // borderBottomColor: 'lightgray',
         
+      },
+    gradient: {
+        flex: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
       },
     titulocabecera: {
         flex: 1,
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
+        color:'white'
       },
     textocontenido:{
       fontSize:12.5,
-      marginBottom:5
+      marginBottom:5,
+      color:'white'
     },
 
     botoncabecera: {
@@ -313,12 +335,16 @@ const styles = StyleSheet.create({
     
   container: {
         flex: 1,
+        // backgroundColor:'#1c2c34'
+        backgroundColor:'rgba(28,44,52,0.7)'
+        //backgroundColor:'#242c34'
+        //backgroundColor:'#202c34'
       },
   contenedordatos:{
         flexDirection: 'row',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: '#ccc',
+        // borderColor: '#ccc',
         overflow: 'hidden', 
         height: 110,
         padding: 10,
@@ -328,7 +354,7 @@ const styles = StyleSheet.create({
   columnadatos:{
         flex: 1,
         height: '100%',
-        backgroundColor: '#f0f0f0',
+        // backgroundColor: '#f0f0f0',
     },
   resumencontainer: {
       //flexDirection: 'row',
@@ -339,14 +365,16 @@ const styles = StyleSheet.create({
       borderWidth:0.5,
       borderTopRightRadius:50,
       borderColor:'gray',
-      backgroundColor:'white',
+      // backgroundColor:'white',
+      backgroundColor:'rgb(28,44,52)',
       paddingLeft:30
 
       
     },
   contenedortexto:{
       paddingBottom:10,
-      fontSize:15
+      fontSize:15,
+      color:'white'
     },
   labeltext:{
       fontWeight:'bold',
