@@ -2,27 +2,28 @@
 import React,{useState,useEffect} from "react";
 import "react-native-gesture-handler";
 import Navigation from "./Navigation";
-import { ActivityIndicator, View,SafeAreaView,StyleSheet  } from "react-native";
+import { ActivityIndicator, View,SafeAreaView,StyleSheet,useColorScheme,   } from "react-native";
 import Login from "./screens/Login";
 import Resumen from "./componentes/Resumen/Resumen";
-import * as SystemUI from 'expo-system-ui';
 
+import Navigationv2 from "./Nivagationsv2";
 
 export default function App() {
   const [activarsesion,setActivarsesion]=useState(false)
   const [sesionname,setSesionname]=useState('')
-  SystemUI.setBackgroundColorAsync("black");
+  
   
     return (
 
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} >
         
 
-        <View style={{ flex: 1}}>
+        <View style={styles.container} >
           
         
           
-          { activarsesion ? <Navigation setActivarsesion={setActivarsesion} sesionname={sesionname}></Navigation>: <Login setActivarsesion={setActivarsesion} setSesionname={setSesionname}></Login>}
+          {/* { activarsesion ? <Navigation setActivarsesion={setActivarsesion} sesionname={sesionname}></Navigation>: <Login setActivarsesion={setActivarsesion} setSesionname={setSesionname}></Login>} */}
+          { activarsesion ? <Navigationv2 setActivarsesion={setActivarsesion} sesionname={sesionname}></Navigationv2>: <Login setActivarsesion={setActivarsesion} setSesionname={setSesionname}></Login>}
           {/* { activarsesion ? <Navigation setActivarsesion={setActivarsesion} sesionname={sesionname}></Navigation>: <Resumen ></Resumen>} */}
         </View>
         
@@ -36,6 +37,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'rgb(28,44,52)' // Color por defecto para todas las pantallas
+  },
+  text:{
+    color:'red'
   }
 });

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {NavigationContainer} from "@react-navigation/native";
+import {NavigationContainer,DefaultTheme} from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -25,6 +25,16 @@ import Handelstorage from "./Storage/handelstorage";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome6 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'red',
+    background: 'red',
+    text: 'blue'
+  },
+};
 
 
 const Drawer = createDrawerNavigator();
@@ -231,7 +241,7 @@ function TabsIngresosGroup({ navigation }) {
 
 function Navigation( {setActivarsesion,sesionname}){
 return(
-    <NavigationContainer>
+    <NavigationContainer >
         {/* <StatusBar style="auto"></StatusBar> */}
         <DrawerGroup setActivarsesion={setActivarsesion} sesionname={sesionname} />
     </NavigationContainer>
