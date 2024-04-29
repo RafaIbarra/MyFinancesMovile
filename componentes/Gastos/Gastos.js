@@ -1,22 +1,31 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext,useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
-import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated   } from "react-native";
+import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
 import { Modal, Portal,  PaperProvider,Dialog,Button } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { IconButton } from 'react-native-paper';
 import { StatusBar } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
-
+import { useRoute } from "@react-navigation/native";
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import GastoModal from "./GastoModal";
+import { useTheme } from '@react-navigation/native';
+import { AuthContext } from "../../AuthContext";
 
-
-function Gastos (){
+function Gastos ({ navigation  }){
+    const [refresh, setRefresh] = useState('');
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const [busqueda,setBusqueda]=useState(false)
+    const [textobusqueda,setTextobusqueda]=useState('')
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const { colors } = useTheme();
     const [recargadatos,setRecargadatos]=useState(false)
     const [cargacompleta,setCargacopleta]=useState(false)
+    const [dateegresoscompleto,setDateegresoscompleto]=useState([])
     const [dataegresos,setDataegresos]=useState([])
     const [rotationValue] = useState(new Animated.Value(0));
     const [rotationValueedit] = useState(new Animated.Value(0));
@@ -49,7 +58,9 @@ function Gastos (){
           rotationValue.setValue(0);
         });
         setRegistrosel({id:0})
-        setVisible(true)
+        //setVisible(true)
+        const item={'id':0}
+        navigate("GastosRegistro", { item})
         // Ejecuta la función onPressBoton si se proporciona
         // onPressBoton && onPressBoton();
       };
@@ -114,6 +125,8 @@ function Gastos (){
       } else if(respuesta === 403 || respuesta === 401){
         
         console.log(respuesta)
+        await Handelstorage('borrar')
+        setActivarsesion(false)
   
     }
 
@@ -123,9 +136,39 @@ function Gastos (){
         outputRange: ['0deg', '360deg'],
       } 
     );
+    const openbusqueda =()=>{
+      setBusqueda(true);
+    // Inicia la animación para mostrar el cuadro de búsqueda
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 700, // Duración de la animación en milisegundos
+      useNativeDriver: false,
+    }).start();
+    }
+
+    const closebusqueda=()=>{
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+      }).start(() => setBusqueda(false));
+      realizarbusqueda('')
+    }
+
+    const realizarbusqueda= (palabra)=>{
+      setTextobusqueda(palabra)
+      const pal =palabra.toLowerCase()
+      let arrayencontrado = dateegresoscompleto.filter(item => 
+        item.NombreGasto.toLowerCase().includes(pal) ||
+        item.CategoriaGasto.toLowerCase().includes(pal)
+        );
+      setDataegresos(arrayencontrado)
+    }
+
 
     useEffect(() => {
-
+      const unsubscribe = navigation.addListener('focus', () => {
+        setCargacopleta(false)
         const cargardatos=async()=>{
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
@@ -143,7 +186,9 @@ function Gastos (){
                       elemento.key = elemento.id;
                     })
                     
+                    // console.log(registros)
                     setDataegresos(registros)
+                    setDateegresoscompleto(registros)
                     let totalgasto=0
                     let cantgasto=0
                     registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
@@ -152,14 +197,31 @@ function Gastos (){
                 }
                 
             }else{
-                console.log(respuesta)
+                
+                
+                await Handelstorage('borrar')
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                setActivarsesion(false)
+            }
+            
+            //console.log(busqueda)
+            if(busqueda){
+              //console.log(textobusqueda)
+              
+              realizarbusqueda(textobusqueda)
             }
             setCargacopleta(true)
+            // setBusqueda(false)
+            // setTextobusqueda('')
 
            
         }
         cargardatos()
-      }, [recargadatos]);
+        // setRefresh(false)
+      })
+      return unsubscribe;
+      }, [navigation]);
+
     if(cargacompleta){
 
         return(
@@ -193,54 +255,90 @@ function Gastos (){
                       
                     </Portal>
 
-                  <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1 }}>    
+                      <View style={styles.cabeceracontainer}>
 
-                        <LinearGradient colors={['#101134','#248ebc',]} 
-                          // style={styles.gradient}
+                      {!busqueda &&( 
+                          <TouchableOpacity onPress={openbusqueda}>
+                              
+                              <FontAwesome name="search" size={24} color={colors.iconcolor}/>
+                              
+                          </TouchableOpacity>
+                      )}
+                      {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.text}]}>Registro Gastos</Text>)}
+
+
+                      {busqueda &&(
+
+                          <Animated.View style={{flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
+                            <TextInput 
+                                  style={{borderWidth:1,borderRadius:10, color:'white',padding:5,backgroundColor:'rgba(28,44,52,0.1)', flex: 1,}} 
+                                  placeholder="Busqueda"
+                                  value={textobusqueda}
+                                  onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                                  >
+
+                            </TextInput>
+
+                            <TouchableOpacity style={{ position: 'absolute',right: 10,padding: 10,}} onPress={closebusqueda} >  
+                              <AntDesign name="closecircleo" size={20} color={colors.iconcolor} />
+                            </TouchableOpacity>
+                          </Animated.View>
+                        )
+                        }
+
+                          
+                          <TouchableOpacity style={[styles.botoncabecera,
+                                                  { 
+                                                    // backgroundColor: colors.iconcolor
+                                                    backgroundColor:'rgb(218,165,32)'
+                                                  }]} onPress={handlePress}
                           >
+                              <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                                  <FontAwesome6 name="add" size={24} color="white" />
+                              </Animated.View>
+                          </TouchableOpacity>
+                      </View>
 
-                            <View style={styles.cabeceracontainer}>
-                                <Text style={styles.titulocabecera}>Registro Gastos</Text>
-                                <TouchableOpacity style={styles.botoncabecera} onPress={handlePress}>
-                                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                        <FontAwesome6 name="add" size={24} color="black" />
-                                    </Animated.View>
-                                </TouchableOpacity>
-                            </View>
-
-                      </LinearGradient>
+                      
                     <View  style={styles.container}>
 
                           <FlatList 
                               data={dataegresos}
                               renderItem={({item}) =>{
                                   return(
-                                      <TouchableOpacity  style={styles.contenedordatos}  onPress={() => {navigate("GastosDetalle", { item});}}
+                                      <TouchableOpacity  style={[styles.contenedordatos,{ borderColor: colors.bordercolor}]} 
+                                       onPress={() => {navigate('GastosDetalle', { item });}}
+                                      
                                       >
-                                          <View style={[styles.columna, { flex: 7 }]}> 
-
-                                              <Text style={styles.textocontenido}> Concepto: {item.NombreGasto}</Text>
-                                              <Text style={styles.textocontenido}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
-                                              {/* <Text> Total: {item.monto_gasto}</Text> */}
-                                              <Text style={styles.textocontenido}> Total: {Number(item.monto_gasto).toLocaleString('es-ES')} Gs.</Text>
-                                              <Text style={styles.textocontenido}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                          <View style={[styles.columna, { flex: 2 }]}> 
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                              
+                                              
                                           </View>
 
-                                          <View style={[styles.columna, { flex: 1 }]}> 
+                                          <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
 
-                                              {/* <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/> */}
-                                              <TouchableOpacity style={[styles.botonaccion, { marginBottom:10}]} onPress={() => eliminar(item)}>
+                                              <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_gasto).toLocaleString('es-ES')} </Text>
+                                              {/* <TouchableOpacity style={[styles.botonaccion, { marginBottom:10}]} onPress={() => eliminar(item)}>
                                                   <Animated.View style={{ transform: [{ rotate: spindel }] }}>
-                                                      <AntDesign name="delete" size={30} color="#cddae8cb" />
+                                                      <AntDesign name="delete" size={30} color={colors.iconcolor} />
                                                   </Animated.View>
                                               </TouchableOpacity>
 
-                                              {/* <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/> */}
+                                              
                                               <TouchableOpacity style={[styles.botonaccion]} onPress={() => editar(item)}>
                                                   <Animated.View style={{ transform: [{ rotate: spinedit }] }}>
-                                                      <AntDesign name="edit" size={30} color="#cddae8cb" />
+                                                      <AntDesign name="edit" size={30} color={colors.iconcolor} />
                                                   </Animated.View>
-                                              </TouchableOpacity>
+                                              </TouchableOpacity> */}
+
+
+
+
                                           </View>
                                       </TouchableOpacity >
                                   )
@@ -255,11 +353,11 @@ function Gastos (){
                     
                     <View style={styles.resumencontainer}>
 
-                        <Text style={styles.contenedortexto}>
+                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                           <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
                             {Number(canttotalegreso).toLocaleString('es-ES')}
                         </Text>
-                        <Text style={styles.contenedortexto}>
+                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                           <Text style={styles.labeltext}>Total Gasto:</Text>{' '}
                             {Number(montototalegreso).toLocaleString('es-ES')} Gs.
                         </Text>
@@ -302,16 +400,20 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        color:'white'
+        // color:'white'
       },
     textocontenido:{
       fontSize:12.5,
       marginBottom:5,
-      color:'white'
+      // color:'white'
     },
-
+    textototal:{
+      fontSize:17,
+      
+      // color:'white'
+    },
     botoncabecera: {
-        backgroundColor: 'blue',
+        // backgroundColor: 'blue',
         width: 40, // Define el ancho del botón
         height: 40, // Define la altura del botón
         borderRadius: 20, // Define la mitad de la dimensión del botón para obtener una forma circular
@@ -329,14 +431,14 @@ const styles = StyleSheet.create({
         
       },
   textoBoton: {
-        color: 'white',
+        // color: 'white',
         fontWeight: 'bold',
       },
     
   container: {
         flex: 1,
         // backgroundColor:'#1c2c34'
-        backgroundColor:'rgba(28,44,52,0.7)'
+        // backgroundColor:'rgba(28,44,52,0.7)'
         //backgroundColor:'#242c34'
         //backgroundColor:'#202c34'
       },
@@ -344,7 +446,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 10,
         borderWidth: 1,
-        // borderColor: '#ccc',
+        //borderColor: '#ccc',
         overflow: 'hidden', 
         height: 110,
         padding: 10,
@@ -366,7 +468,7 @@ const styles = StyleSheet.create({
       borderTopRightRadius:50,
       borderColor:'gray',
       // backgroundColor:'white',
-      backgroundColor:'rgb(28,44,52)',
+      // backgroundColor:'rgb(28,44,52)',
       paddingLeft:30
 
       
@@ -374,7 +476,7 @@ const styles = StyleSheet.create({
   contenedortexto:{
       paddingBottom:10,
       fontSize:15,
-      color:'white'
+      
     },
   labeltext:{
       fontWeight:'bold',

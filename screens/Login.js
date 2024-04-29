@@ -1,15 +1,17 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect, useContext } from "react";
 
 import { ActivityIndicator, View,Text,SafeAreaView,
     StatusBar,StyleSheet,ImageBackground  } from "react-native";
 import { TextInput,Button } from 'react-native-paper';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import Iniciarsesion from "../componentes/PeticionesApi/apiiniciosesion";
 import Handelstorage from "../Storage/handelstorage";
 import ComprobarStorage from "../Storage/verificarstorage";
-function Login ({setActivarsesion,setSesionname}){
+import { AuthContext } from "../AuthContext";
+function Login ({setSesionname}){
     const[username,setUsername]=useState('')
     const[password,setPassword]=useState('')
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
 
     const ingresar= async ()=>{
         
@@ -42,13 +44,16 @@ function Login ({setActivarsesion,setSesionname}){
     useEffect(() => {
 
         const cargardatos=async()=>{
+            console.log('vino a login')
            const datosstarage = await ComprobarStorage()
+           console.log(datosstarage)
            const credenciales=datosstarage['datosesion']
            if (credenciales) {
             setActivarsesion(true)
             setSesionname(datosstarage['user_name'])
         
         } else {
+            await Handelstorage('borrar')
             setActivarsesion(false)
             setSesionname('')
         }

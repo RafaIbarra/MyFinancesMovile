@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import { StyleSheet,Button,View,Image,TouchableOpacity,Text  } from "react-native";
 import { Divider } from 'react-native-paper';
 
@@ -7,11 +7,12 @@ import { Feather } from '@expo/vector-icons'; // Importa un icono de Feather
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { AuthContext } from "../../AuthContext";
 
 const sizeicon=30
-function DrawerContent({setActivarsesion,navigation} ){
+function DrawerContent({navigation} ){
   const [expanded, setExpanded] = useState(true);
-
+  const { activarsesion, setActivarsesion } = useContext(AuthContext);
   const handlePress = () => {
     
     setExpanded(!expanded)
