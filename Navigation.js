@@ -37,7 +37,12 @@ const MyTheme = {
     dark: true,
     colors: {
       ...DefaultTheme.colors,
-      background: 'rgba(28,44,52,0.7)',
+      // background: 'rgba(28,44,52,0.7)',
+      background: 'rgb(28,44,52)',
+      backgroundInpunt: 'rgb(28,44,52)',
+      textbordercoloractive:'rgb(44,148,228)',
+      textbordercolorinactive:'gray',
+      //background: 'red',
       text:'white',
       color:'red',
       primary:'white',
@@ -230,6 +235,7 @@ function HomeStackGroup(){
     <HomeStack.Screen name="ResumenDatos" component={Resumen}/>
     <HomeStack.Screen name="IngresosGroup" component={Ingresos} />
     <HomeStack.Screen name="Gastos" component={Gastos} />
+
     <HomeStack.Screen name="GastosDetalle" 
       component={GastosDetalle} 
       options={{headerTitle:'Detalle del Gasto',
@@ -290,7 +296,7 @@ function TabsIngresosGroup({ navigation }) {
         
       />
       <TabIngresos.Screen name="Notifications" component={IngresosAgregar} />
-      <TabIngresos.Screen name="Settings" component={IngresosDetalle} />
+      {/* <TabIngresos.Screen name="Settings" component={IngresosDetalle} /> */}
     </TabIngresos.Navigator>
   )
 }

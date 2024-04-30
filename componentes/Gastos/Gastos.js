@@ -9,46 +9,37 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import moment from 'moment';
-import { useRoute } from "@react-navigation/native";
+
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
-import GastoModal from "./GastoModal";
+
 import { useTheme } from '@react-navigation/native';
 import { AuthContext } from "../../AuthContext";
 
 function Gastos ({ navigation  }){
-    const [refresh, setRefresh] = useState('');
+    
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const [busqueda,setBusqueda]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const { colors } = useTheme();
-    const [recargadatos,setRecargadatos]=useState(false)
+    
     const [cargacompleta,setCargacopleta]=useState(false)
     const [dateegresoscompleto,setDateegresoscompleto]=useState([])
     const [dataegresos,setDataegresos]=useState([])
     const [rotationValue] = useState(new Animated.Value(0));
-    const [rotationValueedit] = useState(new Animated.Value(0));
-    const [rotationValuedel] = useState(new Animated.Value(0));
+    
     const { navigate } = useNavigation();
-    const [visible, setVisible] = useState(false);
-    const [visibledialogo, setVisibledialogo] = useState(false)
 
-    const showModal = () => setVisible(true);
-    const hideModal = () => setVisible(false);
 
-    const showDialog = () => setVisibledialogo(true);
-    const hideDialog = () => setVisibledialogo(false);
-
-    const containerStyle = {backgroundColor: 'white', padding: 20};
+    
     const [montototalegreso,setMontototalegreso]=useState(0)
     const [canttotalegreso,setcanttotalegreso]=useState(0)
-    const [registrosel,setRegistrosel]=useState([])
-    const [codigoeliminar,setCodigoelimnar]=useState('')
-    const [conceptoeliminar,setConceptoelimnar]=useState('')
+    
+    
    
     const handlePress = () => {
-        // Realiza una animación de rotación cuando se presiona el botón
+        
         Animated.timing(rotationValue, {
           toValue: 1,
           duration: 200, // Duración de la animación en milisegundos
@@ -57,12 +48,9 @@ function Gastos ({ navigation  }){
           // Restaura la animación a su estado original
           rotationValue.setValue(0);
         });
-        setRegistrosel({id:0})
-        //setVisible(true)
         const item={'id':0}
         navigate("GastosRegistro", { item})
-        // Ejecuta la función onPressBoton si se proporciona
-        // onPressBoton && onPressBoton();
+        
       };
     
       // Interpola el valor de rotación para aplicarlo al estilo de transformación del icono
@@ -72,70 +60,7 @@ function Gastos ({ navigation  }){
       } 
     );
 
-    const editar=(item)=>{
-        // Realiza una animación de rotación cuando se presiona el botón
-        setRegistrosel(item)
-        
-        setVisible(true)
-        Animated.timing(rotationValueedit, {
-            toValue: 1,
-            duration: 200, // Duración de la animación en milisegundos
-            useNativeDriver: true,
-          }).start(() => {
-            // Restaura la animación a su estado original
-            rotationValueedit.setValue(0);
-          });
-    }
-    const spinedit = rotationValueedit.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg'],
-      } 
-    );
 
-    const eliminar=(item)=>{
-        // Realiza una animación de rotación cuando se presiona el botón
-        const valdel=[item.id]
-        
-        setCodigoelimnar(valdel)
-        setConceptoelimnar(item.NombreGasto)
-        showDialog(true)
-        Animated.timing(rotationValuedel, {
-            toValue: 1,
-            duration: 200, // Duración de la animación en milisegundos
-            useNativeDriver: true,
-          }).start(() => {
-            // Restaura la animación a su estado original
-            rotationValuedel.setValue(0);
-          });
-    }
-    const confimareliminacion = async()=>{
-      
-      const datoseliminar = {
-        gastos:codigoeliminar,};
-  
-  
-      const endpoint='EliminarEgreso/'
-      const result = await Generarpeticion(endpoint, 'POST', datoseliminar);
-        
-      const respuesta=result['resp']
-      if (respuesta === 200) {
-        hideDialog()
-        setRecargadatos(!recargadatos)
-          
-      } else if(respuesta === 403 || respuesta === 401){
-        
-        console.log(respuesta)
-        await Handelstorage('borrar')
-        setActivarsesion(false)
-  
-    }
-
-    }
-    const spindel = rotationValuedel.interpolate({
-        inputRange: [0, 1],
-        outputRange: ['0deg', '360deg'],
-      } 
-    );
     const openbusqueda =()=>{
       setBusqueda(true);
     // Inicia la animación para mostrar el cuadro de búsqueda
@@ -196,7 +121,7 @@ function Gastos ({ navigation  }){
                     setcanttotalegreso(cantgasto)
                 }
                 
-            }else{
+            }else if(respuesta === 403 || respuesta === 401){
                 
                 
                 await Handelstorage('borrar')
@@ -228,33 +153,8 @@ function Gastos ({ navigation  }){
             <SafeAreaView style={{ flex: 1 }}>
                 <StatusBar />
 
-                <PaperProvider>
-                    <Portal>
-                        
-                      {visible&&(<GastoModal visible={visible} setVisible={setVisible} 
-                                    recargadatos={recargadatos} setRecargadatos={setRecargadatos}  
-                                    registrosel={registrosel}
-                                    >
-
-                                    </GastoModal>)}
-
-
-                      <Dialog visible={visibledialogo} onDismiss={hideDialog}>
-                        <Dialog.Title>Eliminar Registro</Dialog.Title>
-                        <Dialog.Content>
-                          <Text variant="bodyMedium">{`¿Desea eliminar el registro de ${conceptoeliminar} con ID operacion N°: ${codigoeliminar}?`}</Text>
-                           
-                        </Dialog.Content>
-                        <Dialog.Actions>
-                          <Button onPress={hideDialog}>Cancelar</Button>
-                          <Button onPress={confimareliminacion}>ELIMINAR</Button>
-                        </Dialog.Actions>
-                      </Dialog>
-
-
-                      
-                    </Portal>
-
+                
+                    
                   <View style={{ flex: 1 }}>    
                       <View style={styles.cabeceracontainer}>
 
@@ -270,17 +170,21 @@ function Gastos ({ navigation  }){
 
                       {busqueda &&(
 
-                          <Animated.View style={{flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
+                          <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
                             <TextInput 
-                                  style={{borderWidth:1,borderRadius:10, color:'white',padding:5,backgroundColor:'rgba(28,44,52,0.1)', flex: 1,}} 
-                                  placeholder="Busqueda"
+                                  style={{color:'white',padding:5,
+                                          // backgroundColor:'rgba(28,44,52,0.1)'
+                                          //backgroundColor:'red', 
+                                          flex: 1,}} 
+                                  placeholder="Concepto o Categoria.."
+                                  placeholderTextColor='gray'
                                   value={textobusqueda}
                                   onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
                                   >
 
                             </TextInput>
 
-                            <TouchableOpacity style={{ position: 'absolute',right: 10,padding: 10,}} onPress={closebusqueda} >  
+                            <TouchableOpacity style={{ position: 'absolute',right: 10,}} onPress={closebusqueda} >  
                               <AntDesign name="closecircleo" size={20} color={colors.iconcolor} />
                             </TouchableOpacity>
                           </Animated.View>
@@ -323,22 +227,7 @@ function Gastos ({ navigation  }){
                                           <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
 
                                               <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_gasto).toLocaleString('es-ES')} </Text>
-                                              {/* <TouchableOpacity style={[styles.botonaccion, { marginBottom:10}]} onPress={() => eliminar(item)}>
-                                                  <Animated.View style={{ transform: [{ rotate: spindel }] }}>
-                                                      <AntDesign name="delete" size={30} color={colors.iconcolor} />
-                                                  </Animated.View>
-                                              </TouchableOpacity>
-
                                               
-                                              <TouchableOpacity style={[styles.botonaccion]} onPress={() => editar(item)}>
-                                                  <Animated.View style={{ transform: [{ rotate: spinedit }] }}>
-                                                      <AntDesign name="edit" size={30} color={colors.iconcolor} />
-                                                  </Animated.View>
-                                              </TouchableOpacity> */}
-
-
-
-
                                           </View>
                                       </TouchableOpacity >
                                   )
@@ -366,7 +255,7 @@ function Gastos ({ navigation  }){
 
                   </View>
                     
-                </PaperProvider>
+                
             </SafeAreaView>
     
             

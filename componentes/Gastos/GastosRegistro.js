@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 // import { useNavigation } from '@react-navigation/native';
 import {  StyleSheet,View,TouchableOpacity,TextInput,Text } from "react-native";
@@ -13,10 +13,20 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import { AuthContext } from "../../AuthContext";
+import { useTheme } from '@react-navigation/native';
 
 function GastosRegistro({ navigation }){
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { colors } = useTheme();
+
     const {params: { item },} = useRoute();
-    // const navigation = useNavigation()
+
+    const [isFocusedobs, setIsFocusedobs] = useState(false);
+    const [isFocusedgasto, setIsFocusedgasto] = useState(false);
+    
+    
+    
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [mesprincipal,setMesprincipal]=useState(0)
     const [annoprincipal,setAnnoprincipal]=useState(0)
@@ -108,6 +118,15 @@ function GastosRegistro({ navigation }){
         setRecargadatos(!recargadatos)
      };
 
+    const textoanotacion=(valor)=>{
+      setAnotacion(valor)
+      if (!focus && valor !== '') {
+        setFocus(true);
+      } else if (focus && valor === '') {
+        setFocus(false);
+      }
+    }
+
     useEffect(() => {
 
         const cargardatos=async()=>{
@@ -160,8 +179,10 @@ function GastosRegistro({ navigation }){
                 
                 setRealizado(true)
                 
-            }else{
-                console.log(respuesta)
+            }else if(respuesta === 403 || respuesta === 401){
+                await Handelstorage('borrar')
+                await new Promise(resolve => setTimeout(resolve, 1000))
+                setActivarsesion(false)
             }
             
 
@@ -172,101 +193,103 @@ function GastosRegistro({ navigation }){
 
     if(realizado){
         return(
-            <View style={{padding:10,borderTopWidth:1,borderBottomWidth:1,borderColor:'gray'}}>
-                <RNPickerSelect
-                        onValueChange={SeleccionCategoria}
-                        items={optionscategoria}
-                        useNativeAndroidPickerStyle={false}
-                        value={selectedOptioncategoria}
-                        placeholder={{ label: 'Categoria', value: null }}
-                        // Icon={}
-                        style={pickerSelectStyles}
-                        Icon={() => {
-                          return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
-                        }}
-                        pickerProps={{
-                          
-                          mode: 'dropdown', // Establece el modo del modal (dropdown o modal)
-                          animationType: 'slide', // Tipo de animación al abrir/cerrar el modal
-                          
-                          // Más props aquí...
-                        }}
-                                
-                      />
-                <RNPickerSelect
-                        onValueChange={SeleccionGasto}
-                        items={optionsgasto}
-                        value={selectedOptiongasto}
-                        useNativeAndroidPickerStyle={false}
-                        placeholder={{ label: 'Gasto', value: null }}
-                        style={pickerSelectStyles}
-                        Icon={() => {
-                          return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
-                        }}
-                        pickerProps={{
-                          
-                          mode: 'dropdown', // Establece el modo del modal (dropdown o modal)
-                          animationType: 'slide', // Tipo de animación al abrir/cerrar el modal
-                          
-                          // Más props aquí...
-                        }}
-                      />
-                <TextInputMask
-                            style={styles.input}
-                            type={'money'}
-                            options={{
-                              precision: 0, // Sin decimales
-                              separator: ',', // Separador de miles
-                              delimiter: '.', // Separador decimal
-                              unit: '', // No se muestra una unidad
-                              suffixUnit: '', // No se muestra una unidad al final
-                            }}
-                            value={monto}
-                            onChangeText={handleTextChange}
+            <View style={{flex: 1,padding:10,marginTop:150,borderTopWidth:1,borderBottomWidth:1,borderColor:'gray'}}>
+                  <RNPickerSelect
+                          onValueChange={SeleccionCategoria}
+                          items={optionscategoria}
+                          useNativeAndroidPickerStyle={false}
+                          value={selectedOptioncategoria}
+                          placeholder={{ label: 'Categoria', value: null }}
+                          // Icon={}
+                          style={pickerSelectStyles}
+                          Icon={() => {
+                            return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
+                          }}
+                          pickerProps={{
                             
-                            keyboardType="numeric"
-                            placeholder="Monto Gasto"
-                          />
+                            mode: 'dropdown', // Establece el modo del modal (dropdown o modal)
+                            animationType: 'slide', // Tipo de animación al abrir/cerrar el modal
+                            
+                            // Más props aquí...
+                          }}
+                                  
+                        />
+                  <RNPickerSelect
+                          onValueChange={SeleccionGasto}
+                          items={optionsgasto}
+                          value={selectedOptiongasto}
+                          useNativeAndroidPickerStyle={false}
+                          placeholder={{ label: 'Gasto', value: null }}
+                          style={pickerSelectStyles}
+                          Icon={() => {
+                            return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
+                          }}
+                          pickerProps={{
+                            
+                            mode: 'dropdown', // Establece el modo del modal (dropdown o modal)
+                            animationType: 'slide', // Tipo de animación al abrir/cerrar el modal
+                            
+                            // Más props aquí...
+                          }}
+                        />
+                  <TextInputMask
+                              style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, borderBottomColor: isFocusedgasto ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                              type={'money'}
+                              options={{
+                                precision: 0, // Sin decimales
+                                separator: ',', // Separador de miles
+                                delimiter: '.', // Separador decimal
+                                unit: '', // No se muestra una unidad
+                                suffixUnit: '', // No se muestra una unidad al final
+                              }}
+                              value={monto}
+                              onChangeText={handleTextChange}
+                              onFocus={() => setIsFocusedgasto(true)}
+                              onBlur={() => setIsFocusedgasto(false)}
+                              underlineColorAndroid="transparent"
+                              keyboardType="numeric"
+                              placeholder="Monto Gasto"
+                              placeholderTextColor='gray'
+                            />
 
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    
-                    <Text style={[styles.input, { width:'80%'}]} onPress={showDatePicker} >
-                      {fechaegreso ? moment(fechaegreso).format('DD/MM/YYYY') : 'Fecha Gasto'}
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                       
-                      </Text>
-  
-                    <TouchableOpacity style={styles.botonfecha} onPress={showDatePicker}>         
-                        <AntDesign name="calendar" size={24} color="black" />
-                    </TouchableOpacity>
-  
-                    <DateTimePickerModal
+                      <Text style={[styles.inputtextactivo, 
+                                    { width:'80%',
+                                      color: fechaegreso ? colors.text : 'gray',
+                                      borderBottomColor: fechaegreso ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                        onPress={showDatePicker} >
+                        {fechaegreso ? moment(fechaegreso).format('DD/MM/YYYY') : 'Fecha Gasto'}
                         
-                        isVisible={isDatePickerVisible}
-                        mode="date"
-                        onConfirm={handleConfirm}
-                        onCancel={hideDatePicker}
-                    />
-  
-                </View>
-
-                <View style={styles.containertext}>
-                      <Text style={[styles.placeholder, focus || anotacion !== '' ? styles.placeholderFocus : null]}>
-                        Observación
-                      </Text>
-                      <TextInput style={styles.input}
-                              // placeholder='Observacion' 
-                              //label='Obserbacion'
-                              value={anotacion}
-                              // textAlignVertical="center"
-                              onChangeText={anotacion => textoanotacion(anotacion)}
-                              onFocus={() => setFocus(true)}
-                              onBlur={() => setFocus(anotacion !== '')}
-                              />
-                </View>
-
-
-                
-                  
+                        </Text>
+    
+                      <TouchableOpacity 
+                        // style={styles.botonfecha} 
+                        onPress={showDatePicker}>         
+                          <AntDesign name="calendar" size={30} color={colors.iconcolor} />
+                      </TouchableOpacity>
+    
+                      <DateTimePickerModal
+                          
+                          isVisible={isDatePickerVisible}
+                          mode="date"
+                          onConfirm={handleConfirm}
+                          onCancel={hideDatePicker}
+                      />
+    
+                  </View>
+                  <TextInput style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                                placeholder='Observacion'
+                                placeholderTextColor='gray'
+                                //label='Obserbacion'
+                                value={anotacion}
+                                // textAlignVertical="center"
+                                onChangeText={anotacion => textoanotacion(anotacion)}
+                                onFocus={() => setIsFocusedobs(true)}
+                                onBlur={() => setIsFocusedobs(false)}
+                                underlineColorAndroid="transparent"
+                  />
+                    
                   <Button 
                         style={{marginBottom:5,marginTop:5,marginLeft:10
                            ,backgroundColor:'rgb(182, 212, 212)'
@@ -310,6 +333,12 @@ const styles = StyleSheet.create({
       marginBottom: 7,
       //paddingHorizontal: 5, // Espacio interno horizontal
     },
+    inputtextactivo:{
+      //borderBottomColor: 'rgb(44,148,228)', // Cambia el color de la línea inferior aquí
+      borderBottomWidth: 2,
+      
+    }
+    ,
     
   placeholder: {
     position: 'absolute',
@@ -362,7 +391,7 @@ const pickerSelectStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'gray',
         borderRadius: 4,
-        color: 'black',
+        color: 'white',
         paddingRight: 30 // to ensure the text is never behind the icon
     },
     inputAndroid: {
@@ -372,9 +401,9 @@ const pickerSelectStyles = StyleSheet.create({
         borderWidth: 0.5,
         borderColor: 'gray',
         borderRadius: 8,
-        color: 'black',
-        paddingRight: 30, // to ensure the text is never behind the icon
-        marginBottom:15,
+        color: 'white',
+        // paddingRight: 30, 
+        // marginBottom:15,
         height:37,
         
     }

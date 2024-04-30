@@ -78,7 +78,7 @@ function GastosDetalle ({ navigation }){
         
       }, [navigation]);
     return(
-            <PaperProvider>
+            <PaperProvider >
                 <View  style={{ flex: 1 }}>
                     
                     <Portal>
@@ -151,9 +151,14 @@ function GastosDetalle ({ navigation }){
 
 
 
-                    <View style={{flex: 1,borderWidth:1,borderRadius:50,borderStartColor:'white',
-                                    borderBottomColor:'white',justifyContent: 'center',width:'90%',
-                                    marginLeft:20,marginBottom:50,marginTop:50
+                    <View style={{flex: 1,
+                                    // borderWidth:1,
+                                    // borderRadius:50,
+                                    // borderStartColor:'white',
+                                    // borderBottomColor:'white',
+                                    justifyContent: 'center',width:'90%',
+                                    marginLeft:20,
+                                    // marginBottom:50,marginTop:50
                                 }}>
 
                         <View style={{flexDirection: 'row', alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
@@ -172,24 +177,27 @@ function GastosDetalle ({ navigation }){
 
                         <Divider />
 
-                        <View style={{alignItems:'center',justifyContent:'space-between'}}>
+                        <View style={{alignItems:'center',justifyContent:'space-between',marginTop:30}}>
 
                             <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
                                 {item.TipoGasto} - {item.CategoriaGasto}
                             </Text>
-
+                            <Divider />
+                            <Divider />
     
                             <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
                                 Gs. {Number(item.monto_gasto).toLocaleString('es-ES')}
                             </Text>
-
+                            <Divider />
+                            <Divider />
                             <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
                                 {item.NombreGasto}
                             </Text>
-                            
+                            <Divider />
+                            <Divider />
                             {/* <Text style={[styles.contenedortexto, { color: colors.text }]}>
                                     {item.anotacion}
                                 </Text> */}
@@ -214,7 +222,8 @@ function GastosDetalle ({ navigation }){
                             </View>
                             ) : null}
 
-                        <View style={{alignItems:'center',justifyContent:'space-between',marginTop:20,borderBottomWidth:1,borderBottomColor:'white'}}>
+                        <View style={{alignItems:'center',justifyContent:'space-between',
+                                    marginBottom:20,marginTop:20,borderBottomWidth:1,paddingBottom:7,borderBottomColor:'white'}}>
                             
                             <Text style={[{ color: colors.text}]}>
                                 <Text style={[{ color: colors.text}]}>Creado:</Text>{' '}
