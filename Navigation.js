@@ -21,6 +21,7 @@ import Estadisticas from "./componentes/Estadisticas/Estadisticas";
 import DrawerContent from "./componentes/DrawerContent/DrawerContent";
 import CloseSesion from "./componentes/Closesesion/closesesion";
 import GastosRegistro from "./componentes/Gastos/GastosRegistro";
+import GastosTransaccion from "./componentes/Gastos/GastosTransaccion";
 
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
@@ -257,10 +258,11 @@ function HomeStackGroup(){
       ),
 
     }}
+
     
       />
     <HomeStack.Screen name="GastosRegistro" 
-                      component={GastosRegistro} 
+                      component={GastosTransaccion} 
                       options={{headerTitle:'Registro Gastos',
                       headerTitleAlign:'center',
                       

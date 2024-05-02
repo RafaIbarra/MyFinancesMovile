@@ -112,7 +112,7 @@ function Gastos ({ navigation  }){
                       elemento.recarga='no'
                     })
                     
-                   
+                   console.log(registros)
                     setDataegresos(registros)
                     setDateegresoscompleto(registros)
                     let totalgasto=0
