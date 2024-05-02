@@ -109,9 +109,10 @@ function Gastos ({ navigation  }){
                     registros.forEach((elemento) => {
                       
                       elemento.key = elemento.id;
+                      elemento.recarga='no'
                     })
                     
-                    // console.log(registros)
+                   
                     setDataegresos(registros)
                     setDateegresoscompleto(registros)
                     let totalgasto=0
@@ -129,9 +130,9 @@ function Gastos ({ navigation  }){
                 setActivarsesion(false)
             }
             
-            //console.log(busqueda)
+           
             if(busqueda){
-              //console.log(textobusqueda)
+              
               
               realizarbusqueda(textobusqueda)
             }
@@ -211,7 +212,13 @@ function Gastos ({ navigation  }){
                               data={dataegresos}
                               renderItem={({item}) =>{
                                   return(
-                                      <TouchableOpacity  style={[styles.contenedordatos,{ borderColor: colors.bordercolor}]} 
+                                      <TouchableOpacity  style={[styles.contenedordatos
+                                                                ,{ 
+                                                                  // borderColor : colors.bordercolor,
+                                                                  borderRightColor: colors.bordercolor,
+                                                                  borderBottomColor:'rgba(235,234,233,0.1)'
+                                                                }]} 
+                                      
                                        onPress={() => {navigate('GastosDetalle', { item });}}
                                       
                                       >
@@ -333,13 +340,21 @@ const styles = StyleSheet.create({
       },
   contenedordatos:{
         flexDirection: 'row',
-        borderRadius: 10,
-        borderWidth: 1,
+
+        // borderRadius: 10,
+        // borderWidth: 1,
+        // margin:5,
         //borderColor: '#ccc',
+
+        borderBottomWidth:1,
+        borderRightWidth:3,
+        marginBottom:10,
+        marginRight:5,
+
         overflow: 'hidden', 
         height: 110,
         padding: 10,
-        margin:5,
+        
         
     },
   columnadatos:{

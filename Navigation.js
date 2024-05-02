@@ -259,7 +259,13 @@ function HomeStackGroup(){
     }}
     
       />
-    <HomeStack.Screen name="GastosRegistro" component={GastosRegistro} />
+    <HomeStack.Screen name="GastosRegistro" 
+                      component={GastosRegistro} 
+                      options={{headerTitle:'Registro Gastos',
+                      headerTitleAlign:'center',
+                      
+                    }}
+    />
     
     
   </HomeStack.Navigator>

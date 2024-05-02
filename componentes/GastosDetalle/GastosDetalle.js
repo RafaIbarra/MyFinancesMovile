@@ -5,11 +5,13 @@ import { ActivityIndicator, View,Text,StyleSheet,TouchableOpacity } from "react-
 import { Modal, Portal,  PaperProvider,Dialog,Button,Divider } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 function GastosDetalle ({ navigation }){
     const {params: { item },} = useRoute();
+    
     const { colors } = useTheme();
     const [count, setCount] = useState(0);
     const [countdos, setCountdos] = useState(0);
@@ -19,6 +21,7 @@ function GastosDetalle ({ navigation }){
     const hideDialog = () => setVisibledialogo(false);
     const [codigoeliminar,setCodigoelimnar]=useState('')
     const [conceptoeliminar,setConceptoelimnar]=useState('')
+    const [datositem, setDatositem]=useState([])
 
     const eliminar=()=>{
         // Realiza una animación de rotación cuando se presiona el botón
@@ -47,7 +50,7 @@ function GastosDetalle ({ navigation }){
             
         } else if(respuesta === 403 || respuesta === 401){
           
-          console.log(respuesta)
+          
           await Handelstorage('borrar')
           setActivarsesion(false)
     
@@ -56,7 +59,8 @@ function GastosDetalle ({ navigation }){
       }
 
     useEffect(() => {
-        
+        const unsubscribe = navigation.addListener('focus', () => {
+        setDatositem(item)
         
         setCodigoelimnar(item.id)
         setConceptoelimnar(item.NombreGasto)
@@ -73,8 +77,47 @@ function GastosDetalle ({ navigation }){
             </View>
           ),
             });
-        
+        if(item.recarga==='si'){
+            
 
+            
+            const cargardatos=async()=>{
+                const idact=item.id
+                const datestorage=await Handelstorage('obtenerdate');
+                const mes_storage=datestorage['datames']
+                const anno_storage=datestorage['dataanno']
+                const body = {};
+                const endpoint='MovileDatoEgreso/' + anno_storage +'/' + mes_storage + '/'+ idact + '/'
+                const result = await Generarpeticion(endpoint, 'POST', body);
+                const respuesta=result['resp']
+                if (respuesta === 200){
+                    const registros=result['data']
+                    registros.recarga='no'
+
+
+                    Object.keys(registros).forEach(key => {
+                        item[key] = registros[key];
+                      });
+                    setDatositem(registros)
+                    
+                    
+                }else if(respuesta === 403 || respuesta === 401){
+                    
+                    
+                    await Handelstorage('borrar')
+                    await new Promise(resolve => setTimeout(resolve, 1000))
+                    setActivarsesion(false)
+                }
+                
+               
+    
+               
+            }
+            cargardatos()
+        }
+        
+        })
+        return unsubscribe;
         
       }, [navigation]);
     return(
@@ -156,21 +199,23 @@ function GastosDetalle ({ navigation }){
                                     // borderRadius:50,
                                     // borderStartColor:'white',
                                     // borderBottomColor:'white',
-                                    justifyContent: 'center',width:'90%',
+                                    // justifyContent: 'center',
+                                    marginTop:50,
+                                    width:'90%',
                                     marginLeft:20,
                                     // marginBottom:50,marginTop:50
                                 }}>
 
                         <View style={{flexDirection: 'row', alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
-                        borderTopWidth:1,borderTopColor:'white'}}>
+                        borderTopWidth:2,borderTopColor:'white'}}>
 
                             <Text style={[{ color: colors.text}]}>
                                 <Text style={[{ color: colors.text}]}>ID Operacion:</Text>{' '}
-                                {item.id}
+                                {datositem.id}
                             </Text>
                             <Text style={[{ color: colors.text}]}>
                                 <Text style={[{ color: colors.text}]}>Periodo:</Text>{' '}
-                                {item.NombreMesEgreso} / {item.AnnoEgreso}
+                                {datositem.NombreMesEgreso} / {item.AnnoEgreso}
                             </Text>
                         </View>
 
@@ -181,20 +226,20 @@ function GastosDetalle ({ navigation }){
 
                             <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
-                                {item.TipoGasto} - {item.CategoriaGasto}
+                                {datositem.TipoGasto} / {datositem.CategoriaGasto}
                             </Text>
-                            <Divider />
+                            
                             <Divider />
     
-                            <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                            <Text style={[styles.contenedortexto,{ color: colors.text,fontSize:25,fontWeight:'bold'}]}>
                                 
-                                Gs. {Number(item.monto_gasto).toLocaleString('es-ES')}
+                                Gs. {Number(datositem.monto_gasto).toLocaleString('es-ES')}
                             </Text>
                             <Divider />
                             <Divider />
                             <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
-                                {item.NombreGasto}
+                                {datositem.NombreGasto}
                             </Text>
                             <Divider />
                             <Divider />
@@ -204,11 +249,11 @@ function GastosDetalle ({ navigation }){
 
                             <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
-                                {moment(item.fecha_gasto).format('DD/MM/YYYY')}
+                                {moment(datositem.fecha_gasto).format('DD/MM/YYYY')}
                             </Text>
                         </View>
 
-                        <Divider />
+                        
                         <Divider />
 
                         {item.anotacion ? (
@@ -217,17 +262,17 @@ function GastosDetalle ({ navigation }){
 
                                 <Text style={[{ color: colors.text}]}>
                                     <Text style={[{ color: colors.text}]}>Obs.:  </Text>{' '}
-                                    {item.anotacion}
+                                    {datositem.anotacion}
                                 </Text>
                             </View>
                             ) : null}
 
                         <View style={{alignItems:'center',justifyContent:'space-between',
-                                    marginBottom:20,marginTop:20,borderBottomWidth:1,paddingBottom:7,borderBottomColor:'white'}}>
+                                    marginBottom:20,marginTop:20,borderBottomWidth:2,paddingBottom:7,borderBottomColor:'white'}}>
                             
                             <Text style={[{ color: colors.text}]}>
                                 <Text style={[{ color: colors.text}]}>Creado:</Text>{' '}
-                                {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}
+                                {moment(datositem.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}
                             </Text>
                         </View>
                     </View>
