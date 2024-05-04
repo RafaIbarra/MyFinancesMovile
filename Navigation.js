@@ -20,7 +20,6 @@ import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
 import DrawerContent from "./componentes/DrawerContent/DrawerContent";
 import CloseSesion from "./componentes/Closesesion/closesesion";
-import GastosRegistro from "./componentes/Gastos/GastosRegistro";
 import GastosTransaccion from "./componentes/Gastos/GastosTransaccion";
 
 ////////////Storage

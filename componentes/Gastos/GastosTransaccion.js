@@ -1,11 +1,10 @@
 import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
-// import Animated from 'react-native-reanimated';
-// import { useNavigation } from '@react-navigation/native';
-import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal,Pressable } from "react-native";
+
+import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal } from "react-native";
 import { Button } from 'react-native-paper';
 import { TextInputMask } from 'react-native-masked-text';
-import RNPickerSelect from 'react-native-picker-select';
+
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 
@@ -36,13 +35,11 @@ function GastosTransaccion({ navigation }){
     const [textobusquedamodal,setTextobusquedamodal]=useState('')
     const [isFocusemodal, setIsFocusedmodal] = useState(false);
     const [modomodal, setModomodal] = useState(0);
+    const [modalplaceholder,setModalplaceholder]=useState()
 
     
     
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [mesprincipal,setMesprincipal]=useState(0)
-    const [annoprincipal,setAnnoprincipal]=useState(0)
-    const [listacategorias,setListacategorias]=useState([])
     const [listagastos,setListagastos]=useState([])
     const [codigoregistro,setCodigoregisto]=useState(0)
     const [optionscategoria, setOptionscategoria] = useState([]);
@@ -54,7 +51,6 @@ function GastosTransaccion({ navigation }){
     const[monto,setMonto]=useState('')
     const[anotacion,setAnotacion]=useState('')
     const [fechaegreso, setFechaegreso] = useState('');
-    const [titulomodal,setTitulomodal]=useState('')
     const [realizado,setRealizado]=useState(false)
     const [focus, setFocus] = useState(false)
 
@@ -68,31 +64,44 @@ function GastosTransaccion({ navigation }){
         setModomodal(1)
         toggleModal()
         
-        console.log(optionscategoria)
+        
         setDatamodal(optionscategoria)
         setDatamodalcompleto(optionscategoria)
-    }
+        setGastosel([])
+        setSelectedOptiongasto(0)
+        setModalplaceholder('Buscar Categoria..')
+        setTextobusquedamodal('')
+        setGastosel('')
+      }
     const seleccionopcionmodal=(itemsel)=>{
-        console.log('item seleccion')
-        console.log(itemsel.id)
+        
         if(modomodal===1){
 
-            setCategoriasel(itemsel)
+            setCategoriasel(itemsel.opcion)
             setSelectedOptioncategoria(itemsel.id)
+            const lista_gastos_categoria = listagastos.filter((pro) => pro.categoria === itemsel.id)
+
+            setOptionsgasto(lista_gastos_categoria.map(item => ({
+                opcion: item.nombre_gasto,
+                id: item.id
+              })));
         }else{
-            console.log('gasto')
+            setGastosel(itemsel.opcion)
+            setSelectedOptiongasto(itemsel.id)
         }
 
         toggleModal()
 
-    }
+      }
     const abrirgasto =()=>{
         setModomodal(2)
         toggleModal()
-        console.log(optionscategoria)
-        setDatamodal(optionscategoria)
-        setDatamodalcompleto(optionscategoria)
-    }
+        
+        setDatamodal(optionsgasto)
+        setDatamodalcompleto(optionsgasto)
+        setModalplaceholder('Buscar Gasto..')
+        setTextobusquedamodal('')
+      }
     
 
     const realizarbusquedamodal= (palabra)=>{
@@ -104,27 +113,6 @@ function GastosTransaccion({ navigation }){
           );
         setDatamodal(arrayencontrado)
       }
-
-    
-    const handleGoBack = () => {
-        navigation.goBack();
-      };
-    const SeleccionCategoria = (value) => {
-        setSelectedOptioncategoria(value);
-        setCategoriasel(value)
-        const lista_gastos_categoria = listagastos.filter((pro) => pro.categoria === value)
-
-        setOptionsgasto(lista_gastos_categoria.map(item => ({
-            label: item.nombre_gasto,
-            value: item.id
-          })));
-        
-      };
-    const SeleccionGasto = (value) => {
-        setSelectedOptiongasto(value);
-        setGastosel(value)
-        
-      };
 
     const handleTextChange = (formatted, extracted) => {
         const valorformato=formatted.replace(/[,.]/g, '')
@@ -143,7 +131,7 @@ function GastosTransaccion({ navigation }){
     const handleConfirm = (date) => {
         
         const fechaFormateada = new Date(date).toISOString().split('T')[0]
-        // console.warn("Fecha Formateada: ", fechaFormateada);
+        
         setFechaegreso(fechaFormateada)
         hideDatePicker();
       };
@@ -152,7 +140,7 @@ function GastosTransaccion({ navigation }){
         
         const datosregistrar = {
             codgasto:codigoregistro,
-            gasto:gasttosel,
+            gasto:selectedOptiongasto,
             monto:parseInt(monto,10),
             fecha:fechaegreso,
             anotacion:anotacion,
@@ -193,11 +181,7 @@ function GastosTransaccion({ navigation }){
     useEffect(() => {
 
         const cargardatos=async()=>{
-            const datestorage=await Handelstorage('obtenerdate');
-            const mes_storage=datestorage['datames']
-            const anno_storage=datestorage['dataanno']
-            setMesprincipal(mes_storage)
-            setAnnoprincipal(anno_storage)
+        
             const body = {};
             const endpoint='MisDatosRegistroEgreso/'
             const result = await Generarpeticion(endpoint, 'POST', body);
@@ -213,24 +197,25 @@ function GastosTransaccion({ navigation }){
                 setListagastos(result['data']['datosgastos'])
                 setCodigoregisto(item.id)
                 if(item.id===0){
-                  //setTitulomodal('Nuevo Registro')
+                  setCategoriasel('')
+                  setGastosel('')
 
                 }else{
                   const listadocategorias = result['data']['datosgastos']
-                  //setTitulomodal('Modificar Registro')
-                  setSelectedOptioncategoria(item.CodigoCategoriaGasto);
-                  setCategoriasel(item.CodigoCategoriaGasto)
+                  
+                  setSelectedOptioncategoria(item.CodigoCategoriaGasto) ;
+                  setCategoriasel(item.CategoriaGasto)
 
                   const lista_gastos_categoria = listadocategorias.filter((pro) => pro.categoria === item.CodigoCategoriaGasto)
                   
-
-                  setOptionsgasto(lista_gastos_categoria.map(a => ({
-                      label: a.nombre_gasto,
-                      value: a.id
-                    })));
+                  
+                  setOptionsgasto(lista_gastos_categoria.map(item => ({
+                    opcion: item.nombre_gasto,
+                    id: item.id
+                  })));
 
                   setSelectedOptiongasto(item.gasto);
-                  setGastosel(item.gasto)
+                  setGastosel(item.NombreGasto)
 
                   setMonto(item.monto_gasto)
                   setFechaegreso(item.fecha_gasto)
@@ -266,37 +251,15 @@ function GastosTransaccion({ navigation }){
                                 
                                 }}>
                       
-                      {/* <RNPickerSelect
-                              onValueChange={SeleccionCategoria}
-                              items={optionscategoria}
-                              useNativeAndroidPickerStyle={false}
-                              value={selectedOptioncategoria}
-                              placeholder={{ label: 'Categoria', value: null }}
-                              // Icon={}
-                              style={pickerSelectStyles}
-                              Icon={() => {
-                                return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
-                              }}
-                              pickerProps={{
-                                
-                                mode: 'dropdown', // Establece el modo del modal (dropdown o modal)
-                                animationType: 'slide', // Tipo de animación al abrir/cerrar el modal
-                                
-                                // Más props aquí...
-                              }}
-                                      
-                            /> */}
+         
                       <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
                           
                           <Text style={[styles.inputtextactivo, 
-                                        { width:'50%',
-                                          color: categoriasel.opcion ? colors.text : 'gray',
-                                          borderBottomColor: categoriasel.id ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                            onPress={showDatePicker} >
-                            {categoriasel.opcion ? categoriasel.opcion : 'Seleccione Categoria'}
-
-                            
-                            
+                                        { width:'85%',
+                                          color: categoriasel ? colors.text : 'gray',
+                                          borderBottomColor: categoriasel ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                             >
+                            {categoriasel ? categoriasel : 'Seleccione Categoria'}
                             </Text>
         
                           <TouchableOpacity 
@@ -312,11 +275,11 @@ function GastosTransaccion({ navigation }){
                       <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
                           
                           <Text style={[styles.inputtextactivo, 
-                                        { width:'50%',
-                                          color: categoriasel.opcion ? colors.text : 'gray',
-                                          borderBottomColor: categoriasel.id ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                            onPress={showDatePicker} >
-                            {categoriasel.opcion ? categoriasel.opcion : 'Seleccione Gasto'}
+                                        { width:'85%',
+                                          color: gasttosel ? colors.text : 'gray',
+                                          borderBottomColor: gasttosel ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                             >
+                            {gasttosel ? gasttosel : 'Seleccione Gasto'}
 
                             
                             
@@ -324,33 +287,16 @@ function GastosTransaccion({ navigation }){
         
                           <TouchableOpacity 
                             style={styles.botonfecha} 
-                            onPress={toggleModal}>         
+                            onPress={abrirgasto}>         
                               <FontAwesome name="search-plus" size={30} color={colors.iconcolor} />
                           </TouchableOpacity>
         
                           
         
                       </View>
-                      {/* <RNPickerSelect
-                              onValueChange={SeleccionGasto}
-                              items={optionsgasto}
-                              value={selectedOptiongasto}
-                              useNativeAndroidPickerStyle={false}
-                              placeholder={{ label: 'Gasto', value: null }}
-                              style={pickerSelectStyles}
-                              Icon={() => {
-                                return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
-                              }}
-                              pickerProps={{
-                                
-                                mode: 'dropdown', // Establece el modo del modal (dropdown o modal)
-                                animationType: 'slide', // Tipo de animación al abrir/cerrar el modal
-                                
-                                // Más props aquí...
-                              }}
-                            /> */}
-                      <TextInputMask
-                                  style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, borderBottomColor: isFocusedgasto ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                     
+                      <TextInputMask style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, 
+                                          borderBottomColor: isFocusedgasto ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
                                   type={'money'}
                                   options={{
                                     precision: 0, // Sin decimales
@@ -435,24 +381,21 @@ function GastosTransaccion({ navigation }){
                             animationType="slide" 
                             // animationDuration={2000}
                             >
-                        <TouchableOpacity
-                            style={styles.overlay}
-                            activeOpacity={1}
-                            onPress={toggleModal}
-                        />
+                            <TouchableOpacity
+                                style={styles.overlay}
+                                activeOpacity={1}
+                                onPress={toggleModal}
+                            />
 
-                        
-
-
-                            
                             <View style={[styles.modalContainer,{backgroundColor:'rgb(28,44,52)'}]}>
                                 <View style={{alignItems:'center',marginBottom:30,marginTop:5}}>
                                     <View style={{borderBottomWidth: 3,borderBottomColor: 'white',width:300,marginVertical: 10,}}></View>
                                     <View style={{borderBottomWidth: 1,borderBottomColor: 'white',width:250,marginVertical: 3,}}></View>
                                     <View></View>
                                 </View>
-                                <TextInput style={[{borderBottomWidth: 2,marginBottom:10,color: colors.text,backgroundColor:colors.backgroundInpunt, borderBottomColor: isFocusemodal ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
-                                    placeholder="Buscar Categoria..." 
+                                <TextInput style={[{borderBottomWidth: 2,marginBottom:10,color: colors.text,backgroundColor:colors.backgroundInpunt, 
+                                                    borderBottomColor: isFocusemodal ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                                    placeholder={modalplaceholder}
                                     placeholderTextColor='gray'
                                     value={textobusquedamodal}
                                     onChangeText={textobusquedamodal => realizarbusquedamodal(textobusquedamodal)}
@@ -461,24 +404,36 @@ function GastosTransaccion({ navigation }){
                                 > 
                                     
                                 </TextInput>
-                                <View style={{borderTopColor:colors.bordercolor,borderWidth:2,marginTop:10}} >
+                                <View style={{borderTopColor:colors.bordercolor,borderWidth:2,borderBottomLeftRadius:20,borderBottomRightRadius:20,marginTop:10,height:'70%'}} >
+                                  {
+                                    datamodal && datamodal.length > 0 ?(
 
-                                    <FlatList
-                                    data={datamodal}
-                                    renderItem={({item}) =>{
-                                        return(
-                                                <View style={{marginLeft:15,borderBottomWidth:1,borderBottomColor:'white',marginBottom:10,padding:10}} >
-
-                                                    <TouchableOpacity onPress={()=>seleccionopcionmodal(item)}>
-                                                        <Text style={{color:colors.text}}>{item.opcion}</Text>
-                                                    </TouchableOpacity>
-                                                </View>
-                                                )
-                                        }
-                                    }
-                                    keyExtractor={item => item.id}
-
-                                    />
+                                      <FlatList
+                                      data={datamodal}
+                                      renderItem={({item}) =>{
+                                          return(
+                                                  <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
+  
+                                                      <TouchableOpacity onPress={()=>seleccionopcionmodal(item)}>
+                                                          <Text style={{color:colors.text}}>{item.opcion}</Text>
+                                                      </TouchableOpacity>
+                                                  </View>
+                                                  )
+                                          }
+                                      }
+                                      keyExtractor={item => item.id}
+  
+                                      />
+                                    ) : (
+                                          <View style={{alignContent:'center',alignItems:'center',marginTop:'20%'}}> 
+                                            <Ionicons  name="warning" size={50} color="yellow" />
+                                            <Text style={{
+                                                          // color:'rgba(255,115,96,0.5)',
+                                                          color:'rgba(255,255,255,0.6)',
+                                                          fontSize:20}}> SELECCIONE LA CATEGORIA </Text>
+                                          </View>
+                                        )
+                                  }
                                 </View>
                         
                             </View>
@@ -517,8 +472,8 @@ const styles = StyleSheet.create({
     paddingRight:20,
     position: 'absolute',
     bottom: 0,
-    left: 0,
-    right: 0,
+    left: 5,
+    right: 5,
     height:'50%',
     borderTopLeftRadius:50,
     borderTopRightRadius:50,
@@ -562,23 +517,18 @@ const styles = StyleSheet.create({
     color: 'black',
   },
     botonfecha:{
-      // backgroundColor: 'blue',
-      width: 50, // Define el ancho del botón
-      height: 35, // Define la altura del botón
-      //borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
-      // borderWidth:1,
-      // borderColor:'black',
-      // justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
-      // alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
+      width: 50, 
+      height: 35, 
+
       marginLeft:'5%',
       marginBottom:27
     },
     botoncomando:{
       backgroundColor: 'blue',
-      width: 50, // Define el ancho del botón
-      height: 40, // Define la altura del botón
-      borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
-      justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
+      width: 50, 
+      height: 40, 
+      borderRadius: 5, 
+      justifyContent: 'center', 
       alignItems: 'center',
       marginRight:100
     }
