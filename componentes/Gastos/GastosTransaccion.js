@@ -2,7 +2,7 @@ import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 
 import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal } from "react-native";
-import { Button } from 'react-native-paper';
+import { Button, Dialog, Portal,PaperProvider } from 'react-native-paper';
 import { TextInputMask } from 'react-native-masked-text';
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -53,6 +53,12 @@ function GastosTransaccion({ navigation }){
     const [fechaegreso, setFechaegreso] = useState('');
     const [realizado,setRealizado]=useState(false)
     const [focus, setFocus] = useState(false)
+
+    const [visibledialogo, setVisibledialogo] = useState(false)
+    const[mensajeerror,setMensajeerror]=useState('')
+
+    const showDialog = () => setVisibledialogo(true);
+    const hideDialog = () => setVisibledialogo(false);
 
     const toggleModal = () => {
         setEstadomodal(!estadomodal);
@@ -164,8 +170,11 @@ function GastosTransaccion({ navigation }){
           await Handelstorage('borrar')
           await new Promise(resolve => setTimeout(resolve, 1000))
           setActivarsesion(false)
+        } else{
+         setMensajeerror( result['data']['error'])
+         showDialog(true)
         }
-        // setRecargadatos(!recargadatos)
+        
 
      };
 
@@ -240,8 +249,25 @@ function GastosTransaccion({ navigation }){
 
     if(realizado){
         return(
+
+          <PaperProvider >
             <View style={{flex: 1,justifyContent:'flex-start',marginTop:75}}>
                   
+                <Portal>
+
+                  <Dialog visible={visibledialogo} onDismiss={hideDialog}>
+                      <Dialog.Icon icon="alert-circle" size={50} color="red"/>
+                      <Dialog.Title>ERROR</Dialog.Title>
+                      <Dialog.Content>
+                          <Text variant="bodyMedium">{mensajeerror}</Text>
+                          
+                      </Dialog.Content>
+                      <Dialog.Actions>
+                          <Button onPress={hideDialog}>OK</Button>
+                          
+                      </Dialog.Actions>
+                  </Dialog>
+                </Portal>
                   
                   <ScrollView style={{padding:10,
                                 maxHeight:350,
@@ -375,78 +401,74 @@ function GastosTransaccion({ navigation }){
                   </Button>
 
                   
-                    <Modal visible={estadomodal} 
-                            transparent={true} 
-                            onRequestClose={toggleModal}
-                            animationType="slide" 
-                            // animationDuration={2000}
-                            >
-                            <TouchableOpacity
-                                style={styles.overlay}
-                                activeOpacity={1}
-                                onPress={toggleModal}
-                            />
+                  <Modal visible={estadomodal} 
+                          transparent={true} 
+                          onRequestClose={toggleModal}
+                          animationType="slide" 
+                          // animationDuration={2000}
+                          >
+                          <TouchableOpacity
+                              style={styles.overlay}
+                              activeOpacity={1}
+                              onPress={toggleModal}
+                          />
 
-                            <View style={[styles.modalContainer,{backgroundColor:'rgb(28,44,52)'}]}>
-                                <View style={{alignItems:'center',marginBottom:30,marginTop:5}}>
-                                    <View style={{borderBottomWidth: 3,borderBottomColor: 'white',width:300,marginVertical: 10,}}></View>
-                                    <View style={{borderBottomWidth: 1,borderBottomColor: 'white',width:250,marginVertical: 3,}}></View>
-                                    <View></View>
-                                </View>
-                                <TextInput style={[{borderBottomWidth: 2,marginBottom:10,color: colors.text,backgroundColor:colors.backgroundInpunt, 
-                                                    borderBottomColor: isFocusemodal ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
-                                    placeholder={modalplaceholder}
-                                    placeholderTextColor='gray'
-                                    value={textobusquedamodal}
-                                    onChangeText={textobusquedamodal => realizarbusquedamodal(textobusquedamodal)}
-                                    onFocus={() => setIsFocusedmodal(true)}
-                                    onBlur={() => setIsFocusedmodal(false)}
-                                > 
-                                    
-                                </TextInput>
-                                <View style={{borderTopColor:colors.bordercolor,borderWidth:2,borderBottomLeftRadius:20,borderBottomRightRadius:20,marginTop:10,height:'70%'}} >
-                                  {
-                                    datamodal && datamodal.length > 0 ?(
+                          <View style={[styles.modalContainer,{backgroundColor:'rgb(28,44,52)'}]}>
+                              <View style={{alignItems:'center',marginBottom:30,marginTop:5}}>
+                                  <View style={{borderBottomWidth: 3,borderBottomColor: 'white',width:300,marginVertical: 10,}}></View>
+                                  <View style={{borderBottomWidth: 1,borderBottomColor: 'white',width:250,marginVertical: 3,}}></View>
+                                  <View></View>
+                              </View>
+                              <TextInput style={[{borderBottomWidth: 2,marginBottom:10,color: colors.text,backgroundColor:colors.backgroundInpunt, 
+                                                  borderBottomColor: isFocusemodal ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                                  placeholder={modalplaceholder}
+                                  placeholderTextColor='gray'
+                                  value={textobusquedamodal}
+                                  onChangeText={textobusquedamodal => realizarbusquedamodal(textobusquedamodal)}
+                                  onFocus={() => setIsFocusedmodal(true)}
+                                  onBlur={() => setIsFocusedmodal(false)}
+                              > 
+                                  
+                              </TextInput>
+                              <View style={{borderTopColor:colors.bordercolor,borderWidth:2,borderBottomLeftRadius:20,borderBottomRightRadius:20,marginTop:10,height:'70%'}} >
+                                {
+                                  datamodal && datamodal.length > 0 ?(
 
-                                      <FlatList
-                                      data={datamodal}
-                                      renderItem={({item}) =>{
-                                          return(
-                                                  <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
-  
-                                                      <TouchableOpacity onPress={()=>seleccionopcionmodal(item)}>
-                                                          <Text style={{color:colors.text}}>{item.opcion}</Text>
-                                                      </TouchableOpacity>
-                                                  </View>
-                                                  )
-                                          }
-                                      }
-                                      keyExtractor={item => item.id}
-  
-                                      />
-                                    ) : (
-                                          <View style={{alignContent:'center',alignItems:'center',marginTop:'20%'}}> 
-                                            <Ionicons  name="warning" size={50} color="yellow" />
-                                            <Text style={{
-                                                          // color:'rgba(255,115,96,0.5)',
-                                                          color:'rgba(255,255,255,0.6)',
-                                                          fontSize:20}}> SELECCIONE LA CATEGORIA </Text>
-                                          </View>
-                                        )
-                                  }
-                                </View>
-                        
-                            </View>
-                        
+                                    <FlatList
+                                    data={datamodal}
+                                    renderItem={({item}) =>{
+                                        return(
+                                                <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
 
+                                                    <TouchableOpacity onPress={()=>seleccionopcionmodal(item)}>
+                                                        <Text style={{color:colors.text}}>{item.opcion}</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                )
+                                        }
+                                    }
+                                    keyExtractor={item => item.id}
 
-
-
-                    </Modal>
+                                    />
+                                  ) : (
+                                        <View style={{alignContent:'center',alignItems:'center',marginTop:'20%'}}> 
+                                          <Ionicons  name="warning" size={50} color="yellow" />
+                                          <Text style={{
+                                                        // color:'rgba(255,115,96,0.5)',
+                                                        color:'rgba(255,255,255,0.6)',
+                                                        fontSize:20}}> SELECCIONE LA CATEGORIA </Text>
+                                        </View>
+                                      )
+                                }
+                              </View>
+                      
+                          </View>
+                  </Modal>
                 
                
 
             </View>
+          </PaperProvider>
         )
     }
 }

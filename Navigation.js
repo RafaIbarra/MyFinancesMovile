@@ -9,7 +9,8 @@ import { StyleSheet,Button  } from "react-native";
 import { View,Text,TouchableOpacity } from "react-native";
 
 //Componentes///////////////
-import Resumen from "./componentes/Resumen/Resumen";
+// import Resumen from "./componentes/Resumen/Resumen";
+import ResumenPeriodo from "./componentes/ResumenPeriodo/ResumenPeriodo";
 import Gastos from "./componentes/Gastos/Gastos";
 import GastosDetalle from "./componentes/GastosDetalle/GastosDetalle";
 import Ingresos from "./componentes/Ingresos/Ingresos";
@@ -106,7 +107,7 @@ function DrawerGroup({sesionname}) {
       screenOptions={{ headerShown: false }} 
       >
         <Tab.Screen name="Home2" 
-          component={Resumen}
+          component={ResumenPeriodo}
           options={{
             tabBarIcon: ({focused, color, size }) => {
               let nombrreico
@@ -232,7 +233,7 @@ function HomeStackGroup(){
 
     <HomeStack.Navigator >
     <HomeStack.Screen name="Resumen" component={TabsGroup} options={{ headerShown: false }}/>
-    <HomeStack.Screen name="ResumenDatos" component={Resumen}/>
+    <HomeStack.Screen name="ResumenMesOperaciones" component={ResumenPeriodo}/>
     <HomeStack.Screen name="IngresosGroup" component={Ingresos} />
     <HomeStack.Screen name="Gastos" component={Gastos} />
 
@@ -336,7 +337,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     marginTop:5,
-    backgroundColor:'rgba(78,78,78,0.2)',
+    // backgroundColor:'rgba(78,78,78,0.2)',
+    backgroundColor:'rgba(44,148,228,0.5)',
     borderWidth:1,
     bordercolor:'rgba(78,78,78,0.2)',
     borderRadius:10

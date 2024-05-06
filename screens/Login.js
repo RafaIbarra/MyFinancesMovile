@@ -65,6 +65,14 @@ function Login ({setSesionname}){
             }
             await Handelstorage('agregar',userdata,'')
             setSesionname(datos['data']['user_name'])
+            const datestorage=await Handelstorage('obtenerdate');
+            const mes_storage=datestorage['datames']
+            const anno_storage=datestorage['dataanno']
+            if(mes_storage ===0 || anno_storage===0){
+
+                await new Promise(resolve => setTimeout(resolve, 1000))
+
+            }
             setActivarsesion(true)
             
            
