@@ -4,7 +4,7 @@ import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import { useTheme } from '@react-navigation/native';
 import { AuthContext } from "../../AuthContext";
-
+import ImagenEstadistica from "./ImagenEstadistica";
 
 
 function Estadisticas ({ navigation  }){
@@ -24,7 +24,7 @@ function Estadisticas ({ navigation  }){
               const anno_storage=datestorage['dataanno']
 
               const body = {};
-              const endpoint='EstadisticasMes/' + anno_storage +'/' + mes_storage + '/'
+              const endpoint='MovileEstadisticaMesSaldo/' + anno_storage +'/' + mes_storage + '/'
               const result = await Generarpeticion(endpoint, 'POST', body);
               const respuesta=result['resp']
               if (respuesta === 200){
@@ -33,8 +33,8 @@ function Estadisticas ({ navigation  }){
                 const registros=result['data']
               
                 setImgresumen(registros[0].imgResumen)
-                setImgingreso(registros[0].imgIngresos)
-                setImgegreso(registros[0].imgEgresos)
+                // setImgingreso(registros[0].imgIngresos)
+                // setImgegreso(registros[0].imgEgresos)
                   
 
                   
@@ -64,14 +64,36 @@ function Estadisticas ({ navigation  }){
 
             return(
             <View  style={{ flex: 1}}>
-                <Text> Estaditicas del mes </Text>
-                <Image
-                    source={{ uri: `data:image/png;base64,${imgegreso}` }}
-                    style={{ width: 200, height: 200 }} // Ajusta el tamaño según sea necesario
-                />
+                
+                <ImagenEstadistica imgprops={imgresumen}></ImagenEstadistica>
+
+                {/* <View style={styles.container}>
+
+                    <Image
+                        source={{ uri: `data:image/png;base64,${imgingreso}` }}
+                        style={styles.image}
+                        resizeMode="contain"
+                    />
+                </View> */}
+
+                
             </View>
             )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+      width: '100%', // Ancho deseado para el View
+      height: '90%', // Altura deseada para el View
+      justifyContent: 'center', // Alinea la imagen en el centro horizontalmente
+      alignItems: 'center', // Alinea la imagen en el centro verticalmente
+    },
+    image: {
+      flex: 1, // Hace que la imagen se ajuste al tamaño del View
+      width: '130%', // Ancho de la imagen igual al 100% del View
+      height: '150%', // Altura de la imagen igual al 100% del View
+    },
+  });
 
 export default Estadisticas

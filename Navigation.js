@@ -3,6 +3,7 @@ import {NavigationContainer,DefaultTheme} from "@react-navigation/native";
 
 import { useTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { StyleSheet,Button  } from "react-native";
@@ -98,13 +99,13 @@ function DrawerGroup({sesionname}) {
     );
   }
 
-
+  const Tab = createBottomTabNavigator();
 
   function TabsGroup({ navigation }) {
     const { colors } = useTheme();
     return (
       <Tab.Navigator 
-      screenOptions={{ headerShown: false }} 
+      // screenOptions={{ headerShown: false }} 
       >
         <Tab.Screen name="Home2" 
           component={ResumenPeriodo}
@@ -125,7 +126,8 @@ function DrawerGroup({sesionname}) {
               return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
             },
             headerTitle:'Resumen',
-            unmountOnBlur: true
+            unmountOnBlur: true,
+            headerShown:false
           }}
           
         />
@@ -146,7 +148,8 @@ function DrawerGroup({sesionname}) {
             titulolabel = focused ? "Ingresos" : "";
             return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
           },
-          unmountOnBlur: true
+          unmountOnBlur: true,
+          headerShown:false
         }}
 
          />
@@ -168,7 +171,8 @@ function DrawerGroup({sesionname}) {
             titulolabel = focused ? "Gastos" : "";
             return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
           },
-          unmountOnBlur: true
+          unmountOnBlur: true,
+          headerShown:false
         }}
          />
 
@@ -190,12 +194,13 @@ function DrawerGroup({sesionname}) {
               titulolabel = focused ? "Saldos" : "";
               return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
             },
-            unmountOnBlur: true
+            unmountOnBlur: true,
+            headerShown:false
           }}
          />
 
        <Tab.Screen name="Estadisticas"
-          component={Estadisticas} 
+          component={OpcionesTabEstadisticas} 
           options={{
             tabBarIcon: ({focused, color, size }) => {
               let nombrreico
@@ -212,7 +217,8 @@ function DrawerGroup({sesionname}) {
               titulolabel = focused ? "Estadisticas" : "";
               return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
             },
-            unmountOnBlur: true
+            headerTitleAlign:'center'
+            // unmountOnBlur: true
           }}
         />
 
@@ -220,7 +226,7 @@ function DrawerGroup({sesionname}) {
       </Tab.Navigator>
     );
   }
-const Tab = createBottomTabNavigator();
+
 
 
 
@@ -307,6 +313,65 @@ function TabsIngresosGroup({ navigation }) {
       {/* <TabIngresos.Screen name="Settings" component={IngresosDetalle} /> */}
     </TabIngresos.Navigator>
   )
+}
+
+const TabEstadisticas=createMaterialTopTabNavigator()
+function OpcionesTabEstadisticas({navigation}){
+
+  return(
+
+  <TabEstadisticas.Navigator
+
+  screenOptions={
+    {
+      "tabBarIndicatorStyle": {
+        "backgroundColor": "rgb(44,148,228)"
+      },
+      tabBarLabelStyle: { fontSize: 16 },
+      // tabBarInactiveTintColor:'gray',
+      
+    
+      
+    }
+    
+
+  }
+  >
+
+    <TabEstadisticas.Screen 
+      name="EstadisticasSaldo" 
+      component={Estadisticas}
+      options={{
+        title:'SALDOS',
+
+        
+        
+        unmountOnBlur:true ,
+      
+      }}
+    >
+    </TabEstadisticas.Screen>
+
+    <TabEstadisticas.Screen name="EstadisticasIngreso" component={Estadisticas}
+    options={{
+      title:'Ingresos',
+      unmountOnBlur:true
+    }}
+    >
+
+    </TabEstadisticas.Screen>
+
+    <TabEstadisticas.Screen name="EstadisticasEgreso" component={Estadisticas}
+    options={{
+      title:'Gastos',
+      unmountOnBlur:true
+    }}
+    >
+
+    </TabEstadisticas.Screen>
+  </TabEstadisticas.Navigator>
+  )
+
 }
 
 function Navigation( {sesionname}){
