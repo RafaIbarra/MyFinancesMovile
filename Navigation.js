@@ -15,6 +15,7 @@ import ResumenPeriodo from "./componentes/ResumenPeriodo/ResumenPeriodo";
 import Gastos from "./componentes/Gastos/Gastos";
 import GastosDetalle from "./componentes/GastosDetalle/GastosDetalle";
 import Ingresos from "./componentes/Ingresos/Ingresos";
+import IngresoTransaccion from "./componentes/Ingresos/IngresoTransaccion";
 import IngresosAgregar from "./componentes/Ingresos/IngresosAgregar";
 // import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
 import IngresoDetalle from "./componentes/Ingresos/IngresoDetalle";
@@ -301,6 +302,14 @@ function HomeStackGroup(){
                       
                     }}
     />
+
+  <HomeStack.Screen name="IngresoTransaccion" 
+                        component={IngresoTransaccion} 
+                        options={{headerTitle:'Registro Ingresos',
+                        headerTitleAlign:'center',
+                        
+                      }}
+      />
     
     
   </HomeStack.Navigator>

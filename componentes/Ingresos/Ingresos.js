@@ -45,7 +45,7 @@ function Ingresos ({ navigation  }){
           rotationValue.setValue(0);
         });
         const item={'id':0}
-        navigate("GastosRegistro", { item})
+        navigate("IngresoTransaccion", { item})
         
       };
     
