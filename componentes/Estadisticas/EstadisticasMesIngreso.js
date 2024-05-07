@@ -7,11 +7,12 @@ import { AuthContext } from "../../AuthContext";
 import ImagenEstadistica from "./ImagenEstadistica";
 
 
-function Estadisticas ({ navigation  }){
+function EstadisticasMesIngreso ({ navigation  }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { colors } = useTheme();
     const [cargacompleta,setCargacopleta]=useState(false)
-    const [imgresumen,setImgresumen]=useState([])
+    
+    const [imgingreso,setImgingreso]=useState([])
     
 
     useEffect(() => {
@@ -23,16 +24,16 @@ function Estadisticas ({ navigation  }){
               const anno_storage=datestorage['dataanno']
 
               const body = {};
-              const endpoint='MovileEstadisticaMesSaldo/' + anno_storage +'/' + mes_storage + '/'
+              const endpoint='MovileEstadisticaMesIngreso/' + anno_storage +'/' + mes_storage + '/'
               const result = await Generarpeticion(endpoint, 'POST', body);
               const respuesta=result['resp']
               if (respuesta === 200){
     
-                  
+    
                 const registros=result['data']
-              
-                setImgresumen(registros[0].imgResumen)  
-                  
+            
+                setImgingreso(registros[0].imgIngresos)
+            
               }else if(respuesta === 403 || respuesta === 401){
                   
                   
@@ -57,7 +58,7 @@ function Estadisticas ({ navigation  }){
             return(
             <View  style={{ flex: 1}}>
                 
-                <ImagenEstadistica imgprops={imgresumen}></ImagenEstadistica>
+                <ImagenEstadistica imgprops={imgingreso}></ImagenEstadistica>
 
                 {/* <View style={styles.container}>
 
@@ -76,4 +77,4 @@ function Estadisticas ({ navigation  }){
 
 
 
-export default Estadisticas
+export default EstadisticasMesIngreso

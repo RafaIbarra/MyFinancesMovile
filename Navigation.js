@@ -16,13 +16,16 @@ import Gastos from "./componentes/Gastos/Gastos";
 import GastosDetalle from "./componentes/GastosDetalle/GastosDetalle";
 import Ingresos from "./componentes/Ingresos/Ingresos";
 import IngresosAgregar from "./componentes/Ingresos/IngresosAgregar";
-import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
+// import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
+import IngresoDetalle from "./componentes/Ingresos/IngresoDetalle";
 import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
 import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
 import DrawerContent from "./componentes/DrawerContent/DrawerContent";
 import CloseSesion from "./componentes/Closesesion/closesesion";
 import GastosTransaccion from "./componentes/Gastos/GastosTransaccion";
+import EstadisticasMesEgreso from "./componentes/Estadisticas/EstadisticasMesEgreso";
+import EstadisticasMesIngreso from "./componentes/Estadisticas/EstadisticasMesIngreso";
 
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
@@ -241,6 +244,30 @@ function HomeStackGroup(){
     <HomeStack.Screen name="Resumen" component={TabsGroup} options={{ headerShown: false }}/>
     <HomeStack.Screen name="ResumenMesOperaciones" component={ResumenPeriodo}/>
     <HomeStack.Screen name="IngresosGroup" component={Ingresos} />
+    <HomeStack.Screen name="IngresoDetalle" 
+      component={IngresoDetalle} 
+      options={{headerTitle:'Detalle del Ingreso',
+      headerTitleAlign:'left',
+      // headerRight: () => <Button title="Update count" name='count' />,
+      headerRight: () => (
+        <View style={{flexDirection: 'row',alignItems: 'center'}}>
+          <TouchableOpacity style={{ marginRight: 20 }}>
+              <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+          </TouchableOpacity>
+
+
+
+
+          <TouchableOpacity style={{ marginRight: 10 }} >
+            <AntDesign name="edit" size={30} color="white" />
+          </TouchableOpacity>
+        </View>
+      ),
+
+    }}
+
+    
+      />
     <HomeStack.Screen name="Gastos" component={Gastos} />
 
     <HomeStack.Screen name="GastosDetalle" 
@@ -282,38 +309,8 @@ function HomeStackGroup(){
 
 
 
-const TabIngresos = createBottomTabNavigator();
-function TabsIngresosGroup({ navigation }) {
-  return (
-    <TabIngresos.Navigator
-      screenOptions={({ route }) => ({
-         headerTitleAlign: "center",
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === "Home2") {
-            iconName = focused ? "home" : "home-outline";
-          } else if (route.name === "Settings") {
-            iconName = focused ? "settings" : "settings";
-          } else if (route.name === "Notifications") {
-            iconName = focused ? "notifications-outline" : "notifications-outline";
-          }
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        tabBarActiveTintColor: "#1DA1F2",
-        tabBarInactiveTintColor: "gray",
-      })}
-    >
-      <TabIngresos.Screen
-        name="Ingresos" component={Ingresos}
-        
-        
-      />
-      <TabIngresos.Screen name="Notifications" component={IngresosAgregar} />
-      {/* <TabIngresos.Screen name="Settings" component={IngresosDetalle} /> */}
-    </TabIngresos.Navigator>
-  )
-}
+
+
 
 const TabEstadisticas=createMaterialTopTabNavigator()
 function OpcionesTabEstadisticas({navigation}){
@@ -327,11 +324,7 @@ function OpcionesTabEstadisticas({navigation}){
       "tabBarIndicatorStyle": {
         "backgroundColor": "rgb(44,148,228)"
       },
-      tabBarLabelStyle: { fontSize: 16 },
-      // tabBarInactiveTintColor:'gray',
-      
-    
-      
+      tabBarLabelStyle: { fontSize: 14 },
     }
     
 
@@ -343,16 +336,12 @@ function OpcionesTabEstadisticas({navigation}){
       component={Estadisticas}
       options={{
         title:'SALDOS',
-
-        
-        
         unmountOnBlur:true ,
-      
       }}
     >
     </TabEstadisticas.Screen>
 
-    <TabEstadisticas.Screen name="EstadisticasIngreso" component={Estadisticas}
+    <TabEstadisticas.Screen name="EstadisticasIngreso" component={EstadisticasMesIngreso}
     options={{
       title:'Ingresos',
       unmountOnBlur:true
@@ -361,7 +350,7 @@ function OpcionesTabEstadisticas({navigation}){
 
     </TabEstadisticas.Screen>
 
-    <TabEstadisticas.Screen name="EstadisticasEgreso" component={Estadisticas}
+    <TabEstadisticas.Screen name="EstadisticasEgreso" component={EstadisticasMesEgreso}
     options={{
       title:'Gastos',
       unmountOnBlur:true

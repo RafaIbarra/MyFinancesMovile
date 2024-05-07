@@ -1,51 +1,135 @@
-import React,{useState,useEffect} from "react";
-
-import {  View,Text, StyleSheet,FlatList, SafeAreaView } from "react-native";
+import React,{useState,useEffect,useContext,useRef } from "react";
+import { useNavigation } from "@react-navigation/native";
+import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
 import { IconButton } from 'react-native-paper';
+import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import ModalIngreso from "./modalingresos";
 
-function Ingresos (){
+import { AuthContext } from "../../AuthContext";
+import { useTheme } from '@react-navigation/native';
+
+/*Iconos*/
+import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+
+
+function Ingresos ({ navigation  }){
+
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const [busqueda,setBusqueda]=useState(false)
+    const [textobusqueda,setTextobusqueda]=useState('')
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const [rotationValue] = useState(new Animated.Value(0));
+    const { colors } = useTheme();
 
     const [cargacompleta,setCargacopleta]=useState(false)
     const [dataingresos,setDataingresos]=useState([])
-    const [openmodal,setOpenModal]=useState(false)
-    const abrirmodal=()=>{
-        setOpenModal(true)
+    const [dataingresoscompleto,setDataingresoscompleto]=useState([])
+    const [montototalingreso,setMontototalingreso]=useState(0)
+    const [canttotalingreso,setcanttotalingreso]=useState(0)
+    const { navigate } = useNavigation();
+
+
+    const handlePress = () => {
+        
+        Animated.timing(rotationValue, {
+          toValue: 1,
+          duration: 200, // Duración de la animación en milisegundos
+          useNativeDriver: true,
+        }).start(() => {
+          // Restaura la animación a su estado original
+          rotationValue.setValue(0);
+        });
+        const item={'id':0}
+        navigate("GastosRegistro", { item})
+        
+      };
+    
+      // Interpola el valor de rotación para aplicarlo al estilo de transformación del icono
+    const spin = rotationValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '360deg'],
+      } 
+    );
+
+
+    const openbusqueda =()=>{
+         setBusqueda(true);
+        // Inicia la animación para mostrar el cuadro de búsqueda
+        Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 700, // Duración de la animación en milisegundos
+        useNativeDriver: false,
+        }).start();
     }
+
+    const closebusqueda=()=>{
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: false,
+      }).start(() => setBusqueda(false));
+      realizarbusqueda('')
+    }
+
+    const realizarbusqueda= (palabra)=>{
+      setTextobusqueda(palabra)
+      const pal =palabra.toLowerCase()
+      let arrayencontrado = dataingresoscompleto.filter(item => 
+        item.NombreIngreso.toLowerCase().includes(pal)
+        );
+      setDataingresos(arrayencontrado)
+    }
+   
     useEffect(() => {
-
-        const cargardatos=async()=>{
-            const datestorage=await Handelstorage('obtenerdate');
-            const mes_storage=datestorage['datames']
-            const anno_storage=datestorage['dataanno']
-            const body = {};
-            const endpoint='MovileMisIngresos/' + anno_storage +'/' + mes_storage + '/'
-            const result = await Generarpeticion(endpoint, 'POST', body);
-            const respuesta=result['resp']
-            if (respuesta === 200){
-                const registros=result['data']
+        const unsubscribe = navigation.addListener('focus', () => {
+            const cargardatos=async()=>{
+                const datestorage=await Handelstorage('obtenerdate');
+                const mes_storage=datestorage['datames']
+                const anno_storage=datestorage['dataanno']
+                const body = {};
+                const endpoint='MovileMisIngresos/' + anno_storage +'/' + mes_storage + '/'
+                const result = await Generarpeticion(endpoint, 'POST', body);
+                const respuesta=result['resp']
+                if (respuesta === 200){
+                    const registros=result['data']
+                    
+                    if(Object.keys(registros).length>0){
+                        registros.forEach((elemento) => {
+                        
+                        elemento.key = elemento.id;
+                        elemento.recarga='no'
+                        })
+                        
+                        setDataingresos(registros)
+                        setDataingresoscompleto(registros)
+                        let totalingreso=0
+                        let cantingreso=0
+                        registros.forEach(({ monto_ingreso }) => {totalingreso += monto_ingreso,cantingreso+=1})
+                        setMontototalingreso(totalingreso)
+                        setcanttotalingreso(cantingreso)
+                    }
+                    
+                }else if(respuesta === 403 || respuesta === 401){
                 
-                if(Object.keys(registros).length>0){
-                    registros.forEach((elemento) => {
-                      
-                      elemento.key = elemento.id;
-                    })
-                    // console.log(registros)
-                    setDataingresos(registros)
+                
+                    await Handelstorage('borrar')
+                    await new Promise(resolve => setTimeout(resolve, 1000))
+                    setActivarsesion(false)
                 }
-                
-            }else{
-                console.log(respuesta)
-            }
-            setCargacopleta(true)
+                setCargacopleta(true)
 
-           
-        }
-        cargardatos()
-      }, []);
+            
+            }
+            cargardatos()
+
+         })
+        return unsubscribe;
+    }, [navigation]);
     
     
     
@@ -54,34 +138,110 @@ function Ingresos (){
         return(
             <SafeAreaView style={{ flex: 1 }}>
 
-                <View  style={styles.container}>
-                    <FlatList
-                        data={dataingresos}
-                        renderItem={({item}) =>{
-                            return(
-                                <View style={styles.contenedordatos}>
-                                    <View style={[styles.columna, { flex: 4 }]}> 
+                <View style={{ flex: 1 }}>    
+                    <View style={styles.cabeceracontainer}>
 
-                                        <Text> Descripcion: {item.NombreIngreso}</Text>
-                                        <Text> Fecha Ingreso: {item.fecha_ingreso}</Text>
-                                        <Text> Total: {item.monto_ingreso}</Text>
-                                        <Text> Fecha Registro: {item.fecha_registro}</Text>
-                                    </View>
+                        {!busqueda &&( 
+                            <TouchableOpacity onPress={openbusqueda}>
+                                
+                                <FontAwesome name="search" size={24} color={colors.iconcolor}/>
+                                
+                            </TouchableOpacity>
+                        )}
+                        {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.text}]}>Registro Ingresos</Text>)}
 
-                                    <View style={[styles.columna, { flex: 1 }]}> 
-                                        <IconButton icon="delete-circle-outline"size={20}mode="contained"onPress={() => console.log('Pressed')}/>
-                                        <IconButton icon='pencil-circle-outline'size={20} mode="contained"onPress={() => console.log('Pressed')}/>
-                                    </View>
-                                </View>
-                            )
+
+                        {busqueda &&(
+
+                            <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
+                            <TextInput 
+                                    style={{color:'white',padding:5,
+                                            // backgroundColor:'rgba(28,44,52,0.1)'
+                                            //backgroundColor:'red', 
+                                            flex: 1,}} 
+                                    placeholder="Concepto.."
+                                    placeholderTextColor='gray'
+                                    value={textobusqueda}
+                                    onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                                    >
+
+                            </TextInput>
+
+                            <TouchableOpacity style={{ position: 'absolute',right: 10,}} onPress={closebusqueda} >  
+                                <AntDesign name="closecircleo" size={20} color={colors.iconcolor} />
+                            </TouchableOpacity>
+                            </Animated.View>
+                        )
                         }
-                    }
-                        keyExtractor={item => item.key}
-                    />
-                    <View style={styles.fixedButtonsContainer}>
-                        <IconButton icon="plus-circle-outline"size={30}mode="contained" onPress={abrirmodal}/>
+
+                            
+                        <TouchableOpacity style={[styles.botoncabecera,
+                                                { 
+                                                // backgroundColor: colors.iconcolor
+                                                backgroundColor:'rgb(218,165,32)'
+                                                }]} onPress={handlePress}
+                        >
+                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                                <FontAwesome6 name="add" size={24} color="white" />
+                            </Animated.View>
+                        </TouchableOpacity>
                     </View>
-                    {openmodal &&(<ModalIngreso></ModalIngreso>)}
+
+                    
+                    <View  style={styles.container}>
+
+                            <FlatList 
+                                data={dataingresos}
+                                renderItem={({item}) =>{
+                                    return(
+                                        <TouchableOpacity  style={[styles.contenedordatos
+                                                                ,{ 
+                                                                    // borderColor : colors.bordercolor,
+                                                                    borderRightColor: colors.bordercolor,
+                                                                    borderBottomColor:'rgba(235,234,233,0.1)'
+                                                                }]} 
+                                        
+                                        onPress={() => {navigate('IngresoDetalle', { item });}}
+                                        
+                                        >
+                                            <View style={[styles.columna, { flex: 2 }]}> 
+                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Tipo: {item.TipoIngreso}</Text>
+                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreIngreso}</Text>
+                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Ingreso: {moment(item.fecha_ingreso).format('DD/MM/YYYY')}</Text>
+                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                                
+                                                
+                                            </View>
+
+                                            <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
+
+                                                <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_ingreso).toLocaleString('es-ES')} </Text>
+                                                
+                                            </View>
+                                        </TouchableOpacity >
+                                    )
+                                }
+                            }
+                                keyExtractor={item => item.key}
+                            />
+                        
+                    </View>
+
+
+
+                    <View style={styles.resumencontainer}>
+
+                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                            <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
+                            {Number(canttotalingreso).toLocaleString('es-ES')}
+                        </Text>
+                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                            <Text style={styles.labeltext}>Total Ingreso:</Text>{' '}
+                            {Number(montototalingreso).toLocaleString('es-ES')} Gs.
+                        </Text>
+                        
+                    </View>
+
                 </View>
             </SafeAreaView>
     
@@ -90,39 +250,124 @@ function Ingresos (){
     }
 }
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-    },
-    scrollContainer: {
-      flex: 1,
-    },
-    scrollContent: {
-      padding: 16,
-      // Agrega estilos adicionales según sea necesario
-    },
-    fixedButtonsContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      padding: 16,
-      backgroundColor: '#fff', // Puedes cambiar el color de fondo si es necesario
-      borderTopWidth: 1,
-      borderTopColor: '#ccc', // Puedes cambiar el color de la línea superior
-    },
-    contenedordatos:{
+    
+    cabeceracontainer: {
         flexDirection: 'row',
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        // borderBottomColor: 'lightgray',
+        
+      },
+    gradient: {
+        flex: 1,
+        // justifyContent: 'center',
+        // alignItems: 'center',
+      },
+    titulocabecera: {
+        flex: 1,
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        // color:'white'
+      },
+    textocontenido:{
+      fontSize:12.5,
+      marginBottom:5,
+      // color:'white'
+    },
+    textototal:{
+      fontSize:17,
+      
+      // color:'white'
+    },
+    botoncabecera: {
+        // backgroundColor: 'blue',
+        width: 40, // Define el ancho del botón
+        height: 40, // Define la altura del botón
+        borderRadius: 20, // Define la mitad de la dimensión del botón para obtener una forma circular
+        justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
+        alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
+      },
+
+    botonaccion: {
+        
+        width: 40, // Define el ancho del botón
+        height: 40  , // Define la altura del botón
+        borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
+        justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
+        alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
+        
+      },
+  textoBoton: {
+        // color: 'white',
+        fontWeight: 'bold',
+      },
+    
+  container: {
+        flex: 1,
+        // backgroundColor:'#1c2c34'
+        // backgroundColor:'rgba(28,44,52,0.7)'
+        //backgroundColor:'#242c34'
+        //backgroundColor:'#202c34'
+      },
+  contenedordatos:{
+        flexDirection: 'row',
+
+        // borderRadius: 10,
+        // borderWidth: 1,
+        // margin:5,
+        //borderColor: '#ccc',
+
+        borderBottomWidth:1,
+        borderRightWidth:3,
+        marginBottom:10,
+        marginRight:5,
+
         overflow: 'hidden', 
         height: 110,
         padding: 10,
-        margin:5
+        
+        
     },
-    columnadatos:{
+  columnadatos:{
         flex: 1,
         height: '100%',
-        backgroundColor: '#f0f0f0',
-    }
-  });
+        // backgroundColor: '#f0f0f0',
+    },
+  resumencontainer: {
+      //flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+      paddingVertical: 10,
+      borderWidth:0.5,
+      borderTopRightRadius:50,
+      borderColor:'gray',
+      // backgroundColor:'white',
+      // backgroundColor:'rgb(28,44,52)',
+      paddingLeft:30
 
+      
+    },
+  contenedortexto:{
+      paddingBottom:10,
+      fontSize:15,
+      
+    },
+  labeltext:{
+      fontWeight:'bold',
+      fontSize:15
+  },
+  Tituloresumen: {
+    
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom:5
+  },
+
+  });
 export default Ingresos

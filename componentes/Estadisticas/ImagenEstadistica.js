@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     },
     image: {
       flex: 1, // Hace que la imagen se ajuste al tamaño del View
-      width: '130%', // Ancho de la imagen igual al 100% del View
+      width: '110%', // Ancho de la imagen igual al 100% del View
       height: '150%', // Altura de la imagen igual al 100% del View
     },
   });
