@@ -6,8 +6,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+
+
 import { StyleSheet,Button  } from "react-native";
 import { View,Text,TouchableOpacity } from "react-native";
+import { List } from 'react-native-paper';
 
 //Componentes///////////////
 // import Resumen from "./componentes/Resumen/Resumen";
@@ -23,6 +26,7 @@ import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
 import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
 import DrawerContent from "./componentes/DrawerContent/DrawerContent";
+import DrawerContentInicio from "./componentes/DrawerContentInicio/DrawerContentInicio";
 import CloseSesion from "./componentes/Closesesion/closesesion";
 import GastosTransaccion from "./componentes/Gastos/GastosTransaccion";
 import EstadisticasMesEgreso from "./componentes/Estadisticas/EstadisticasMesEgreso";
@@ -66,6 +70,135 @@ const MyTheme = {
 
 const Drawer = createDrawerNavigator();
 
+function DrawerInicio({sesionname}){
+  
+  const { colors } = useTheme();
+  const sizeicon=30
+  let colorborder='rgb(44,148,228)'
+  
+
+  return(
+
+  <Drawer.Navigator
+    screenOptions={{
+      headerTitle: ({}) => (
+        <View >
+          <Text style={{ color: colors.text,fontSize:20}}>{sesionname}</Text>
+          
+        </View>
+      ),
+      headerRight:({})=>(
+        <View style={{marginRight:20}}>
+
+          <TouchableOpacity  >
+                    <AntDesign name="setting" size={27} color={colors.iconcolor} />
+                    
+                </TouchableOpacity>
+        </View>
+      ),
+      headerTitleAlign: 'center',
+      headerStyle:{elevation:0},
+      headerTintColor: colors.text,
+      drawerLabelStyle: {marginLeft: -20},
+      tabBarLabelStyle:{borderWidth:1,bordercolor:'red'}
+    }}
+    drawerContent={DrawerContentInicio}
+  >
+      <Drawer.Screen name="InicioHome" 
+      component={HomeStackGroup}
+      options={{
+        drawerLabel: 'Inicio',
+        title: 'Inicio',
+        drawerIcon: ({size, color})=>(<AntDesign name="home" size={sizeicon} color={colors.iconcolor} />),
+        drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white',marginBottom:5,marginTop:20}
+        
+        }}
+      />
+      <Drawer.Screen name="InicioConceptosIngreso" 
+        component={HomeStackGroup}
+        options={{
+          drawerLabel: 'Conceptos Ingresos',
+          title: 'Conceptos Ingresos',
+          drawerIcon: ({size, color})=>(
+            <Feather name="trending-up"  size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+         }}
+
+       />
+      <Drawer.Screen name="InicioCategoriaGastos" 
+        component={HomeStackGroup}
+        options={{
+          drawerLabel: 'Categoria Gastos',
+          title: 'Categoria Gastos',
+          drawerIcon: ({size, color})=>(
+            <Feather name="align-left"  size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+         }}
+       />
+      <Drawer.Screen name="InicioConceptos" 
+        component={ConceptosGastos}
+        options={{
+          drawerLabel: 'Conceptos Gastos',
+          title: 'Conceptos Gastos',
+          drawerIcon: ({size, color})=>(
+            <Feather name="trending-down" size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+          }}
+
+        />
+      <Drawer.Screen name="InicioMovimientosGastos" 
+        component={HomeStackGroup}
+        options={{
+          drawerLabel: 'Movimientos',
+          title: 'Movimientos',
+          drawerIcon: ({size, color})=>(
+            <AntDesign name="home"  size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+         }}
+       />
+
+
+      <Drawer.Screen name="InicioEstaditicas" 
+        component={HomeStackGroup}
+        options={{
+          drawerLabel: 'Estadisticas',
+          title: 'Estadisticas',
+          drawerIcon: ({size, color})=>(
+            <AntDesign name="barschart"  size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+         }}
+       />
+
+      <Drawer.Screen name="InicioDatosPersonales" 
+        component={HomeStackGroup}
+        options={{
+          drawerLabel: 'Datos Personales',
+          title: 'Datos Personales',
+          drawerIcon: ({size, color})=>(
+            <Ionicons name="person-outline"  size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+         }}
+       />
+    
+
+    
+
+
+
+
+      
+      
+  </Drawer.Navigator>
+  )
+
+}
+
 
 function DrawerGroup({sesionname}) {
   const { colors } = useTheme();
@@ -90,7 +223,7 @@ function DrawerGroup({sesionname}) {
           </View>
         ),
         headerTitleAlign: 'center',
-        // headerStyle:{elevation:0},
+        headerStyle:{elevation:0},
         headerTintColor: colors.text
          
       }}
@@ -105,9 +238,9 @@ function DrawerGroup({sesionname}) {
     );
   }
 
-  const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
-  function TabsGroup({ navigation }) {
+function TabsGroup({ navigation }) {
     const { colors } = useTheme();
     return (
       <Tab.Navigator 
@@ -371,7 +504,7 @@ function Navigation( {sesionname}){
 return(
     <NavigationContainer theme={MyTheme }>
         {/* <StatusBar style="auto"></StatusBar> */}
-        <DrawerGroup  sesionname={sesionname} />
+        <DrawerInicio  sesionname={sesionname} />
     </NavigationContainer>
 )
 }
