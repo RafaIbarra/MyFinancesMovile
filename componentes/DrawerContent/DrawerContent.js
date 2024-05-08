@@ -154,7 +154,8 @@ const styles = StyleSheet.create({
       },
 
       buttonclose: {
-        backgroundColor: 'black', // Color de fondo del botón
+        // backgroundColor: 'black', // Color de fondo del botón
+        backgroundColor:"rgba(44,148,228,0.7)",
         // marginTop:'70%',
         borderRadius: 10, // Bordes curvos
         padding: 10, // Espaciado interno

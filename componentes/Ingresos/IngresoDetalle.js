@@ -34,10 +34,10 @@ function IngresoDetalle ({ navigation }){
     const confimareliminacion = async()=>{
       
         const datoseliminar = {
-          gastos:codigoeliminar,};
+            ingresos:codigoeliminar,};
     
     
-        const endpoint='EliminarEgreso/'
+        const endpoint='EliminarIngreso/'
         const result = await Generarpeticion(endpoint, 'POST', datoseliminar);
           
         const respuesta=result['resp']
@@ -70,7 +70,7 @@ function IngresoDetalle ({ navigation }){
                     <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ marginRight: 10 }} onPress={() => {navigate("GastosRegistro", { item});}}>
+                <TouchableOpacity style={{ marginRight: 10 }} onPress={() => {navigate("IngresoTransaccion", { item});}}>
                     <AntDesign name="edit" size={30} color="white" />
                 </TouchableOpacity>
             </View>

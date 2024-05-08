@@ -65,9 +65,9 @@ function ResumenPeriodo ({ navigation  }){
 
             return(
             <View>
-                <View style={styles.cabeceracontainer}>
+                {/* <View style={styles.cabeceracontainer}>
                         <Text style={[styles.titulocabecera, { color: colors.text}]}>Resumen del mes</Text>
-                </View>
+                </View> */}
 
                 <View style={[{ flexDirection:'row', marginLeft:2,marginTop:50,borderWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}]}>
     

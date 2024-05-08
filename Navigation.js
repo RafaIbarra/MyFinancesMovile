@@ -38,6 +38,7 @@ import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+
 const MyTheme = {
   ...DefaultTheme,
     dark: true,
@@ -57,7 +58,8 @@ const MyTheme = {
       commentText:'red',
       bordercolor:'#d6d7b3',
       // iconcolor:'#cddae8cb'
-      iconcolor:'white'
+      iconcolor:'white',
+      
     },
 };
 
@@ -88,7 +90,7 @@ function DrawerGroup({sesionname}) {
           </View>
         ),
         headerTitleAlign: 'center',
-        
+        // headerStyle:{elevation:0},
         headerTintColor: colors.text
          
       }}
@@ -110,6 +112,8 @@ function DrawerGroup({sesionname}) {
     return (
       <Tab.Navigator 
       // screenOptions={{ headerShown: false }} 
+      initialRouteName="Gastos"
+      // screenOptions={{tabBarStyle:{height:60,elevation:50,borderTopWidth:1,borderTopColor:'black',marginBottom:2,marginTop:5}}}
       >
         <Tab.Screen name="Home2" 
           component={ResumenPeriodo}
@@ -129,9 +133,11 @@ function DrawerGroup({sesionname}) {
               titulolabel = focused ? "Resumen" : "";
               return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
             },
-            headerTitle:'Resumen',
+            headerTitle:'Resumen del Mes',
+            headerTitleStyle:{fontWeight:'bold',fontSize:20},
+            headerTitleAlign:'center',
             unmountOnBlur: true,
-            headerShown:false
+            headerShown:true
           }}
           
         />
@@ -199,7 +205,11 @@ function DrawerGroup({sesionname}) {
               return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
             },
             unmountOnBlur: true,
-            headerShown:false
+            headerShown:true,
+            headerTitleAlign:'center',
+            title:'Saldos del año',
+            headerTitleStyle:{fontWeight:'bold',fontSize:20},
+
           }}
          />
 
@@ -221,7 +231,8 @@ function DrawerGroup({sesionname}) {
               titulolabel = focused ? "Estadisticas" : "";
               return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
             },
-            headerTitleAlign:'center'
+            headerTitleAlign:'center',
+            headerTitleStyle:{fontWeight:'bold',fontSize:20},
             // unmountOnBlur: true
           }}
         />
@@ -242,83 +253,67 @@ function HomeStackGroup(){
   return(
 
     <HomeStack.Navigator >
-    <HomeStack.Screen name="Resumen" component={TabsGroup} options={{ headerShown: false }}/>
-    <HomeStack.Screen name="ResumenMesOperaciones" component={ResumenPeriodo}/>
-    <HomeStack.Screen name="IngresosGroup" component={Ingresos} />
-    <HomeStack.Screen name="IngresoDetalle" 
-      component={IngresoDetalle} 
-      options={{headerTitle:'Detalle del Ingreso',
-      headerTitleAlign:'left',
-      // headerRight: () => <Button title="Update count" name='count' />,
-      headerRight: () => (
-        <View style={{flexDirection: 'row',alignItems: 'center'}}>
-          <TouchableOpacity style={{ marginRight: 20 }}>
-              <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
-          </TouchableOpacity>
+        <HomeStack.Screen name="Resumen" component={TabsGroup} options={{ headerShown: false }}/>
+        <HomeStack.Screen name="IngresoDetalle" 
+          component={IngresoDetalle} 
+          options={{headerTitle:'Detalle del Ingreso',
+                    headerTitleAlign:'left',
+                    headerRight: () => (
+                      <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                        <TouchableOpacity style={{ marginRight: 20 }}>
+                            <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                        </TouchableOpacity>
 
+                        <TouchableOpacity style={{ marginRight: 10 }} >
+                          <AntDesign name="edit" size={30} color="white" />
+                        </TouchableOpacity>
+                      </View>
+                    ),
 
+                  }}
 
+        
+          />
+        
 
-          <TouchableOpacity style={{ marginRight: 10 }} >
-            <AntDesign name="edit" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
-      ),
+        <HomeStack.Screen name="GastosDetalle" 
+          component={GastosDetalle} 
+          options={{headerTitle:'Detalle del Gasto',
+                    headerTitleAlign:'left',
+                    headerRight: () => (
+                      <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                        <TouchableOpacity style={{ marginRight: 20 }}>
+                            <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                        </TouchableOpacity>
 
-    }}
+                        <TouchableOpacity style={{ marginRight: 10 }} >
+                          <AntDesign name="edit" size={30} color="white" />
+                        </TouchableOpacity>
+                      </View>
+                    ),
 
-    
-      />
-    <HomeStack.Screen name="Gastos" component={Gastos} />
+                  }}    
+        />
+        <HomeStack.Screen name="GastosRegistro" 
+                          component={GastosTransaccion} 
+                          options={{headerTitle:'Registro Gastos',
+                          headerTitleAlign:'center',
+                          
+                        }}
+        />
 
-    <HomeStack.Screen name="GastosDetalle" 
-      component={GastosDetalle} 
-      options={{headerTitle:'Detalle del Gasto',
-      headerTitleAlign:'left',
-      // headerRight: () => <Button title="Update count" name='count' />,
-      headerRight: () => (
-        <View style={{flexDirection: 'row',alignItems: 'center'}}>
-          <TouchableOpacity style={{ marginRight: 20 }}>
-              <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
-          </TouchableOpacity>
-
-
-
-
-          <TouchableOpacity style={{ marginRight: 10 }} >
-            <AntDesign name="edit" size={30} color="white" />
-          </TouchableOpacity>
-        </View>
-      ),
-
-    }}
-
-    
-      />
-    <HomeStack.Screen name="GastosRegistro" 
-                      component={GastosTransaccion} 
-                      options={{headerTitle:'Registro Gastos',
-                      headerTitleAlign:'center',
-                      
-                    }}
-    />
-
-  <HomeStack.Screen name="IngresoTransaccion" 
-                        component={IngresoTransaccion} 
-                        options={{headerTitle:'Registro Ingresos',
-                        headerTitleAlign:'center',
-                        
-                      }}
-      />
+        <HomeStack.Screen name="IngresoTransaccion" 
+                            component={IngresoTransaccion} 
+                            options={{headerTitle:'Registro Ingresos',
+                            headerTitleAlign:'center',
+                            
+                          }}
+        />
     
     
   </HomeStack.Navigator>
   )
 }
-
-
-
-
 
 
 const TabEstadisticas=createMaterialTopTabNavigator()
@@ -330,10 +325,9 @@ function OpcionesTabEstadisticas({navigation}){
 
   screenOptions={
     {
-      "tabBarIndicatorStyle": {
-        "backgroundColor": "rgb(44,148,228)"
-      },
-      tabBarLabelStyle: { fontSize: 14 },
+      "tabBarIndicatorStyle": {"backgroundColor": "rgb(44,148,228)"},
+      tabBarLabelStyle: { fontSize: 16,textTransform:'none' },
+      
     }
     
 
@@ -344,7 +338,7 @@ function OpcionesTabEstadisticas({navigation}){
       name="EstadisticasSaldo" 
       component={Estadisticas}
       options={{
-        title:'SALDOS',
+        title:'Saldos',
         unmountOnBlur:true ,
       }}
     >
@@ -352,7 +346,8 @@ function OpcionesTabEstadisticas({navigation}){
 
     <TabEstadisticas.Screen name="EstadisticasIngreso" component={EstadisticasMesIngreso}
     options={{
-      title:'Ingresos',
+       tabBarLabel: 'Ingresos',
+       
       unmountOnBlur:true
     }}
     >

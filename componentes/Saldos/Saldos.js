@@ -71,11 +71,11 @@ function Saldos ({ navigation  }){
 
         return(
             <View>
-            <View style={styles.cabeceracontainer}>
-                    <Text style={[styles.titulocabecera, { color: colors.text}]}>SALDOS DEL AÑO</Text>
-            </View>
+            {/* <View style={styles.cabeceracontainer}>
+                    <Text style={[styles.titulocabecera, { color: colors.text}]}>Saldos del Año</Text>
+            </View> */}
 
-            <View style={[{ flexDirection:'row', marginLeft:2,marginTop:50,borderWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}]}>
+            <View style={[{ flexDirection:'row', marginLeft:2,marginTop:20,borderWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}]}>
 
                 <View style={{width:'20%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
                     <Text style={[ styles.textocontenido, { color:  colors.text,fontWeight:'bold' }]}>MES</Text>
@@ -99,7 +99,7 @@ function Saldos ({ navigation  }){
                             
             </View>
 
-            <View style={{borderLeftWidth:1,borderRightWidth:1,borderBottomWidth:1,borderColor:'white',marginLeft:5,marginRight:5,maxHeight:'80%'}}>
+            <View style={{borderLeftWidth:1,borderRightWidth:1,borderBottomWidth:1,borderColor:'white',marginLeft:5,marginRight:5,maxHeight:'82%'}}>
 
                 <FlatList
                     data={datadetalle}

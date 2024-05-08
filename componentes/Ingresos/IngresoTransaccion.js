@@ -91,7 +91,7 @@ function IngresoTransaccion({ navigation }){
                 opcion: a.nombre_producto,
                 id: a.id
               })));
-            console.log(filtrar)
+            
             setDatamodal(filtrar)
             setDatamodalcompleto(filtrar)
         } else if(valor===2){
@@ -102,51 +102,23 @@ function IngresoTransaccion({ navigation }){
                 opcion: a.nombre_producto,
                 id: a.id
               })));
-            console.log(filtrar)
+            
             setDatamodal(filtrar)
             setDatamodalcompleto(filtrar)
         }
     }
-    const abrircategoria =()=>{
-        //setModomodal(1)
-        toggleModal()
-        
-        
-        setDatamodal(optionscategoria)
-        setDatamodalcompleto(optionscategoria)
-        setGastosel([])
-        setSelectedOptiongasto(0)
-        setModalplaceholder('Buscar Categoria..')
-        setTextobusquedamodal('')
-        setGastosel('')
-      }
+    
     const seleccionopcionmodal=(itemsel)=>{
-        
-        
-
-            setConceptosel(itemsel.opcion)
-            setCodigosel(itemsel.id)
-        //     const lista_gastos_categoria = listagastos.filter((pro) => pro.categoria === itemsel.id)
-
-        //     setOptionsgasto(lista_gastos_categoria.map(item => ({
-        //         opcion: item.nombre_gasto,
-        //         id: item.id
-        //       })));
-        // }else{
-        //     setGastosel(itemsel.opcion)
-        //     setSelectedOptiongasto(itemsel.id)
-        // }
-
+  
+        setConceptosel(itemsel.opcion)
+        setCodigosel(itemsel.id)
         toggleModal()
 
       }
     const abrirgasto =()=>{
-        //setModomodal(2)
-        toggleModal()
         
-        // setDatamodal(optionsgasto)
-        // setDatamodalcompleto(optionsgasto)
-        setModalplaceholder('Buscar Gasto..')
+        toggleModal()
+        setModalplaceholder('Buscar Ingreso..')
         setTextobusquedamodal('')
       }
     
@@ -184,18 +156,20 @@ function IngresoTransaccion({ navigation }){
       };
 
     const registrar_egreso = async () => {
-        
+
+
+
         const datosregistrar = {
-            codgasto:codigoregistro,
-            gasto:selectedOptiongasto,
-            monto:parseInt(monto,10),
-            fecha:fechaegreso,
-            anotacion:anotacion,
+          codingreso:codigoregistro,
+          producto:codigosel,
+          monto:parseInt(monto,10),
+          fecha:fechaegreso,
+          anotacion:anotacion,
             
 
         };
         
-        const endpoint='RegistroEgreso/'
+        const endpoint='RegistroIngreso/'
         const result = await Generarpeticion(endpoint, 'POST', datosregistrar);
         
         const respuesta=result['resp']
@@ -245,13 +219,7 @@ function IngresoTransaccion({ navigation }){
 
                 setProductosfijos(listafijos)
                 setProductosocacionales(listasocacionales)
-                
-                setOpcionesconceptos(result['data'].map(a => ({
-                  opcion: a.nombre_producto,
-                  id: a.id
-                })));
-                
-              
+            
                 setListaconcepto(result['data'])
                 setCodigoregisto(item.id)
                 if(item.id===0){
@@ -260,24 +228,31 @@ function IngresoTransaccion({ navigation }){
 
                 }else{
                   const listadoconceptos = result['data']
-                  
-                  setSelectedOptioncategoria(item.CodigoCategoriaGasto) ;
-                  setCategoriasel(item.CategoriaGasto)
 
-                //   const lista_gastos_categoria = listadocategorias.filter((pro) => pro.categoria === item.CodigoCategoriaGasto)
+                  let tipoitem=0
+                  if (item.TipoIngreso==='Ocasionales'){
+                    setValueradio(2)
+                    tipoitem=2
+                  }else {
+                    setValueradio(1)
+                    tipoitem=1
+                  }
+                  setConceptosel(item.NombreIngreso)
+                  setCodigosel(item.producto_financiero)
+
+                  const lista_productos_tipo= listadoconceptos.filter((pro) => pro.tipoproducto === tipoitem)
                   
                   
-                //   setOptionsgasto(lista_gastos_categoria.map(item => ({
-                //     opcion: item.nombre_gasto,
-                //     id: item.id
-                //   })));
+                  const itemodal=(lista_productos_tipo.map(itemtipo => ({
+                    opcion: itemtipo.nombre_producto,
+                    id: itemtipo.id
+                  })));
 
-                //   setSelectedOptiongasto(item.gasto);
-                //   setGastosel(item.NombreGasto)
-
-                //   setMonto(item.monto_gasto)
-                //   setFechaegreso(item.fecha_gasto)
-                //   setAnotacion(item.anotacion)
+                  setDatamodal(itemodal)
+                  setDatamodalcompleto(itemodal)
+                  setMonto(item.monto_ingreso)
+                  setFechaegreso(item.fecha_ingreso)
+                  setAnotacion(item.anotacion)
                 }
                 
 
@@ -415,9 +390,7 @@ function IngresoTransaccion({ navigation }){
                       <TextInput style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
                                     placeholder='Observacion'
                                     placeholderTextColor='gray'
-                                    //label='Obserbacion'
                                     value={anotacion}
-                                    // textAlignVertical="center"
                                     onChangeText={anotacion => textoanotacion(anotacion)}
                                     onFocus={() => setIsFocusedobs(true)}
                                     onBlur={() => setIsFocusedobs(false)}
@@ -429,13 +402,12 @@ function IngresoTransaccion({ navigation }){
                   <Button 
                         style={{marginTop:10,marginBottom:10,marginLeft:10
                           ,
-                          // backgroundColor:'rgb(182, 212, 212)'
-                          //backgroundColor:'rgba(0,0,0,0.2)'
+                        
                           backgroundColor:'rgba(44,148,228,0.7)'
                         }} 
-                        // icon="content-save-check" 
+                     
                         icon={() => {
-                          // return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
+                          
 
                           return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
                         }}
