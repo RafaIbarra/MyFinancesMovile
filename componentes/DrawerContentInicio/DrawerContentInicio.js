@@ -7,6 +7,7 @@ import Handelstorage from "../../Storage/handelstorage";
 import { AuthContext } from "../../AuthContext";
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
 function DrawerContentInicio(props){
@@ -36,25 +37,19 @@ function DrawerContentInicio(props){
             </DrawerContentScrollView>
 
             <Button 
-                        style={{marginBottom:10,width:250,height:50,
-                          backgroundColor:'rgba(44,148,228,0.3)'
-                        }} 
-                     
-                        icon={() => {
-                          
-
-                          return <Entypo name="log-out" size={30} color="white" />
-                        }}
-                        mode="elevated" 
-                        textColor="white"
-                        onPress={cerrar}>
+                    style={{marginBottom:20,marginLeft:10,width:'90%',height:40,
+                      //backgroundColor:'rgb(44,148,228)',
+                      backgroundColor:'rgba(218,165,32,0.7)',
+                      alignContent:'center',alignItems:'center',justifyContent:'center'
+                    }} 
+                  
+                    icon={() => {return <Entypo name="log-out" size={30} color="white" />}}
+                    mode="elevated" 
+                    textColor="white"
+                    onPress={cerrar}>
                         CERRAR SESION 
-                  </Button>
+                </Button>
 
-            {/* <Pressable onPress={closeDrawer} style={{padding: 20}}>
-
-                <Text style={{color:'white'}}>Logout</Text>
-            </Pressable> */}
     </View>
     )
 }
@@ -71,6 +66,7 @@ const styles = StyleSheet.create({
         borderColor:'gray',
         overflow: 'hidden', // Oculta el contenido que se desborda del contenedor circular
         marginLeft:'33%',
+        marginTop:10,
         marginBottom:3,
       },
     image: {

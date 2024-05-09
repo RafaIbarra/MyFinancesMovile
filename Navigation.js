@@ -32,6 +32,7 @@ import GastosTransaccion from "./componentes/Gastos/GastosTransaccion";
 import EstadisticasMesEgreso from "./componentes/Estadisticas/EstadisticasMesEgreso";
 import EstadisticasMesIngreso from "./componentes/Estadisticas/EstadisticasMesIngreso";
 
+import MovimientosEgreso from "./componentes/MovimientosEgreso/MovimientosEgreso";
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
 
@@ -73,7 +74,7 @@ const Drawer = createDrawerNavigator();
 function DrawerInicio({sesionname}){
   
   const { colors } = useTheme();
-  const sizeicon=30
+  const sizeicon=25
   let colorborder='rgb(44,148,228)'
   
 
@@ -149,13 +150,13 @@ function DrawerInicio({sesionname}){
           }}
 
         />
-      <Drawer.Screen name="InicioMovimientosGastos" 
-        component={HomeStackGroup}
+      <Drawer.Screen name="InicioMovimientos" 
+        component={OpcionesHistorialMovimientos}
         options={{
           drawerLabel: 'Movimientos',
           title: 'Movimientos',
           drawerIcon: ({size, color})=>(
-            <AntDesign name="home"  size={sizeicon} color={colors.iconcolor} />
+            <Ionicons name="swap-horizontal-outline"  size={sizeicon} color={colors.iconcolor} />
           ),
           drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
          }}
@@ -239,7 +240,6 @@ function DrawerGroup({sesionname}) {
   }
 
 const Tab = createBottomTabNavigator();
-
 function TabsGroup({ navigation }) {
     const { colors } = useTheme();
     return (
@@ -380,7 +380,6 @@ function TabsGroup({ navigation }) {
 
 
 const HomeStack = createNativeStackNavigator();
-
 function HomeStackGroup(){
   
   return(
@@ -448,7 +447,6 @@ function HomeStackGroup(){
   )
 }
 
-
 const TabEstadisticas=createMaterialTopTabNavigator()
 function OpcionesTabEstadisticas({navigation}){
 
@@ -497,6 +495,52 @@ function OpcionesTabEstadisticas({navigation}){
     </TabEstadisticas.Screen>
   </TabEstadisticas.Navigator>
   )
+
+}
+
+///////// Navegaciones para historial de movimientos /////////////////////
+const Tabhistorial=createMaterialTopTabNavigator()
+function OpcionesHistorialMovimientos({navigation}){
+  return(
+
+    <Tabhistorial.Navigator
+  
+    screenOptions={
+      {
+        "tabBarIndicatorStyle": {"backgroundColor": "rgb(44,148,228)"},
+        tabBarLabelStyle: { fontSize: 16,textTransform:'none' },
+        
+      }
+      
+  
+    }
+    >
+  
+      <Tabhistorial.Screen 
+        name="HistoralGastos" 
+        component={MovimientosEgreso}
+        options={{
+          title:'Movimimiento Gastos',
+          unmountOnBlur:true ,
+        }}
+      >
+      </Tabhistorial.Screen>
+  
+      <Tabhistorial.Screen 
+      name="HistotialIngresos" 
+      component={MovimientosEgreso}
+      options={{
+         tabBarLabel: 'Movimientos Ingresos',
+         
+        unmountOnBlur:true
+      }}
+      >
+  
+      </Tabhistorial.Screen>
+  
+      
+    </Tabhistorial.Navigator>
+    )
 
 }
 
