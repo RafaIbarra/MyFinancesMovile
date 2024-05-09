@@ -1,11 +1,13 @@
 import React,{useState,useEffect,useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,TextInput   } from "react-native";
+import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,TextInput,Animated,Modal   } from "react-native";
 import { StatusBar } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+
 import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
@@ -25,6 +27,8 @@ function MovimientosEgreso ({ navigation  }){
     const [cargacompleta,setCargacopleta]=useState(false)
     const [dateegresoscompleto,setDateegresoscompleto]=useState([])
     const [dataegresos,setDataegresos]=useState([])
+
+    const [optionmeses, setOptionmeses] = useState([]);
         
     const { navigate } = useNavigation();
 
@@ -36,6 +40,71 @@ function MovimientosEgreso ({ navigation  }){
 
 
     const [messeleccionado,setMesseleccionado]=useState('')
+    const [nombremesselccionado,setNombremesselccionado]=useState('')
+
+    const [rotationValue] = useState(new Animated.Value(0));
+
+
+    const [estadomodal,setEstadomodal]=useState(false)
+    const [datamodal,setDatamodal]=useState([])
+    const [datamodalcompleto,setDatamodalcompleto]=useState([])
+    const [textobusquedamodal,setTextobusquedamodal]=useState('')
+    const [isFocusemodal, setIsFocusedmodal] = useState(false);
+
+
+    const toggleModal = () => {
+      setEstadomodal(!estadomodal);
+   
+     };
+
+     const seleccionopcionmodal=(itemsel)=>{
+  
+      setNombremesselccionado(itemsel.opcion)
+      setMesseleccionado(itemsel.id)
+      setDataegresos([])
+      setDateegresoscompleto([])
+      toggleModal()
+
+    }
+    const abrirmeses =()=>{
+        
+      toggleModal()
+      // setModalplaceholder('Buscar Meses..')
+      setDatamodal(datamodalcompleto)
+      setTextobusquedamodal('')
+      
+    }
+
+    const realizarbusquedamodal= (palabra)=>{
+      setTextobusquedamodal(palabra)
+      const pal =palabra.toLowerCase()
+      let arrayencontrado = datamodalcompleto.filter(item => 
+        item.opcion.toLowerCase().includes(pal)
+        
+        );
+      setDatamodal(arrayencontrado)
+    }
+
+
+    const handlePress = () => {
+        
+      Animated.timing(rotationValue, {
+        toValue: 1,
+        duration: 200, // Duración de la animación en milisegundos
+        useNativeDriver: true,
+      }).start(() => {
+        // Restaura la animación a su estado original
+        rotationValue.setValue(0);
+      });
+     
+      procesar()
+    };
+
+    const spin = rotationValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
+    } 
+  );
     
     const Cargaranno= (annotexto)=>{
         setAnnoseleccionado(annotexto)
@@ -43,66 +112,76 @@ function MovimientosEgreso ({ navigation  }){
       }
  
 
-    const openbusqueda =()=>{
-      setBusqueda(true);
-    // Inicia la animación para mostrar el cuadro de búsqueda
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 700, // Duración de la animación en milisegundos
-      useNativeDriver: false,
-    }).start();
-    }
+ 
 
-    const closebusqueda=()=>{
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: false,
-      }).start(() => setBusqueda(false));
-      realizarbusqueda('')
-    }
+    const procesar = async ()=>{
 
-    const realizarbusqueda= (palabra)=>{
-      setTextobusqueda(palabra)
-      const pal =palabra.toLowerCase()
-      let arrayencontrado = dateegresoscompleto.filter(item => 
-        item.NombreGasto.toLowerCase().includes(pal) ||
-        item.CategoriaGasto.toLowerCase().includes(pal)
-        );
-      setDataegresos(arrayencontrado)
-    }
+      const body = {};
+      const endpoint='MovileMisEgresos/' + annoseleccionado +'/' + messeleccionado + '/'
+      const result = await Generarpeticion(endpoint, 'POST', body);
+      const respuesta=result['resp']
+      if (respuesta === 200){
+          const registros=result['data']
 
+          
+          
+          if(Object.keys(registros).length>0){
+              registros.forEach((elemento) => {
+                
+                elemento.key = elemento.id;
+                elemento.recarga='no'
+              })
+              
+              
+              setDataegresos(registros)
+              setDateegresoscompleto(registros)
+              let totalgasto=0
+              let cantgasto=0
+              registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
+              setMontototalegreso(totalgasto)
+              setcanttotalegreso(cantgasto)
+          }
+          
+      }else if(respuesta === 403 || respuesta === 401){
+          
+          
+          await Handelstorage('borrar')
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          setActivarsesion(false)
+      }
+      
+      
+      
+
+    }
 
     useEffect(() => {
-      const unsubscribe = navigation.addListener('focus', () => {
-        setCargacopleta(false)
+      
+        // setCargacopleta(false)
         const cargardatos=async()=>{
-            const datestorage=await Handelstorage('obtenerdate');
             
-            const anno_storage=datestorage['dataanno']
             const body = {};
-            const endpoint='MovileMisEgresos/' + anno_storage +'/0/'
+            const endpoint='Meses/'
             const result = await Generarpeticion(endpoint, 'POST', body);
             const respuesta=result['resp']
             if (respuesta === 200){
                 const registros=result['data']
                 
-                if(Object.keys(registros).length>0){
-                    registros.forEach((elemento) => {
-                      
-                      elemento.key = elemento.id;
-                      elemento.recarga='no'
-                    })
-                    
-                    
-                    setDataegresos(registros)
-                    setDateegresoscompleto(registros)
-                    let totalgasto=0
-                    let cantgasto=0
-                    registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
-                    setMontototalegreso(totalgasto)
-                    setcanttotalegreso(cantgasto)
-                }
+                console.log('hizo peticion')
+                setOptionmeses(registros.map(item => ({
+                  opcion: item.nombre_mes,
+                  id: item.id
+                })));
+                const listamesesopcion=registros.map(item => ({
+                  opcion: item.nombre_mes,
+                  id: item.id
+                }))
+
+                setDatamodalcompleto(listamesesopcion)
+                setDatamodal(listamesesopcion);
+                
+                
+               
                 
             }else if(respuesta === 403 || respuesta === 401){
                 
@@ -112,13 +191,8 @@ function MovimientosEgreso ({ navigation  }){
                 setActivarsesion(false)
             }
             
-           
-            if(busqueda){
-              
-              
-              realizarbusqueda(textobusqueda)
-            }
-            setCargacopleta(true)
+           setCargacopleta(true)
+            
             // setBusqueda(false)
             // setTextobusqueda('')
 
@@ -126,9 +200,9 @@ function MovimientosEgreso ({ navigation  }){
         }
         cargardatos()
         // setRefresh(false)
-      })
-      return unsubscribe;
-      }, [navigation]);
+      
+      
+      }, []);
 
     if(cargacompleta){
 
@@ -140,57 +214,76 @@ function MovimientosEgreso ({ navigation  }){
                     
                   <View style={{ flex: 1 }}>    
                       
-                            
-                        <View style={{ flexDirection:'row', marginLeft:20,alignContent:'center',marginTop:10}}>
+                      <View style={{marginLeft:10,marginRight:10,padding:10,marginTop:10,borderWidth:1,borderColor:'gray',elevation:2}}>
 
-                            <TextInput style={[{width:100,borderBottomWidth:2,color: colors.text,backgroundColor:colors.backgroundInpunt, 
-                                                    borderBottomColor: isFocusedanno ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
-                                        placeholder='Ingrese Año'
-                                        placeholderTextColor='gray'
-                                        value={annoseleccionado}
-                                        onChangeText={annoseleccionado => Cargaranno(annoseleccionado)}
-                                        onFocus={() => setIsFocusedanno(true)}
-                                        onBlur={() => setIsFocusedanno(false)}
-                                        underlineColorAndroid="transparent"
-                                />
-                            <View style={{flex:1, flexDirection: 'row', alignItems:'center',justifyContent:'center' }}>
-                            
-                                <Text style={[ 
-                                            { 
-                                            borderBottomWidth:2,
-                                            // borderColor:'red',
-                                            height:35,
-                                            marginBottom:0,
-                                            paddingTop:8,
-                                            width:'60%',
-                                            color: messeleccionado ? colors.text : 'gray',
-                                            borderBottomColor: messeleccionado ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                                >
-                                {messeleccionado ? messeleccionado : 'Seleccione el mes..'}
+                        <View style={{ flexDirection:'row',alignContent:'center'}}>
 
-                                
-                                
-                                </Text>
-            
-                                <TouchableOpacity 
-                                style={styles.botonfecha} 
-                                //   onPress={abrirgasto}
-                                >         
-                                <FontAwesome name="search-plus" size={30} color={colors.iconcolor} />
-                                </TouchableOpacity>
-                            </View>
+                              <TextInput style={[{width:80,marginBottom:2.6,borderBottomWidth:2,color: colors.text,backgroundColor:colors.backgroundInpunt, 
+                                                      borderBottomColor: isFocusedanno ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                                          placeholder='Ingrese Año'
+                                          placeholderTextColor='gray'
+                                          value={annoseleccionado}
+                                          onChangeText={annoseleccionado => Cargaranno(annoseleccionado)}
+                                          onFocus={() => setIsFocusedanno(true)}
+                                          onBlur={() => setIsFocusedanno(false)}
+                                          underlineColorAndroid="transparent"
+                                  />
+                              <View style={{flex:1, flexDirection: 'row', alignItems:'center',justifyContent:'center' }}>
+                              
+                                  <Text style={[ 
+                                              { 
+                                              borderBottomWidth:2,
+                                              // borderColor:'red',
+                                              height:35,
+                                              marginBottom:0,
+                                              paddingTop:8,
+                                              width:'60%',
+                                              color: messeleccionado ? colors.text : 'gray',
+                                              borderBottomColor: messeleccionado ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                                  >
+                                  {messeleccionado ? nombremesselccionado : 'Seleccione el mes..'}
 
-                            <TouchableOpacity 
-                                style={styles.botonfecha} 
-                                //   onPress={abrirgasto}
-                                >         
-                                <MaterialCommunityIcons name="page-next-outline" size={30} color={colors.iconcolor} />
-                                </TouchableOpacity>
-      
+                                  
+    
+                                  
+                                  </Text>
+              
+                                  <TouchableOpacity 
+                                  style={styles.botonfecha} 
+                                  onPress={abrirmeses}
+                                  >         
+                                  <FontAwesome name="search-plus" size={30} color={colors.iconcolor} />
+                                  </TouchableOpacity>
+                              </View>
+
+                              <TouchableOpacity 
+                                  style={{width: 40, 
+                                  height: 40, 
+                                  borderRadius: 20, 
+                                  justifyContent: 'center', 
+                                  alignItems: 'center',
+                                  backgroundColor:'rgb(218,165,32)'
+                                }} 
+                                onPress={handlePress}
+                                  >
+                                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                                        <MaterialCommunityIcons name="database-arrow-down" size={30} color={colors.iconcolor} />
+                                    </Animated.View>     
+                              </TouchableOpacity>
+        
+                        </View>
+
+                        <TextInput style={{marginTop:20,borderBottomWidth:2,borderBottomColor:'white',height:40,color: colors.text}}
+                        placeholder="Buscar Concepto o Categoria .."
+                        placeholderTextColor={'gray'}
+                        underlineColorAndroid="transparent"
+                        >
+
+                        </TextInput>
                       </View>
 
                       
-                    {/* <View  style={styles.container}>
+                    <View  style={{flex: 1,marginBottom:20,marginTop:20}}>
 
                           <FlatList 
                               data={dataegresos}
@@ -203,23 +296,25 @@ function MovimientosEgreso ({ navigation  }){
                                                                   borderBottomColor:'rgba(235,234,233,0.1)'
                                                                 }]} 
                                       
-                                       onPress={() => {navigate('GastosDetalle', { item });}}
+                                      //  onPress={() => {navigate('GastosDetalle', { item });}}
                                       
                                       >
-                                          <View style={[styles.columna, { flex: 2 }]}> 
+                                          <View style={[styles.columna, { flex: 1 }]}> 
+
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> ID Transaccion: {item.id}</Text>
+                                              <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_gasto).toLocaleString('es-ES')} </Text>
                                               <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
                                               <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
                                               <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
                                               <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.anotacion}</Text>
+                                              
+                                              
                                               
                                               
                                           </View>
 
-                                          <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
-
-                                              <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_gasto).toLocaleString('es-ES')} </Text>
-                                              
-                                          </View>
+                                      
                                       </TouchableOpacity >
                                   )
                               }
@@ -227,22 +322,75 @@ function MovimientosEgreso ({ navigation  }){
                               keyExtractor={item => item.key}
                           />
                         
-                    </View> */}
+                    </View>
 
 
                     
-                    {/* <View style={styles.resumencontainer}>
+                   
 
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                          <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
-                            {Number(canttotalegreso).toLocaleString('es-ES')}
-                        </Text>
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                          <Text style={styles.labeltext}>Total Gasto:</Text>{' '}
-                            {Number(montototalegreso).toLocaleString('es-ES')} Gs.
-                        </Text>
-                        
-                    </View> */}
+                  <Modal visible={estadomodal} 
+                          transparent={true} 
+                          onRequestClose={toggleModal}
+                          animationType="slide" 
+                          // animationDuration={2000}
+                          >
+                          <TouchableOpacity
+                              style={styles.overlay}
+                              activeOpacity={1}
+                              onPress={toggleModal}
+                          />
+
+                          <View style={[styles.modalContainer,{backgroundColor:'rgb(28,44,52)'}]}>
+                              <View style={{alignItems:'center',marginBottom:30,marginTop:5}}>
+                                  <View style={{borderBottomWidth: 3,borderBottomColor: 'white',width:300,marginVertical: 10,}}></View>
+                                  <View style={{borderBottomWidth: 1,borderBottomColor: 'white',width:250,marginVertical: 3,}}></View>
+                                  <View></View>
+                              </View>
+                              <TextInput style={[{borderBottomWidth: 2,marginBottom:10,color: colors.text,backgroundColor:colors.backgroundInpunt, 
+                                                  borderBottomColor: isFocusemodal ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                                  placeholder='Buscar mes..'
+                                  placeholderTextColor='gray'
+                                  value={textobusquedamodal}
+                                  onChangeText={textobusquedamodal => realizarbusquedamodal(textobusquedamodal)}
+                                  onFocus={() => setIsFocusedmodal(true)}
+                                  onBlur={() => setIsFocusedmodal(false)}
+                              > 
+                                  
+                              </TextInput>
+                              <View style={{borderTopColor:colors.bordercolor,borderWidth:2,borderBottomLeftRadius:20,borderBottomRightRadius:20,marginTop:10,height:'70%'}} >
+                                {
+                                  datamodal && datamodal.length > 0 ?(
+
+                                    <FlatList
+                                    data={datamodal}
+                                    renderItem={({item}) =>{
+                                        return(
+                                                <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
+
+                                                    <TouchableOpacity onPress={()=>seleccionopcionmodal(item)}>
+                                                        <Text style={{color:colors.text}}>{item.opcion}</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                                )
+                                        }
+                                    }
+                                    keyExtractor={item => item.id}
+
+                                    />
+                                  ) : (
+                                        <View style={{alignContent:'center',alignItems:'center',marginTop:'20%'}}> 
+                                          <Ionicons  name="warning" size={50} color="yellow" />
+                                          <Text style={{
+                                                        // color:'rgba(255,115,96,0.5)',
+                                                        color:'rgba(255,255,255,0.6)',
+                                                        fontSize:20}}> NO SE ENCONTRARON LOS MESES </Text>
+                                        </View>
+                                      )
+                                }
+                              </View>
+                      
+                          </View>
+                  </Modal>
 
                   </View>
                     
@@ -273,6 +421,50 @@ const styles = StyleSheet.create({
         paddingTop:5,
         marginLeft:'5%',
         //marginBottom:27
+      },
+
+      modalContainer: {
+    
+        // padding: 20,
+        paddingBottom:20,
+        paddingLeft:20,
+        paddingRight:20,
+        position: 'absolute',
+        bottom: 0,
+        left: 5,
+        right: 5,
+        height:'50%',
+        borderTopLeftRadius:50,
+        borderTopRightRadius:50,
+        borderLeftWidth:1,
+        borderTopWidth:1,
+        borderRightWidth:1,
+        
+        borderColor:'gray'
+        },
+    overlay: {
+          flex: 1,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+
+    contenedordatos:{
+          flexDirection: 'row',
+  
+          // borderRadius: 10,
+          // borderWidth: 1,
+          // margin:5,
+          //borderColor: '#ccc',
+  
+          borderBottomWidth:1,
+          borderRightWidth:3,
+          marginBottom:10,
+          marginRight:5,
+  
+          overflow: 'hidden', 
+          // height: 130,
+          padding: 10,
+          
+          
       },
 
   });
