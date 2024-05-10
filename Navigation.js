@@ -34,6 +34,10 @@ import EstadisticasMesIngreso from "./componentes/Estadisticas/EstadisticasMesIn
 
 import MovimientosEgreso from "./componentes/MovimientosEgreso/MovimientosEgreso";
 import MovimientosIngresos from "./componentes/MovimientosIngresos/MovimientosIngresos";
+
+import ConceptosIngresos from "./componentes/ConceptosIngresos/ConceptosIngresos";
+import ConceptosIngresosRegistro from "./componentes/ConceptosIngresos/ConceptosIngresosRegistro";
+import ConceptoIngresoDetalle from "./componentes/ConceptosIngresos/ConceptoIngresoDetalle";
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
 
@@ -73,11 +77,9 @@ const MyTheme = {
 const Drawer = createDrawerNavigator();
 
 function DrawerInicio({sesionname}){
-  
   const { colors } = useTheme();
   const sizeicon=25
   let colorborder='rgb(44,148,228)'
-  
 
   return(
 
@@ -118,7 +120,7 @@ function DrawerInicio({sesionname}){
         }}
       />
       <Drawer.Screen name="InicioConceptosIngreso" 
-        component={HomeStackGroup}
+        component={IngresoStackGroup}
         options={{
           drawerLabel: 'Conceptos Ingresos',
           title: 'Conceptos Ingresos',
@@ -188,58 +190,13 @@ function DrawerInicio({sesionname}){
           drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
          }}
        />
-    
-
-    
-
-
-
-
-      
-      
+  
   </Drawer.Navigator>
   )
 
 }
 
 
-function DrawerGroup({sesionname}) {
-  const { colors } = useTheme();
-  
-    return (
-      <Drawer.Navigator 
-      drawerContent={(props) => <DrawerContent {...props}/>}
-      screenOptions={{
-        headerTitle: ({}) => (
-          <View >
-            <Text style={{ color: colors.text,fontSize:20}}>{sesionname}</Text>
-            
-          </View>
-        ),
-        headerRight:({})=>(
-          <View style={{marginRight:20}}>
-
-            <TouchableOpacity  >
-                      <AntDesign name="setting" size={27} color={colors.iconcolor} />
-                      
-                  </TouchableOpacity>
-          </View>
-        ),
-        headerTitleAlign: 'center',
-        headerStyle:{elevation:0},
-        headerTintColor: colors.text
-         
-      }}
-      
-    >
-      <Drawer.Screen name="Home" component={HomeStackGroup} />
-      <Drawer.Screen name="ConceptosGastos" component={ConceptosGastos} />
-      <Drawer.Screen name="CloseSesion" component={CloseSesion}/>
-      
-
-    </Drawer.Navigator>
-    );
-  }
 
 const Tab = createBottomTabNavigator();
 function TabsGroup({ navigation }) {
@@ -377,10 +334,6 @@ function TabsGroup({ navigation }) {
     );
   }
 
-
-
-
-
 const HomeStack = createNativeStackNavigator();
 function HomeStackGroup(){
   
@@ -443,9 +396,62 @@ function HomeStackGroup(){
                             
                           }}
         />
+
+        
     
     
   </HomeStack.Navigator>
+  )
+}
+
+
+const ConceptosIngresoStack=createNativeStackNavigator();
+function IngresoStackGroup(){
+  
+  return(
+
+    <ConceptosIngresoStack.Navigator
+     
+     >
+        
+        <ConceptosIngresoStack.Screen name="ConceptosIngresos" 
+          component={ConceptosIngresos} 
+          options={{headerShown:false}}
+        />
+
+      <ConceptosIngresoStack.Screen name="ConceptoIngresoDetalle" 
+                component={ConceptoIngresoDetalle} 
+                options={{headerTitle:'Detalle del Concepto',
+                          headerTitleAlign:'left',
+                          headerRight: () => (
+                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                              <TouchableOpacity style={{ marginRight: 20 }}>
+                                  <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                              </TouchableOpacity>
+
+                              <TouchableOpacity style={{ marginRight: 10 }} >
+                                <AntDesign name="edit" size={30} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          ),
+
+                        }}    
+              />
+              
+
+      
+        <ConceptosIngresoStack.Screen name="ConceptosIngresosRegistro" 
+                          component={ConceptosIngresosRegistro} 
+                          options={{headerTitle:'Registro Concepto Ingreso',
+                          headerTitleAlign:'center',
+                          
+                        }}
+        />
+
+        
+    
+    
+  </ConceptosIngresoStack.Navigator>
   )
 }
 
