@@ -33,6 +33,7 @@ import EstadisticasMesEgreso from "./componentes/Estadisticas/EstadisticasMesEgr
 import EstadisticasMesIngreso from "./componentes/Estadisticas/EstadisticasMesIngreso";
 
 import MovimientosEgreso from "./componentes/MovimientosEgreso/MovimientosEgreso";
+import MovimientosIngresos from "./componentes/MovimientosIngresos/MovimientosIngresos";
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
 
@@ -101,7 +102,8 @@ function DrawerInicio({sesionname}){
       headerStyle:{elevation:0},
       headerTintColor: colors.text,
       drawerLabelStyle: {marginLeft: -20},
-      tabBarLabelStyle:{borderWidth:1,bordercolor:'red'}
+      tabBarLabelStyle:{borderWidth:1,bordercolor:'red'},
+      
     }}
     drawerContent={DrawerContentInicio}
   >
@@ -458,6 +460,7 @@ function OpcionesTabEstadisticas({navigation}){
     {
       "tabBarIndicatorStyle": {"backgroundColor": "rgb(44,148,228)"},
       tabBarLabelStyle: { fontSize: 16,textTransform:'none' },
+       
       
     }
     
@@ -471,6 +474,7 @@ function OpcionesTabEstadisticas({navigation}){
       options={{
         title:'Saldos',
         unmountOnBlur:true ,
+        
       }}
     >
     </TabEstadisticas.Screen>
@@ -510,6 +514,8 @@ function OpcionesHistorialMovimientos({navigation}){
         "tabBarIndicatorStyle": {"backgroundColor": "rgb(44,148,228)"},
         tabBarLabelStyle: { fontSize: 16,textTransform:'none' },
         
+        
+        
       }
       
   
@@ -522,13 +528,14 @@ function OpcionesHistorialMovimientos({navigation}){
         options={{
           title:'Movimimiento Gastos',
           unmountOnBlur:true ,
+          
         }}
       >
       </Tabhistorial.Screen>
   
       <Tabhistorial.Screen 
       name="HistotialIngresos" 
-      component={MovimientosEgreso}
+      component={MovimientosIngresos}
       options={{
          tabBarLabel: 'Movimientos Ingresos',
          

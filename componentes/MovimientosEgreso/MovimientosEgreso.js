@@ -43,6 +43,7 @@ function MovimientosEgreso ({ navigation  }){
     const [nombremesselccionado,setNombremesselccionado]=useState('')
 
     const [rotationValue] = useState(new Animated.Value(0));
+    const [rotationValuereload] = useState(new Animated.Value(0));
 
 
     const [estadomodal,setEstadomodal]=useState(false)
@@ -51,7 +52,16 @@ function MovimientosEgreso ({ navigation  }){
     const [textobusquedamodal,setTextobusquedamodal]=useState('')
     const [isFocusemodal, setIsFocusedmodal] = useState(false);
 
-
+    const realizarbusqueda= (palabra)=>{
+      setTextobusqueda(palabra)
+      const pal =palabra.toLowerCase()
+      let arrayencontrado = dateegresoscompleto.filter(item => 
+        item.NombreGasto.toLowerCase().includes(pal) ||
+        item.CategoriaGasto.toLowerCase().includes(pal) ||
+        item.anotacion.toLowerCase().includes(pal)
+        );
+      setDataegresos(arrayencontrado)
+    }
     const toggleModal = () => {
       setEstadomodal(!estadomodal);
    
@@ -100,11 +110,32 @@ function MovimientosEgreso ({ navigation  }){
       procesar()
     };
 
+    const recargadatos = () => {
+        
+      Animated.timing(rotationValuereload, {
+        toValue: 1,
+        duration: 200, // Duración de la animación en milisegundos
+        useNativeDriver: true,
+      }).start(() => {
+        // Restaura la animación a su estado original
+        rotationValuereload.setValue(0);
+      });
+     
+      setTextobusqueda('')
+      setDataegresos(dateegresoscompleto)
+    };
+
     const spin = rotationValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '360deg'],
     } 
-  );
+    );
+
+    const spinreload = rotationValuereload.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg'],
+    } 
+    );
     
     const Cargaranno= (annotexto)=>{
         setAnnoseleccionado(annotexto)
@@ -167,7 +198,7 @@ function MovimientosEgreso ({ navigation  }){
             if (respuesta === 200){
                 const registros=result['data']
                 
-                console.log('hizo peticion')
+                
                 setOptionmeses(registros.map(item => ({
                   opcion: item.nombre_mes,
                   id: item.id
@@ -272,14 +303,34 @@ function MovimientosEgreso ({ navigation  }){
                               </TouchableOpacity>
         
                         </View>
+                        <View style={{ flexDirection:'row',alignContent:'center'}}>
 
-                        <TextInput style={{marginTop:20,borderBottomWidth:2,borderBottomColor:'white',height:40,color: colors.text}}
-                        placeholder="Buscar Concepto o Categoria .."
-                        placeholderTextColor={'gray'}
-                        underlineColorAndroid="transparent"
-                        >
+                            <TextInput style={{width:'86.4%',marginTop:20,borderBottomWidth:2,borderBottomColor:'white',height:40,color: colors.text}}
+                                    placeholder="Buscar Concepto, Categoria o Anotacion.."
+                                    placeholderTextColor={'gray'}
+                                    underlineColorAndroid="transparent"
+                                    value={textobusqueda}
+                                    onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                            >
 
-                        </TextInput>
+                            </TextInput>
+                            <TouchableOpacity 
+                                  style={{width: 40, 
+                                  height: 40, 
+                                  borderRadius: 20, 
+                                  justifyContent: 'center', 
+                                  alignItems: 'center',
+                                  backgroundColor:'rgb(218,165,32)',
+                                  marginTop:20,
+                                  marginLeft:10
+                                }} 
+                                onPress={recargadatos}
+                                  >
+                                    <Animated.View style={{ transform: [{ rotate: spinreload }] }}>
+                                        <MaterialCommunityIcons name="reload" size={30} color={colors.iconcolor} />
+                                    </Animated.View>     
+                              </TouchableOpacity>
+                        </View>
                       </View>
 
                       
@@ -307,7 +358,7 @@ function MovimientosEgreso ({ navigation  }){
                                               <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
                                               <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
                                               <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.anotacion}</Text>
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Anotacion: {item.anotacion}</Text>
                                               
                                               
                                               
