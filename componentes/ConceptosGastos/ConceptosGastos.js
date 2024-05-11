@@ -1,6 +1,6 @@
-import React,{useState,useEffect,useContext,useRef } from "react";
+import React,{useState,useEffect,useContext,useRef,memo  } from "react";
 import { useNavigation } from "@react-navigation/native";
-import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
+import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput,ScrollView   } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -32,6 +32,17 @@ function ConceptosGastos ({ navigation  }){
     const [montototalegreso,setMontototalegreso]=useState(0)
     const [canttotalegreso,setcanttotalegreso]=useState(0)
     const { navigate } = useNavigation();
+    const [dataagrupado,setDataagrupado]=useState([])
+
+    const [expandedGroup, setExpandedGroup] = useState(null);
+
+    const toggleExpand = (index) => {
+      if (expandedGroup === index) {
+        setExpandedGroup(null);
+      } else {
+        setExpandedGroup(index);
+      }
+    };
 
 
     const chunk = (array, size) => {
@@ -93,7 +104,7 @@ function ConceptosGastos ({ navigation  }){
 
                     const registros=result['data']
 
-                    // console.log(registros)
+                    
 
                     if(Object.keys(registros).length>0){
                       registros.forEach((elemento) => {
@@ -112,6 +123,19 @@ function ConceptosGastos ({ navigation  }){
                     registros.forEach(({ TotalEgresos }) => {totalegreso += TotalEgresos,cantegreso+=1})
                     setMontototalegreso(totalegreso)
                     setcanttotalegreso(cantegreso)
+
+                    const agrupado = registros.reduce((resultado, elemento) => {
+                      // const clave = `${elemento.DescripcionCategoriaGasto}-${elemento.categoria}`;
+                      const clave = elemento.DescripcionCategoriaGasto;
+                      if (!resultado[clave]) {
+                        resultado[clave] = [];
+                      }
+                      resultado[clave].push(elemento);
+                      return resultado;
+                    }, {});
+                    
+                    // console.log(agrupado);
+                    setDataagrupado(agrupado)
                     
                     
                 }else if(respuesta === 403 || respuesta === 401){
@@ -131,7 +155,42 @@ function ConceptosGastos ({ navigation  }){
         return unsubscribe;
     }, [navigation]);
     
+    const ConceptoItem = memo(({ concepto, navigate, colors }) => (
+      <TouchableOpacity
+        key={concepto.id}
+        style={{
+          flex: 1,
+          marginHorizontal: 5,
+          borderWidth: 1,
+          borderTopLeftRadius: 10,
+          borderColor: colors.bordercolor,
+        }}
+        onPress={() => navigate('ConceptoIngresoDetalle', { concepto })}
+      >
+        <LinearGradient
+          key={concepto.nombre_producto}
+          colors={['#182120', '#12262c', '#0b2a37']}
+          style={{ flex: 1, borderRadius: 10, padding: 10 }}
+        >
+          <View style={{ 
+                        // flexDirection: 'row',
+                          alignContent:'center',
+                          alignItems:'center' }}>
+            {/* <FontAwesome6 name="check" size={20} color="green" /> */}
+            <Text style={[styles.textoconcepto, { marginLeft: 5, fontSize:17,color: colors.text, paddingRight: 10,marginBottom:15 }]}>
+              {concepto.nombre_gasto}
+            </Text>
+          </View>
     
+          <Text style={[styles.textocontenido, { color: colors.text }]}> Categoria: {concepto.DescripcionCategoriaGasto}</Text>
+    
+          <Text style={[styles.textocontenido, { color: colors.text }]}>
+           Acumulado:  {Number(concepto.TotalEgresos).toLocaleString('es-ES')} Gs.
+          </Text>
+          <Text style={[styles.textocontenido, { color: colors.text }]}> Tipo: {concepto.DescripcionTipoGasto}</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+    ));
     
     if(cargacompleta){
 
@@ -171,58 +230,56 @@ function ConceptosGastos ({ navigation  }){
                         </View>
                     </View>
 
-                    
+                    <FlatList
+                      data={Object.entries(dataagrupado)}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item, index }) => (
+                        <View key={item[0]}>
+                          <View style={{borderTopWidth:2,
+                                        borderRightWidth:2,
+                                        borderLeftWidth:2,
+                                        borderColor:'gray',
+                                        padding:10,
+                                        alignItems:'center',
+                                        // borderRadius:20,
+                                        borderTopLeftRadius:20,
+                                        marginTop:10,
+                                        backgroundColor:'rgba(0,0,0,0.6)',
+                                        marginLeft:10,
+                                        marginRight:10,
+                                        flexDirection:'row',
+                                        justifyContent:'space-between'
+                                      }} 
+                                        > 
 
-                    <FlatList data={dataingresos}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <View style={{ flexDirection: 'row', marginBottom: 10,marginLeft:5,marginRight:5 }}>
-                                {item.map(concepto => (
-                                    
-                                      
-                                      
-                                        <TouchableOpacity key={concepto.id} 
-                                                          style={{ flex: 1, marginHorizontal: 5,borderWidth:1,
-                                                              borderRadius:10,borderColor:colors.bordercolor}}
-                                                          onPress={() => {navigate('ConceptoIngresoDetalle', { concepto });}}
-                                                          >
+                            <Text style={{ color: 'white',fontSize:17,fontWeight:'bold' }}>{item[0]}</Text>
+                            <TouchableOpacity onPress={() => toggleExpand(index)} >
 
-
-                                            <LinearGradient
-                                            key={concepto.nombre_producto} 
-                                            
-                                            
-                                            colors={['#182120', '#12262c', '#0b2a37']}
-                                            
-                                            style={{flex: 1,borderRadius:10,padding:10}}
-                                            >
-
-                                              <View style={{flexDirection:'row'}}>
-                                                <FontAwesome6 name="check" size={20} color="green" />
-                                                <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text,paddingRight:10}]}>{concepto.nombre_gasto}</Text>
-                                              </View>
-
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]} >{concepto.DescripcionCategoriaGasto}</Text>
-                                              
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]}>
-                                
-                                                Gs. {Number(concepto.TotalEgresos).toLocaleString('es-ES')}
-                                            </Text>
-                                            </LinearGradient>
-
-                                        </TouchableOpacity  >
-                                      
-                                    
-                                ))}
-                            </View>
-                        )}
-                        />
-                          
-                        
-                    
-
-
-
+                            <AntDesign name={expandedGroup === index ? "caretup" : "caretdown"} size={24} color="white" />
+                            </TouchableOpacity>
+                          </View>
+                          {expandedGroup === index && Array.isArray(item[1]) && item[1].length > 0 ? (
+                            <FlatList
+                              data={item[1]}
+                              keyExtractor={(item, index) => index.toString()}
+                              renderItem={({ item }) => (
+                                <View style={{ flexDirection: 'row', marginBottom: 10, marginLeft: 5, marginRight: 5 }}>
+                                  <ConceptoItem
+                                    key={item.id}
+                                    concepto={item}
+                                    navigate={navigate}
+                                    colors={colors}
+                                  />
+                                </View>
+                              )}
+                            />
+                          ) : (
+                            <Text></Text>
+                          )}
+                        </View>
+                      )}
+                    />
+                
                     <View style={styles.resumencontainer}>
 
                         <Text style={[styles.contenedortexto,{ color: colors.text}]}>
