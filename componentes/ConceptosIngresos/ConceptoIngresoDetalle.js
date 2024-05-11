@@ -22,6 +22,7 @@ function ConceptoIngresoDetalle ({ navigation }){
     const hideDialog = () => setVisibledialogo(false);
     const [codigoeliminar,setCodigoelimnar]=useState('')
     const [conceptoeliminar,setConceptoelimnar]=useState('')
+    const [valorconcepto,setValorConcepto]=useState(0)
     const [datositem, setDatositem]=useState([])
 
     const eliminar=()=>{
@@ -62,7 +63,8 @@ function ConceptoIngresoDetalle ({ navigation }){
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
         setDatositem(concepto)
-        console.log(concepto)
+        setValorConcepto(concepto.TotalIngresos)
+        
         setCodigoelimnar(concepto.id)
         setConceptoelimnar(concepto.nombre_producto)
         navigation.setOptions({
@@ -84,21 +86,22 @@ function ConceptoIngresoDetalle ({ navigation }){
             
             const cargardatos=async()=>{
                 const idact=concepto.id
-                const datestorage=await Handelstorage('obtenerdate');
-                const mes_storage=datestorage['datames']
-                const anno_storage=datestorage['dataanno']
+               
                 const body = {};
-                const endpoint='MovileDatoEgreso/' + anno_storage +'/' + mes_storage + '/'+ idact + '/'
+                const endpoint='MisProductosFinancieros/' + idact +'/' 
                 const result = await Generarpeticion(endpoint, 'POST', body);
                 const respuesta=result['resp']
                 if (respuesta === 200){
-                    const registros=result['data']
+                    const registros=result['data'][0]
                     registros.recarga='no'
+                    
 
 
                     Object.keys(registros).forEach(key => {
-                        item[key] = registros[key];
+                        concepto[key] = registros[key];
                       });
+                      
+
                     setDatositem(registros)
                     
                     
@@ -130,7 +133,9 @@ function ConceptoIngresoDetalle ({ navigation }){
                         <Dialog visible={visibledialogo} onDismiss={hideDialog}>
                             <Dialog.Title>Eliminar Registro</Dialog.Title>
                             <Dialog.Content>
+                                { valorconcepto >0 ? <Text variant="bodyMedium">{`¿Desea eliminar el registro de ${conceptoeliminar} con ID Concepto N°: ${codigoeliminar}?. Se liminaran TODOS los registros de ingresos asociados a él!!!`}</Text> : 
                                 <Text variant="bodyMedium">{`¿Desea eliminar el registro de ${conceptoeliminar} con ID Concepto N°: ${codigoeliminar}?`}</Text>
+                                }
                                 
                             </Dialog.Content>
                             <Dialog.Actions>
@@ -155,17 +160,17 @@ function ConceptoIngresoDetalle ({ navigation }){
                                     // marginBottom:50,marginTop:50
                                 }}>
 
-                        <View style={{ alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'center',
+                        <View style={{ flexDirection: 'row',alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
                         borderTopWidth:2,borderTopColor:'white'}}>
 
                             <Text style={[{ color: colors.text}]}>
                                 <Text style={[{ color: colors.text}]}>ID Concepto:</Text>{' '}
                                 {datositem.id}
                             </Text>
-                            {/* <Text style={[{ color: colors.text}]}>
-                                <Text style={[{ color: colors.text}]}>Periodo:</Text>{' '}
-                                {datositem.NombreMesEgreso} / {item.AnnoEgreso}
-                            </Text> */}
+                            <Text style={[{ color: colors.text}]}>
+                                <Text style={[{ color: colors.text}]}>Cantidad Registros:</Text>{' '}
+                                {datositem.CantidadRegistros} 
+                            </Text>
                         </View>
 
 

@@ -1,8 +1,8 @@
 import React,{useState,useEffect,useContext,useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
-import { IconButton } from 'react-native-paper';
-import moment from 'moment';
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
@@ -86,7 +86,7 @@ function ConceptosIngresos ({ navigation  }){
             const cargardatos=async()=>{
                 
                 const body = {};
-                const endpoint='MisProductosFinancieros/'
+                const endpoint='MisProductosFinancieros/0/'
                 const result = await Generarpeticion(endpoint, 'POST', body);
                 const respuesta=result['resp']
                 if (respuesta === 200){
@@ -178,22 +178,40 @@ function ConceptosIngresos ({ navigation  }){
                             <View style={{ flexDirection: 'row', marginBottom: 10,marginLeft:5,marginRight:5 }}>
                                 {item.map(concepto => (
                                     
-
+                                      
+                                      
                                         <TouchableOpacity key={concepto.id} 
                                                           style={{ flex: 1, marginHorizontal: 5,borderWidth:1,
-                                                              borderRadius:10,borderColor:colors.bordercolor,padding:10 }}
+                                                              borderRadius:10,borderColor:colors.bordercolor}}
                                                           onPress={() => {navigate('ConceptoIngresoDetalle', { concepto });}}
                                                           >
 
-                                            <View style={{flexDirection:'row'}}>
-                                              <FontAwesome6 name="check" size={20} color="green" />
-                                              <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text}]}>{concepto.nombre_producto}</Text>
-                                            </View>
 
-                                            <Text style={[styles.textocontenido,{ color: colors.text}]} >{concepto.DescripcionTipoProducto}</Text>
-                                            <Text style={[styles.textocontenido,{ color: colors.text}]} >{moment(concepto.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                            <LinearGradient
+                                            key={concepto.nombre_producto} 
+                                            
+                                            // colors={['rgba(0,0,0,0.7)', 'transparent']}
+                                            colors={['#182120', '#12262c', '#0b2a37']}
+                                            // colors={['rgb(28,44,52)', 'rgba(0,0,0,0.5)']}
+                                            // colors={['rgba(44,148,228,0.3)', 'rgb(28,44,52)', 'transparent']}
+                                            style={{flex: 1,borderRadius:10,padding:10}}
+                                            >
+
+                                              <View style={{flexDirection:'row'}}>
+                                                <FontAwesome6 name="check" size={20} color="green" />
+                                                <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text,paddingRight:10}]}>{concepto.nombre_producto}</Text>
+                                              </View>
+
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]} >{concepto.DescripcionTipoProducto}</Text>
+                                              {/* <Text style={[styles.textocontenido,{ color: colors.text}]} >{moment(concepto.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text> */}
+                                              <Text style={[styles.textocontenido,{ color: colors.text}]}>
+                                
+                                                Gs. {Number(concepto.TotalIngresos).toLocaleString('es-ES')}
+                                            </Text>
+                                            </LinearGradient>
 
                                         </TouchableOpacity  >
+                                      
                                     
                                 ))}
                             </View>

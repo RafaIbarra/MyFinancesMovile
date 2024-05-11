@@ -138,59 +138,7 @@ function GastosDetalle ({ navigation }){
                             </Dialog.Actions>
                         </Dialog>
                     </Portal>
-                    {/* <View style={styles.container}>
 
-                    
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Codigo Operacion:</Text>{' '}
-                            {item.id}
-                        </Text>
-
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Periodo:</Text>{' '}
-                            {item.NombreMesEgreso} / {item.AnnoEgreso}
-                        </Text>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Tipo Gasto:</Text>{' '}
-                            {item.TipoGasto}
-                        </Text>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Categoria:</Text>{' '}
-                            {item.CategoriaGasto}
-                        </Text>
-
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Descripcion:</Text>{' '}
-                            {item.NombreGasto}
-                        </Text>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Monto Gasto:</Text>{' '}
-                            {Number(item.monto_gasto).toLocaleString('es-ES')} Gs.
-                        </Text>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Fecha Gasto:</Text>{' '}
-                            {moment(item.fecha_gasto).format('DD/MM/YYYY')}
-                        </Text>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Fecha Regisro:</Text>{' '}
-                            {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}
-                        </Text>
-
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={[styles.labeltext,{ color: colors.text}]}>Anotacion:</Text>{' '}
-                            {item.anotacion}
-                        </Text>
-
-                    </View> */}
 
 
 

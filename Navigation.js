@@ -22,7 +22,7 @@ import IngresoTransaccion from "./componentes/Ingresos/IngresoTransaccion";
 import IngresosAgregar from "./componentes/Ingresos/IngresosAgregar";
 // import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
 import IngresoDetalle from "./componentes/Ingresos/IngresoDetalle";
-import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
+
 import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
 import DrawerContent from "./componentes/DrawerContent/DrawerContent";
@@ -38,6 +38,12 @@ import MovimientosIngresos from "./componentes/MovimientosIngresos/MovimientosIn
 import ConceptosIngresos from "./componentes/ConceptosIngresos/ConceptosIngresos";
 import ConceptosIngresosRegistro from "./componentes/ConceptosIngresos/ConceptosIngresosRegistro";
 import ConceptoIngresoDetalle from "./componentes/ConceptosIngresos/ConceptoIngresoDetalle";
+
+import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
+import ConceptosGastosDetalle from "./componentes/ConceptosGastos/ConceptosGastosDetalle";
+import ConceptosGastosRegistro from "./componentes/ConceptosGastos/ConceptosGastosRegistro";
+
+
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
 
@@ -142,8 +148,8 @@ function DrawerInicio({sesionname}){
           drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
          }}
        />
-      <Drawer.Screen name="InicioConceptos" 
-        component={ConceptosGastos}
+      <Drawer.Screen name="GastosStackGroup" 
+        component={GastosStackGroup}
         options={{
           drawerLabel: 'Conceptos Gastos',
           title: 'Conceptos Gastos',
@@ -454,6 +460,59 @@ function IngresoStackGroup(){
   </ConceptosIngresoStack.Navigator>
   )
 }
+
+const ConceptosGastosStack=createNativeStackNavigator();
+function GastosStackGroup(){
+  
+  return(
+
+    <ConceptosGastosStack.Navigator
+     
+     >
+        
+        <ConceptosGastosStack.Screen name="ConceptosGastos" 
+          component={ConceptosGastos} 
+          options={{headerShown:false}}
+        />
+
+      <ConceptosGastosStack.Screen name="ConceptosGastosDetalle" 
+                component={ConceptosGastosDetalle} 
+                options={{headerTitle:'Detalle del Concepto',
+                          headerTitleAlign:'left',
+                          headerRight: () => (
+                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                              <TouchableOpacity style={{ marginRight: 20 }}>
+                                  <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                              </TouchableOpacity>
+
+                              <TouchableOpacity style={{ marginRight: 10 }} >
+                                <AntDesign name="edit" size={30} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          ),
+
+                        }}    
+              />
+              
+
+      
+        <ConceptosGastosStack.Screen name="ConceptosGastosRegistro" 
+                          component={ConceptosGastosRegistro} 
+                          options={{headerTitle:'Registro Concepto Gasto',
+                          headerTitleAlign:'center',
+                          
+                        }}
+        />
+
+        
+    
+    
+  </ConceptosGastosStack.Navigator>
+  )
+}
+
+
+
 
 const TabEstadisticas=createMaterialTopTabNavigator()
 function OpcionesTabEstadisticas({navigation}){

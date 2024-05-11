@@ -76,7 +76,7 @@ function ConceptosIngresosRegistro({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
           
-        //   item.recarga='si'
+          concepto.recarga='si'
       
   
           navigation.goBack();

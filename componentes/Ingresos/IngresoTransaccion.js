@@ -207,7 +207,7 @@ function IngresoTransaccion({ navigation }){
         const cargardatos=async()=>{
         
             const body = {};
-            const endpoint='MisProductosFinancieros/'
+            const endpoint='MisProductosFinancieros/0/'
             const result = await Generarpeticion(endpoint, 'POST', body);
             const respuesta=result['resp']
             if (respuesta === 200){
