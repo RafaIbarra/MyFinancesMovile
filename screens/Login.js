@@ -12,6 +12,8 @@ import { AuthContext } from "../AuthContext";
 
 import { Fontisto } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; // Importa el icono de spinner
+
+import { LinearGradient } from 'expo-linear-gradient';
 function Login ({setSesionname}){
     const[username,setUsername]=useState('')
     const[password,setPassword]=useState('')
@@ -136,66 +138,81 @@ function Login ({setSesionname}){
       }, []);
     
     return(
-        <SafeAreaView style={{ flex: 1}}>
+        <View style={{ flex: 1}}>
 
             
-            <StatusBar />
+            {/* <StatusBar /> */}
+            <LinearGradient
+                key='linearlogin'
+                                            
+                                            
+                // colors={['rgba(0,0,0,0.7)', 'transparent']}
+                // colors={['#D41EE5', '#64209A', '#0C0A47']}
+                // colors={['rgba(28,44,52,0.6)','rgb(0,0,0)','transparent']}
+                // colors={['#fef0ff', '#eaebfb','#ecfef6','#fffbe5','#ffebeb']}
+                colors={['#003366', '#0079c2']}
+                style={{flex:1}}
+                                
+                                            
+            >
 
-                
-                        <View style={{ flex: 1}}>
-                            <ImageBackground
-                                source={require('../assets/ahorro6.png')} // Ruta de la imagen de fondo
-                                style={styles.imagenFondo}
-                                resizeMode='contain'
-                                >
-                                <View style={styles.contenedorelementos} >
+                    <View style={{ flex: 1}}>
+                        <ImageBackground
+                            source={require('../assets/ahorro6.png')} // Ruta de la imagen de fondo
+                            style={styles.imagenFondo}
+                            resizeMode='contain'
+                            
+                            >
+                            <View style={styles.contenedorelementos} >
 
-                                    <View style={styles.elemento}>
-                                        <TextInput 
+                                <View style={styles.elemento}>
+                                    <TextInput 
 
-                                            backgroundColor='rgba(182, 212, 212,0.5)'
-                                            label="Usuario" 
-                                            value={username} 
-                                            onChangeText={username => setUsername(username)}
-                                            />
-                                    </View>
-
-                                    <View style={styles.elemento}>
-                                        <TextInput 
-                                        label="Password" 
-                                        secureTextEntry 
-                                        value={password} 
                                         backgroundColor='rgba(182, 212, 212,0.5)'
-                                        onChangeText={password => setPassword(password)}/>
-                                    </View>
-
-                                    <View style={styles.elemento}>
-                                        <Button icon="account-check-outline" mode="contained" onPress={() => ingresar()}>
-                                            INGRESAR
-                                        </Button>
-                                    </View>
+                                        label="Usuario" 
+                                        value={username} 
+                                        onChangeText={username => setUsername(username)}
+                                        />
                                 </View>
-                            </ImageBackground>
-                        </View>
 
-                        {
-                            comprobando &&(
+                                <View style={styles.elemento}>
+                                    <TextInput 
+                                    label="Password" 
+                                    secureTextEntry 
+                                    value={password} 
+                                    backgroundColor='rgba(182, 212, 212,0.5)'
+                                    onChangeText={password => setPassword(password)}/>
+                                </View>
 
-                            <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
-                                <View style={{ alignItems: 'center' }}>
-                                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                    <Fontisto name="spinner" size={60} color="blue" />
-                                    </Animated.View>
-                                    <Text style={{color:'rgba(255,255,255,0.6)',fontSize:20 }}>{mensajeusuario}</Text>
+                                <View style={styles.elemento}>
+                                    <Button icon="account-check-outline" mode="contained" onPress={() => ingresar()}>
+                                        INGRESAR
+                                    </Button>
                                 </View>
                             </View>
-                            )
-                        }
+                        </ImageBackground>
+                    </View>
+
+                    {
+                        comprobando &&(
+
+                        <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
+                            <View style={{ alignItems: 'center' }}>
+                                <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                                <Fontisto name="spinner" size={60} color="blue" />
+                                </Animated.View>
+                                <Text style={{color:'rgba(255,255,255,0.6)',fontSize:20 }}>{mensajeusuario}</Text>
+                            </View>
+                        </View>
+                        )
+                    }
+            </LinearGradient>
+                
                   
                 
 
             
-         </SafeAreaView>
+         </View>
 
          
 
@@ -211,7 +228,7 @@ const styles = StyleSheet.create({
     imagenFondo: {
         flex: 1,
         justifyContent: 'center', // Alinear la imagen en el centro
-        backgroundColor:'rgb(182, 212, 212)',
+        // backgroundColor:'rgb(182, 212, 212)',
         width: '100%',
         height: '100%',
         

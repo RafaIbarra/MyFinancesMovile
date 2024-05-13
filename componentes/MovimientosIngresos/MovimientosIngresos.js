@@ -314,22 +314,29 @@ function MovimientosIngresos ({ navigation  }){
                             >
 
                             </TextInput>
-                            <TouchableOpacity 
-                                  style={{width: 40, 
-                                  height: 40, 
-                                  borderRadius: 20, 
-                                  justifyContent: 'center', 
-                                  alignItems: 'center',
-                                  backgroundColor:'rgb(218,165,32)',
-                                  marginTop:20,
-                                  marginLeft:10
-                                }} 
-                                onPress={recargadatos}
-                                  >
-                                    <Animated.View style={{ transform: [{ rotate: spinreload }] }}>
-                                        <MaterialCommunityIcons name="reload" size={30} color={colors.iconcolor} />
-                                    </Animated.View>     
-                              </TouchableOpacity>
+
+                            {
+                              textobusqueda.length >0 && dataegresos.length >0 && (
+
+                                <TouchableOpacity 
+                                      style={{width: 40, 
+                                      height: 40, 
+                                      borderRadius: 20, 
+                                      justifyContent: 'center', 
+                                      alignItems: 'center',
+                                      backgroundColor:'rgb(218,165,32)',
+                                      marginTop:20,
+                                      marginLeft:10
+                                    }} 
+                                    onPress={recargadatos}
+                                      >
+                                        <Animated.View style={{ transform: [{ rotate: spinreload }] }}>
+                                            <MaterialCommunityIcons name="reload" size={30} color={colors.iconcolor} />
+                                        </Animated.View>     
+                                </TouchableOpacity>
+                              )
+
+                            }
                         </View>
                       </View>
 

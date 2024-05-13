@@ -47,6 +47,8 @@ import CategoriaGastos from "./componentes/CategoriaGastos/CategoriaGastos";
 import CategoriaGastosDetalle from "./componentes/CategoriaGastos/CategoriaGastosDetalle";
 import CategoriaGastosRegistro from "./componentes/CategoriaGastos/CategoriaGastosRegistro";
 
+import DatosPersonales from "./componentes/DatosPersonales/DatosPersonales";
+
 
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
@@ -190,7 +192,7 @@ function DrawerInicio({sesionname}){
        />
 
       <Drawer.Screen name="InicioDatosPersonales" 
-        component={HomeStackGroup}
+        component={DatosPersonales}
         options={{
           drawerLabel: 'Datos Personales',
           title: 'Datos Personales',

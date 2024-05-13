@@ -20,10 +20,11 @@ function AppContent() {
       }, [activarsesion]);
   
     return (
-      <SafeAreaView style={styles.container}>
-        <View style={styles.container}>{activarsesion ? (<Navigation sesionname={sesionname} />) : (<Login setSesionname={setSesionname} />)}</View>
-        {/* <View style={styles.container}><Navigation sesionname={sesionname} /></View> */}
-      </SafeAreaView>
+      // <SafeAreaView style={styles.container}>
+        
+        
+      // </SafeAreaView>
+      <View style={styles.container}>{activarsesion ? (<Navigation sesionname={sesionname} />) : (<Login setSesionname={setSesionname} />)}</View>
     );
   }
   

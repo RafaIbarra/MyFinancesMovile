@@ -314,7 +314,9 @@ function MovimientosEgreso ({ navigation  }){
                             >
 
                             </TextInput>
-                            <TouchableOpacity 
+                            {
+                              textobusqueda.length >0 && dataegresos.length >0 && (
+                                <TouchableOpacity 
                                   style={{width: 40, 
                                   height: 40, 
                                   borderRadius: 20, 
@@ -330,6 +332,10 @@ function MovimientosEgreso ({ navigation  }){
                                         <MaterialCommunityIcons name="reload" size={30} color={colors.iconcolor} />
                                     </Animated.View>     
                               </TouchableOpacity>
+
+                              )
+                            }
+                            
                         </View>
                       </View>
 
