@@ -43,6 +43,10 @@ import ConceptosGastos from "./componentes/ConceptosGastos/ConceptosGastos";
 import ConceptosGastosDetalle from "./componentes/ConceptosGastos/ConceptosGastosDetalle";
 import ConceptosGastosRegistro from "./componentes/ConceptosGastos/ConceptosGastosRegistro";
 
+import CategoriaGastos from "./componentes/CategoriaGastos/CategoriaGastos";
+import CategoriaGastosDetalle from "./componentes/CategoriaGastos/CategoriaGastosDetalle";
+import CategoriaGastosRegistro from "./componentes/CategoriaGastos/CategoriaGastosRegistro";
+
 
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
@@ -138,7 +142,7 @@ function DrawerInicio({sesionname}){
 
        />
       <Drawer.Screen name="InicioCategoriaGastos" 
-        component={HomeStackGroup}
+        component={CategoriaGastosStackGroup}
         options={{
           drawerLabel: 'Categoria Gastos',
           title: 'Categoria Gastos',
@@ -511,6 +515,55 @@ function GastosStackGroup(){
   )
 }
 
+const CategoriaGastosStack=createNativeStackNavigator();
+function CategoriaGastosStackGroup(){
+  
+  return(
+
+    <CategoriaGastosStack.Navigator
+     
+     >
+        
+        <CategoriaGastosStack.Screen name="CategoriaGastos" 
+          component={CategoriaGastos} 
+          options={{headerShown:false}}
+        />
+
+      <CategoriaGastosStack.Screen name="CategoriaGastosDetalle" 
+                component={CategoriaGastosDetalle} 
+                options={{headerTitle:'Detalle Categoria',
+                          headerTitleAlign:'left',
+                          headerRight: () => (
+                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                              <TouchableOpacity style={{ marginRight: 20 }}>
+                                  <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                              </TouchableOpacity>
+
+                              <TouchableOpacity style={{ marginRight: 10 }} >
+                                <AntDesign name="edit" size={30} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          ),
+
+                        }}    
+              />
+              
+
+      
+        <CategoriaGastosStack.Screen name="CategoriaGastosRegistro" 
+                          component={CategoriaGastosRegistro} 
+                          options={{headerTitle:'Registro Categoria',
+                          headerTitleAlign:'center',
+                          
+                        }}
+        />
+
+        
+    
+    
+  </CategoriaGastosStack.Navigator>
+  )
+}
 
 
 

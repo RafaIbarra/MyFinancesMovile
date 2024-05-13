@@ -10,7 +10,7 @@ import Generarpeticion from "../PeticionesApi/apipeticiones";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 
-function ConceptosGastosDetalle ({ navigation }){
+function CategoriaGastosDetalle ({ navigation }){
     const {params: { concepto },} = useRoute();
     
     const { colors } = useTheme();
@@ -30,17 +30,17 @@ function ConceptosGastosDetalle ({ navigation }){
         const valdel=[concepto.id]
         
         setCodigoelimnar(valdel)
-        setConceptoelimnar(concepto.nombre_gasto)
+        setConceptoelimnar(concepto.nombre_categoria)
         showDialog(true)
         
     }
     const confimareliminacion = async()=>{
       
         const datoseliminar = {
-            gastos:codigoeliminar,};
+            categorias:codigoeliminar,};
     
     
-        const endpoint='EliminarGastos/'
+        const endpoint='EliminarCategorias/'
         const result = await Generarpeticion(endpoint, 'POST', datoseliminar);
           
         const respuesta=result['resp']
@@ -62,13 +62,11 @@ function ConceptosGastosDetalle ({ navigation }){
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-        
         setDatositem(concepto)
-        setValorConcepto(concepto.TotalEgresos)
+        setValorConcepto(concepto.TotalIngresos)
         
         setCodigoelimnar(concepto.id)
-        
-        setConceptoelimnar(concepto.nombre_gasto)
+        setConceptoelimnar(concepto.nombre_producto)
         navigation.setOptions({
           headerRight: () => (
             <View style={{flexDirection: 'row',alignItems: 'center'}}>
@@ -76,7 +74,7 @@ function ConceptosGastosDetalle ({ navigation }){
                     <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ marginRight: 10 }} onPress={() => {navigate("ConceptosGastosRegistro", { concepto});}}>
+                <TouchableOpacity style={{ marginRight: 10 }} onPress={() => {navigate("CategoriaGastosRegistro", { concepto});}}>
                     <AntDesign name="edit" size={30} color="white" />
                 </TouchableOpacity>
             </View>
@@ -90,7 +88,7 @@ function ConceptosGastosDetalle ({ navigation }){
                 const idact=concepto.id
                
                 const body = {};
-                const endpoint='MisGastos/' + idact +'/' 
+                const endpoint='MisCategorias/' + idact +'/' 
                 const result = await Generarpeticion(endpoint, 'POST', body);
                 const respuesta=result['resp']
                 if (respuesta === 200){
@@ -135,8 +133,8 @@ function ConceptosGastosDetalle ({ navigation }){
                         <Dialog visible={visibledialogo} onDismiss={hideDialog}>
                             <Dialog.Title>Eliminar Registro</Dialog.Title>
                             <Dialog.Content>
-                                { valorconcepto >0 ? <Text variant="bodyMedium">{`¿Desea eliminar el registro de ${conceptoeliminar} con ID Concepto N°: ${codigoeliminar}?. Se liminaran TODOS los registros de gastos asociados a él!!!`}</Text> : 
-                                <Text variant="bodyMedium">{`¿Desea eliminar el registro de ${conceptoeliminar} con ID Concepto N°: ${codigoeliminar}?`}</Text>
+                                { valorconcepto >0 ? <Text variant="bodyMedium">{`¿Desea eliminar el registro de ${conceptoeliminar} con ID Concepto N°: ${codigoeliminar}?. Se liminaran TODOS los registros de ingresos asociados a él!!!`}</Text> : 
+                                <Text variant="bodyMedium">{`¿Desea eliminar el registro de ${conceptoeliminar} con ID Categoria N°: ${codigoeliminar}?`}</Text>
                                 }
                                 
                             </Dialog.Content>
@@ -151,24 +149,25 @@ function ConceptosGastosDetalle ({ navigation }){
 
 
                     <View style={{flex: 1,
-                                 
+                                    // borderWidth:1,
+                                    // borderRadius:50,
+                                    // borderStartColor:'white',
+                                    // borderBottomColor:'white',
+                                    // justifyContent: 'center',
                                     marginTop:50,
                                     width:'90%',
                                     marginLeft:20,
-                                    
+                                    // marginBottom:50,marginTop:50
                                 }}>
 
-                        <View style={{ flexDirection: 'row',alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
+                        <View style={{ alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'center',
                         borderTopWidth:2,borderTopColor:'white'}}>
 
                             <Text style={[{ color: colors.text}]}>
-                                <Text style={[{ color: colors.text}]}>ID Concepto:</Text>{' '}
+                                <Text style={[{ color: colors.text}]}>ID Categoria:</Text>{' '}
                                 {datositem.id}
                             </Text>
-                            <Text style={[{ color: colors.text}]}>
-                                <Text style={[{ color: colors.text}]}>Cantidad Registros:</Text>{' '}
-                                {datositem.CantidadRegistros} 
-                            </Text>
+                            
                         </View>
 
 
@@ -178,31 +177,19 @@ function ConceptosGastosDetalle ({ navigation }){
 
                         <Text style={[styles.contenedortexto,{ color: colors.text,fontSize:25,fontWeight:'bold'}]}>
                                 
-                                {datositem.nombre_gasto}
+                                {datositem.nombre_categoria}
                             </Text>
 
                            
                             <Divider />
     
-                            <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                                
-                                Gs. {Number(datositem.TotalEgresos).toLocaleString('es-ES')}
-                            </Text>
-                            <Divider />
-                            <Divider />
-                            <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                                
-                                {datositem.DescripcionCategoriaGasto} 
-                            </Text>
-                            <Divider />
-                            <Divider />
-                            <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                                
-                                {datositem.DescripcionTipoGasto} 
-                            </Text>
-                            <Divider />
-                            <Divider />
                            
+                            <Divider />
+                            <Divider />
+
+                            {/* <Text style={[styles.contenedortexto, { color: colors.text }]}>
+                                    {item.anotacion}
+                                </Text> */}
 
                             {/* <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
@@ -256,4 +243,4 @@ const styles = StyleSheet.create({
     }
 
   });
-export default ConceptosGastosDetalle
+export default CategoriaGastosDetalle

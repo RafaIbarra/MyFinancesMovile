@@ -198,14 +198,16 @@ function ConceptoIngresoDetalle ({ navigation }){
                             </Text>
                             <Divider />
                             <Divider />
+                            <Divider />
+
                             {/* <Text style={[styles.contenedortexto, { color: colors.text }]}>
                                     {item.anotacion}
                                 </Text> */}
 
-                            <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                            {/* <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
                                 {moment(datositem.fecha_gasto).format('DD/MM/YYYY')}
-                            </Text>
+                            </Text> */}
                         </View>
 
                         
