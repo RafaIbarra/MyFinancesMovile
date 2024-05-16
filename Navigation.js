@@ -7,7 +7,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AuthContext } from "./AuthContext";
-
+import { StatusBar } from 'react-native';
 import { StyleSheet,Button  } from "react-native";
 import { View,Text,TouchableOpacity } from "react-native";
 import { List } from 'react-native-paper';
@@ -698,9 +698,11 @@ function OpcionesHistorialMovimientos({navigation}){
 }
 
 function Navigation( {sesionname}){
+  const { colors } = useTheme();
 return(
     <NavigationContainer theme={MyTheme }>
-        {/* <StatusBar style="auto"></StatusBar> */}
+        
+        <StatusBar backgroundColor='rgb(28,44,52)'  />
         <DrawerInicio  sesionname={sesionname} />
     </NavigationContainer>
 )

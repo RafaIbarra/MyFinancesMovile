@@ -4,6 +4,7 @@ import { useTheme } from '@react-navigation/native';
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { StatusBar } from 'react-native';
 import Login from "./screens/Login";
 import RegistroUsuario from "./screens/RegistroUsuario";
 
@@ -53,6 +54,7 @@ function NavigationLogin(){
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <NavigationContainer theme={MyTheme }>
+            <StatusBar backgroundColor='rgb(28,44,52)'  />
                 <LoginStackGroup ></LoginStackGroup>
             </NavigationContainer>
         </GestureHandlerRootView>

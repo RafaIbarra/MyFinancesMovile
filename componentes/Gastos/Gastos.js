@@ -150,7 +150,9 @@ function Gastos ({ navigation  }){
 
         return(
             <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar />
+                {/* <StatusBar /> */}
+
+               
 
                 
                     

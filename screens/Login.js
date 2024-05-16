@@ -64,6 +64,7 @@ function Login ({ navigation  }){
         if(datos['resp']===200){
             
             // await AsyncStorage.setItem("user", (JSON.stringify(datos['data']['token'])));
+            console.log(datos['data']['datauser'])
             const userdata={
                 token:datos['data']['token'],
                 sesion:datos['data']['sesion'],
