@@ -21,31 +21,7 @@ function Resumen ({ navigation  }){
     const unsubscribe = navigation.addListener('focus', () => {
       
       const cargardatos=async()=>{
-          // const datestorage=await Handelstorage('obtenerdate');
-          // const mes_storage=datestorage['datames']
-          // const anno_storage=datestorage['dataanno']
-          // const body = {};
-          // const endpoint='MovileResumenMes/' + anno_storage +'/' + mes_storage + '/'
-          // const result = await Generarpeticion(endpoint, 'POST', body);
-          // const respuesta=result['resp']
-          // if (respuesta === 200){
-
-          //     console.log(result['data']['datos'])
-              
-          //     // const detalle=result['data']['datos'].filter(item => item.Codigo !== 3);
-          //     // console.log(detalle)
-          //     // setDatadetalle(detalle)
-              
-              
-              
-              
-          // }else if(respuesta === 403 || respuesta === 401){
-              
-              
-          //     await Handelstorage('borrar')
-          //     await new Promise(resolve => setTimeout(resolve, 1000))
-          //     setActivarsesion(false)
-          // }
+         
           
           setCargacopleta(true)
 

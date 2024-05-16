@@ -1,12 +1,12 @@
-import React,{useState } from "react";
+import React,{useState,useContext } from "react";
 import {NavigationContainer,DefaultTheme} from "@react-navigation/native";
-
+import { useNavigation } from "@react-navigation/native";
 import { useTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-
+import { AuthContext } from "./AuthContext";
 
 import { StyleSheet,Button  } from "react-native";
 import { View,Text,TouchableOpacity } from "react-native";
@@ -49,6 +49,9 @@ import CategoriaGastosRegistro from "./componentes/CategoriaGastos/CategoriaGast
 
 import DatosPersonales from "./componentes/DatosPersonales/DatosPersonales";
 
+import Seguridad from "./componentes/Seguridad/Seguridad";
+import Periodo from "./componentes/Periodo/Perdiodo";
+
 
 ////////////Storage
 import Handelstorage from "./Storage/handelstorage";
@@ -59,6 +62,7 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 const MyTheme = {
@@ -88,10 +92,15 @@ const MyTheme = {
 
 const Drawer = createDrawerNavigator();
 
-function DrawerInicio({sesionname}){
+function DrawerInicio({navigation}){
   const { colors } = useTheme();
   const sizeicon=25
   let colorborder='rgb(44,148,228)'
+  const { activarsesion, setActivarsesion } = useContext(AuthContext);
+  const {periodo, setPeriodo} = useContext(AuthContext);
+  const { navigate } = useNavigation();
+  
+  
 
   return(
 
@@ -99,14 +108,14 @@ function DrawerInicio({sesionname}){
     screenOptions={{
       headerTitle: ({}) => (
         <View >
-          <Text style={{ color: colors.text,fontSize:20}}>{sesionname}</Text>
+          <Text style={{ color: colors.text,fontSize:20}}>{periodo}</Text>
           
         </View>
       ),
       headerRight:({})=>(
         <View style={{marginRight:20}}>
 
-          <TouchableOpacity  >
+          <TouchableOpacity onPress={() => navigate('StackPeriodo')} >
                     <AntDesign name="setting" size={27} color={colors.iconcolor} />
                     
                 </TouchableOpacity>
@@ -117,6 +126,7 @@ function DrawerInicio({sesionname}){
       headerTintColor: colors.text,
       drawerLabelStyle: {marginLeft: -20},
       tabBarLabelStyle:{borderWidth:1,bordercolor:'red'},
+      
       
     }}
     drawerContent={DrawerContentInicio}
@@ -179,15 +189,18 @@ function DrawerInicio({sesionname}){
        />
 
 
-      <Drawer.Screen name="InicioEstaditicas" 
-        component={HomeStackGroup}
+      <Drawer.Screen name="InicioSeguridad" 
+        component={Seguridad}
         options={{
-          drawerLabel: 'Estadisticas',
-          title: 'Estadisticas',
+          drawerLabel: 'Seguridad',
+          title: 'Seguridad',
           drawerIcon: ({size, color})=>(
-            <AntDesign name="barschart"  size={sizeicon} color={colors.iconcolor} />
+            // <AntDesign name="barschart"  size={sizeicon} color={colors.iconcolor} />
+
+            <MaterialIcons name="security" size={sizeicon} color={colors.iconcolor} />
           ),
-          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' },
+          headerShown:true
          }}
        />
 
@@ -404,6 +417,14 @@ function HomeStackGroup(){
         <HomeStack.Screen name="IngresoTransaccion" 
                             component={IngresoTransaccion} 
                             options={{headerTitle:'Registro Ingresos',
+                            headerTitleAlign:'center',
+                            
+                          }}
+        />
+
+        <HomeStack.Screen name="StackPeriodo" 
+                            component={Periodo} 
+                            options={{headerTitle:'Seleccion Periodo',
                             headerTitleAlign:'center',
                             
                           }}
@@ -631,7 +652,12 @@ function OpcionesHistorialMovimientos({navigation}){
   
     screenOptions={
       {
-        "tabBarIndicatorStyle": {"backgroundColor": "rgb(44,148,228)"},
+        tabBarIndicatorStyle: 
+        { 
+          backgroundColor: 'rgb(44,148,228)',
+          // backgroundColor: "red",
+          
+        },
         tabBarLabelStyle: { fontSize: 16,textTransform:'none' },
         
         

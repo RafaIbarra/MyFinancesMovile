@@ -23,16 +23,5 @@ async function Iniciarsesion(usuario,password){
         datos={data,resp}
         return datos
 
-    // try {
-    //     const response = await fetch(`${APIBASE}/${endpoint}`, requestOptions);
-    //     if (!response.ok) {
-    //       throw new Error('La solicitud no fue exitosa');
-    //     }
-    //     const data = await response.json();
-    //     console.log('Datos recibidos:', data);
-    //   } catch (error) {
-    //     console.error('Error al realizar la solicitud:', error);
-    //   }
-
 } 
 export default Iniciarsesion

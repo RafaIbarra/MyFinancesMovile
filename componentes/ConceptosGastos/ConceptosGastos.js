@@ -148,7 +148,7 @@ function ConceptosGastos ({ navigation  }){
                       return resultado;
                     }, {});
                     
-                    //console.log(agrupado);
+                    
                     setDataagrupado(agrupado)
                     setDataingresoscompleto(agrupado)
                     
@@ -182,28 +182,24 @@ function ConceptosGastos ({ navigation  }){
         }}
         onPress={() => navigate('ConceptosGastosDetalle', { concepto })}
       >
-        <LinearGradient
-          key={concepto.nombre_producto}
-          colors={['#182120', '#12262c', '#0b2a37']}
-          style={{ flex: 1, borderRadius: 10, padding: 10 }}
-        >
-          <View style={{ 
-                        // flexDirection: 'row',
-                          alignContent:'center',
-                          alignItems:'center' }}>
+        
+          <View style={{ alignContent:'center',
+                         alignItems:'center' }}>
             
-            <Text style={[styles.textoconcepto, { marginLeft: 5, fontSize:17,color: colors.text, paddingRight: 10,marginBottom:15 }]}>
+            <Text style={[styles.textoconcepto, { marginLeft: 5, fontSize:17,color: colors.text,paddingTop:5, paddingRight: 10,marginBottom:15 }]}>
               {concepto.nombre_gasto}
             </Text>
           </View>
-    
-          <Text style={[styles.textocontenido, { color: colors.text }]}> Categoria: {concepto.DescripcionCategoriaGasto}</Text>
-    
-          <Text style={[styles.textocontenido, { color: colors.text }]}>
-           Acumulado:  {Number(concepto.TotalEgresos).toLocaleString('es-ES')} Gs.
-          </Text>
-          <Text style={[styles.textocontenido, { color: colors.text }]}> Tipo: {concepto.DescripcionTipoGasto}</Text>
-        </LinearGradient>
+          <View style={{marginLeft:10,paddingBottom:5}}>
+
+              <Text style={[styles.textocontenido, { color: colors.text }]}> Categoria: {concepto.DescripcionCategoriaGasto}</Text>
+        
+              <Text style={[styles.textocontenido, { color: colors.text }]}>
+              Acumulado:  {Number(concepto.TotalEgresos).toLocaleString('es-ES')} Gs.
+              </Text>
+              <Text style={[styles.textocontenido, { color: colors.text }]}> Tipo: {concepto.DescripcionTipoGasto}</Text>
+          </View>
+        
       </TouchableOpacity>
     ));
     

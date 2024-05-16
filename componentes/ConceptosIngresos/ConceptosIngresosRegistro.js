@@ -1,25 +1,23 @@
 import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 
-import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal } from "react-native";
+import {  StyleSheet,View,TextInput,Text,Modal } from "react-native";
 import { Button, Dialog, Portal,PaperProvider,RadioButton } from 'react-native-paper';
-import { TextInputMask } from 'react-native-masked-text';
 
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import moment from 'moment';
 
-import { AntDesign } from '@expo/vector-icons'
+
+
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
+
 
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import {  ScrollView } from "react-native-gesture-handler";
 
 function ConceptosIngresosRegistro({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
@@ -27,7 +25,7 @@ function ConceptosIngresosRegistro({ navigation }){
     
     const {params: { concepto },} = useRoute();
 
-
+    const [guardando,setGuardando]=useState(false)
 
     const [codigoconcepto,setCodigoconcepto]=useState(0)
     const [nombreconcepto,setNombreconcepto]=useState('')
@@ -59,7 +57,7 @@ function ConceptosIngresosRegistro({ navigation }){
       }
     
     const registrar_concepto = async () => {
-
+        setGuardando(true)
 
 
         const datosregistrar = {
@@ -91,7 +89,7 @@ function ConceptosIngresosRegistro({ navigation }){
          showDialog(true)
         }
         
-
+        setGuardando(false)
      };
 
     useEffect(() => {
@@ -116,6 +114,7 @@ function ConceptosIngresosRegistro({ navigation }){
         return(
 
           <PaperProvider >
+             {guardando &&(<Procesando></Procesando>)}
             <View style={{flex: 1,justifyContent:'flex-start',marginTop:75}}>
                   
                 <Portal>

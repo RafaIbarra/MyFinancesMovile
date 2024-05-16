@@ -135,8 +135,6 @@ function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel
                 
                 setRealizado(true)
                 
-            }else{
-                console.log(respuesta)
             }
             
 
@@ -168,7 +166,7 @@ function GastoModal({visible,setVisible,recargadatos,setRecargadatos,registrosel
           
         } else if(respuesta === 403 || respuesta === 401){
           
-          console.log('error')
+          
 
         }else {
           

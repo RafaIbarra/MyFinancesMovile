@@ -167,7 +167,12 @@ function DatosPersonales({navigation}){
     return (
 
         <PaperProvider>
-            <View style={{flex: 1,justifyContent:'flex-start',marginTop:75}}>
+            <View style={{flex: 1,justifyContent:'flex-start'}}>
+                <View style={styles.cabeceracontainer}>           
+                    <Text style={[styles.titulocabecera, { color: colors.text}]}>Datos de la cuenta</Text>
+
+
+                </View>
                 <Portal>
 
                     <Dialog visible={visibledialogo} onDismiss={hideDialog}>
@@ -184,7 +189,9 @@ function DatosPersonales({navigation}){
                     </Dialog>
                 </Portal>
 
-                <ScrollView style={{padding:10,maxHeight:350,marginLeft:10,marginRight:10}}>
+                
+
+                <ScrollView style={{padding:10,maxHeight:350,marginLeft:10,marginRight:10,marginTop:20}}>
 
                     <TextInput style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, 
                                         borderBottomColor: isFocusednombre ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
@@ -206,7 +213,7 @@ function DatosPersonales({navigation}){
                                         //label='Obserbacion'
                                         value={apellido}
                                         // textAlignVertical="center"
-                                        onChangeText={apellido => textoapellido(nombre)}
+                                        onChangeText={apellido => textoapellido(apellido)}
                                         onFocus={() => setIsFocusedapellido(true)}
                                         onBlur={() => setIsFocusedapellido(false)}
                                         underlineColorAndroid="transparent"
@@ -282,7 +289,23 @@ function DatosPersonales({navigation}){
 }
 
 const styles = StyleSheet.create({
-
+  cabeceracontainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    // borderBottomColor: 'lightgray',
+    
+  },
+  titulocabecera: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    // color:'white'
+  },
     inputtextactivo:{
         //borderBottomColor: 'rgb(44,148,228)', // Cambia el color de la línea inferior aquí
         borderBottomWidth: 2,

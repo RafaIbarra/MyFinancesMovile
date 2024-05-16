@@ -3,18 +3,7 @@ import {  View,Text, StyleSheet,Image    } from "react-native";
 
 function ImagenEstadistica ({imgprops}){
 
-    // useEffect(() => {
-       
-          
-    //       const cargardatos=async()=>{
-    //          console.log(imgprops)
-             
-    //       }
-    //       cargardatos()
-    //       // setRefresh(false)
-        
-        
-    //     }, []);
+   
     return(
 
     <View style={styles.container}>

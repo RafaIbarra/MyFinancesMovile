@@ -95,6 +95,7 @@ function Gastos ({ navigation  }){
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
             const anno_storage=datestorage['dataanno']
+            
             const body = {};
             const endpoint='MovileMisEgresos/' + anno_storage +'/' + mes_storage + '/'
             const result = await Generarpeticion(endpoint, 'POST', body);

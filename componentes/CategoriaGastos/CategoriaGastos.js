@@ -92,7 +92,7 @@ function CategoriaGastos ({ navigation  }){
                 if (respuesta === 200){
 
                     const registros=result['data']
-                    console.log(registros)
+                    
 
                     if(Object.keys(registros).length>0){
                       registros.forEach((elemento) => {
@@ -188,13 +188,9 @@ function CategoriaGastos ({ navigation  }){
                                                           >
 
 
-                                            <LinearGradient
-                                            key={concepto.nombre_producto} 
-                                            
-                                            
-                                            colors={['#182120', '#12262c', '#0b2a37']}
-                                            
-                                            style={{flex: 1,borderRadius:10,padding:10}}
+                                            <LinearGradient key={concepto.nombre_producto} 
+                                                            colors={['#182120', '#12262c', '#0b2a37']}
+                                                            style={{borderRadius:10,padding:10}}
                                             >
 
                                               <View style={{flexDirection:'row'}}>
@@ -202,7 +198,7 @@ function CategoriaGastos ({ navigation  }){
                                                 <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text,paddingRight:10}]}>{concepto.nombre_categoria}</Text>
                                               </View>
 
-                                              {/* <Text style={[styles.textocontenido,{ color: colors.text}]} >{concepto.DescripcionTipoProducto}</Text> */}
+                                              
                                               
                                               
                                             </LinearGradient>

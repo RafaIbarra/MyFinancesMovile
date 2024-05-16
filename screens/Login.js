@@ -3,7 +3,7 @@ import React,{useState,useEffect, useContext,useRef } from "react";
 import { ActivityIndicator, View,Text,SafeAreaView,
     StatusBar,StyleSheet,ImageBackground ,Animated, Easing,  } from "react-native";
 import { TextInput,Button } from 'react-native-paper';
-
+import { useNavigation } from "@react-navigation/native";
 import Iniciarsesion from "../componentes/PeticionesApi/apiiniciosesion";
 import Generarpeticion from "../componentes/PeticionesApi/apipeticiones";
 import Handelstorage from "../Storage/handelstorage";
@@ -14,10 +14,12 @@ import { Fontisto } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; // Importa el icono de spinner
 
 import { LinearGradient } from 'expo-linear-gradient';
-function Login ({setSesionname}){
+function Login ({ navigation  }){
+    const { navigate } = useNavigation();
     const[username,setUsername]=useState('')
     const[password,setPassword]=useState('')
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const {periodo, setPeriodo} = useContext(AuthContext);
     const [mensajeusuario,setMensajeusuario]=useState('Comprobando Sesion')
 
     const spinValueRef = useRef(new Animated.Value(0));
@@ -51,6 +53,9 @@ function Login ({setSesionname}){
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'], // Rango de rotación de 0 a 360 grados
       });
+    const registrarse=()=>{
+        navigate("RegistroUsuarioStack")
+    }
     const ingresar= async ()=>{
         
 
@@ -66,13 +71,19 @@ function Login ({setSesionname}){
                 user_name:datos['data']['user_name'],
             }
             await Handelstorage('agregar',userdata,'')
-            setSesionname(datos['data']['user_name'])
+            // setSesionname(datos['data']['user_name'])
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
             const anno_storage=datestorage['dataanno']
+            
+            setPeriodo(datestorage['dataperiodo'])
             if(mes_storage ===0 || anno_storage===0){
 
-                await new Promise(resolve => setTimeout(resolve, 1000))
+                await new Promise(resolve => setTimeout(resolve, 1500))
+                
+                const datestorage2=await Handelstorage('obtenerdate');
+                
+                setPeriodo(datestorage2['dataperiodo'])
 
             }
             setActivarsesion(true)
@@ -81,7 +92,7 @@ function Login ({setSesionname}){
         }else{
             
             
-            console.log(datos['data']['error'])
+            
         }
 
         
@@ -90,10 +101,10 @@ function Login ({setSesionname}){
     useEffect(() => {
 
         const cargardatos=async()=>{
-            console.log('vino a login')
+            
             
             const datosstarage = await ComprobarStorage()
-            console.log(datosstarage)
+            
             const credenciales=datosstarage['datosesion']
             if (credenciales) {
                 setComprobando(true)
@@ -104,7 +115,9 @@ function Login ({setSesionname}){
                 const respuesta=result['resp']
                 if (respuesta === 200){
                     
-                    setSesionname(datosstarage['user_name'])
+                    // setSesionname(datosstarage['user_name'])
+                    const datestorage=await Handelstorage('obtenerdate');
+                    setPeriodo(datestorage['dataperiodo'])
                     await new Promise(resolve => setTimeout(resolve, 7000))
                     setMensajeusuario('Credenciales validas')
                     detenerSpin()
@@ -118,7 +131,7 @@ function Login ({setSesionname}){
                     detenerSpin()
                     await Handelstorage('borrar')
                     setActivarsesion(false)
-                    setSesionname('')
+                    // setSesionname('')
                     await new Promise(resolve => setTimeout(resolve, 2000))
                     setComprobando(false)
                     //setActivarsesion(true)
@@ -131,7 +144,7 @@ function Login ({setSesionname}){
                 setComprobando(false)
                 await Handelstorage('borrar')
                 setActivarsesion(false)
-                setSesionname('')
+                // setSesionname('')
             }
         }
         cargardatos()
@@ -187,6 +200,11 @@ function Login ({setSesionname}){
                                 <View style={styles.elemento}>
                                     <Button icon="account-check-outline" mode="contained" onPress={() => ingresar()}>
                                         INGRESAR
+                                    </Button>
+                                </View>
+                                <View style={styles.elemento}>
+                                    <Button icon="account-check-outline" mode="contained" onPress={() => registrarse()}>
+                                        Registrarse
                                     </Button>
                                 </View>
                             </View>

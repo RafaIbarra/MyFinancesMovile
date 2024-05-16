@@ -17,6 +17,7 @@ import { EvilIcons } from '@expo/vector-icons';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
 import { FlatList, ScrollView } from "react-native-gesture-handler";
@@ -26,7 +27,7 @@ function GastosTransaccion({ navigation }){
     const { colors } = useTheme();
     
     const {params: { item },} = useRoute();
-
+    const [guardando,setGuardando]=useState(false)
     const [isFocusedobs, setIsFocusedobs] = useState(false);
     const [isFocusedgasto, setIsFocusedgasto] = useState(false);
     const [estadomodal,setEstadomodal]=useState(false)
@@ -143,6 +144,7 @@ function GastosTransaccion({ navigation }){
       };
 
     const registrar_egreso = async () => {
+        setGuardando(true)
         
         const datosregistrar = {
             codgasto:codigoregistro,
@@ -174,7 +176,7 @@ function GastosTransaccion({ navigation }){
          setMensajeerror( result['data']['error'])
          showDialog(true)
         }
-        
+        setGuardando(false)
 
      };
 
@@ -251,7 +253,11 @@ function GastosTransaccion({ navigation }){
         return(
 
           <PaperProvider >
+
+             {guardando &&(<Procesando></Procesando>)}
             <View style={{flex: 1,justifyContent:'flex-start',marginTop:75}}>
+
+             
                   
                 <Portal>
 

@@ -12,11 +12,12 @@ import { AntDesign } from '@expo/vector-icons'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
+
 
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
 import { FlatList, ScrollView } from "react-native-gesture-handler";
@@ -27,7 +28,7 @@ function IngresoTransaccion({ navigation }){
     
     const {params: { item },} = useRoute();
 
-
+    const [guardando,setGuardando]=useState(false)
 
     const[productosfijos,setProductosfijos]=useState(null)
     const[productosocacionales,setProductosocacionales]=useState(null)
@@ -50,16 +51,7 @@ function IngresoTransaccion({ navigation }){
     //const [modomodal, setModomodal] = useState(0);
     const [modalplaceholder,setModalplaceholder]=useState()
 
-    
-    
-    // const [listagastos,setListagastos]=useState([])
-    // 
-    // const [optionscategoria, setOptionscategoria] = useState([]);
-    // const[categoriasel,setCategoriasel]=useState([])
-    // const [optionsgasto, setOptionsgasto] = useState([]);
-    // const [selectedOptioncategoria, setSelectedOptioncategoria] = useState(null);
-    // const [selectedOptiongasto, setSelectedOptiongasto] = useState(null);
-    // const[gasttosel,setGastosel]=useState(0)
+
 
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -157,7 +149,7 @@ function IngresoTransaccion({ navigation }){
 
     const registrar_egreso = async () => {
 
-
+        setGuardando(true)
 
         const datosregistrar = {
           codingreso:codigoregistro,
@@ -189,6 +181,7 @@ function IngresoTransaccion({ navigation }){
          setMensajeerror( result['data']['error'])
          showDialog(true)
         }
+        setGuardando(false)
         
 
      };
@@ -275,6 +268,7 @@ function IngresoTransaccion({ navigation }){
         return(
 
           <PaperProvider >
+            {guardando &&(<Procesando></Procesando>)}
             <View style={{flex: 1,justifyContent:'flex-start',marginTop:75}}>
                   
                 <Portal>

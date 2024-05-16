@@ -1,29 +1,26 @@
 import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 
-import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal } from "react-native";
-import { Button, Dialog, Portal,PaperProvider,RadioButton } from 'react-native-paper';
-import { TextInputMask } from 'react-native-masked-text';
+import {  StyleSheet,View,TextInput,Text } from "react-native";
+import { Button, Dialog, Portal,PaperProvider } from 'react-native-paper';
 
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import moment from 'moment';
 
-import { AntDesign } from '@expo/vector-icons'
+
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
+
 
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import {  ScrollView } from "react-native-gesture-handler";
 
 function CategoriaGastosRegistro({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { colors } = useTheme();
+    const [guardando,setGuardando]=useState(false)
     
     const {params: { concepto },} = useRoute();
 
@@ -32,7 +29,7 @@ function CategoriaGastosRegistro({ navigation }){
     const [codigoconcepto,setCodigoconcepto]=useState(0)
     const [nombreconcepto,setNombreconcepto]=useState('')
     const [isFocusednombre, setIsFocusednombre] = useState(false);
-    const [valueradio, setValueradio] = useState(0);
+    
 
     const [focus, setFocus] = useState(false)
 
@@ -55,8 +52,8 @@ function CategoriaGastosRegistro({ navigation }){
       }
     
     const registrar_concepto = async () => {
-
-
+        
+        setGuardando(true)
 
         const datosregistrar = {
             codigocategoria:codigoconcepto,
@@ -65,11 +62,12 @@ function CategoriaGastosRegistro({ navigation }){
         
 
         };
-        
+        console.log(datosregistrar)
         const endpoint='RegistroCategoria/'
         const result = await Generarpeticion(endpoint, 'POST', datosregistrar);
         
         const respuesta=result['resp']
+        console.log(respuesta)
         if (respuesta === 200) {
           
           concepto.recarga='si'
@@ -87,7 +85,7 @@ function CategoriaGastosRegistro({ navigation }){
          showDialog(true)
         }
         
-
+        setGuardando(false)
      };
 
     useEffect(() => {
@@ -112,6 +110,7 @@ function CategoriaGastosRegistro({ navigation }){
         return(
 
           <PaperProvider >
+            {guardando &&(<Procesando></Procesando>)}
             <View style={{flex: 1,justifyContent:'flex-start',marginTop:75}}>
                   
                 <Portal>

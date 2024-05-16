@@ -11,7 +11,7 @@ function CloseSesion(){
     useLayoutEffect (() => {
 
         const cargardatos = async () => {
-            console.log('entro en cerrar')
+            
             await Handelstorage('borrar')
             await new Promise(resolve => setTimeout(resolve, 1000))
             setMostrar(false)
