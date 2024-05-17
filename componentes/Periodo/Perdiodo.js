@@ -112,128 +112,130 @@ function Periodo({navigation}){
     if(cargacompleta){
         return(
     
-            <View style={{ flex: 1,justifyContent:'flex-start',alignContent:'center' }}>
-                
-                <View style={{flex:1,flexDirection:'row',marginTop:100,alignContent:'center',alignContent:'center',justifyContent:'space-between',marginRight:50}}> 
+            <View style={{ flex: 1 }}>
+                <View style={{}}>
 
-                    <View style={{marginLeft:10,marginTop:20}}>
+                        <View style={{flexDirection:'row',marginBottom:100,marginTop:100,alignContent:'center',alignContent:'center',justifyContent:'space-between',marginRight:50}}> 
 
-                        <View style={{flexDirection: 'row',marginLeft:10}}>
-                                    
-                            <Text style={[ 
-                                            { 
-                                            borderBottomWidth:2,
-                                            // borderColor:'red',
-                                            height:35,
-                                            marginBottom:0,
-                                            paddingTop:8,
-                                            paddingLeft:10,
-                                            width:'60%',
-                                            color: mesactual ? colors.text : 'gray',
-                                            borderBottomColor: mesactual ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                                >
-                                {mesactual ? mesactual : 'Seleccione el mes..'}
-                            </Text>
-            
-                            <TouchableOpacity onPress={() => toggleExpandMes()} style={{paddingTop:10}}>
+                            <View style={{marginLeft:10,marginTop:20}}>
 
-                                <AntDesign name={expandedMes ? "caretup" : "caretdown"} size={24} color="white" />
-                            </TouchableOpacity>
-                            
-                        </View>
-                        {
-                            expandedMes &&(
-                                <View style={{borderLeftWidth:1,borderRightWidth:1,
-                                            borderBottomWidth:1,borderColor:'gray',width:'60%',
-                                            borderBottomLeftRadius:20,borderBottomRightRadius:20
-                                            ,maxHeight:400,marginLeft:10}}>
-                                    
-                                    <FlatList
-                                        data={meses}
-                                        renderItem={({item}) =>{
-                                            return(
-                                                    <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
-
-                                                        <TouchableOpacity onPress={() => seleccionarmes(item)}>
-                                                            <Text style={{color:colors.text}}>{item.nombre_mes}</Text>
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    )
-                                            }
-                                        }
-                                        keyExtractor={item => item.id}
-
-                                        />
-                                </View>
-                            )
-                        }
-                    </View>
-
-                    <View style={{marginLeft:10,marginTop:20}}>
-
-                        <View style={{flexDirection: 'row',marginLeft:10}}>
-                                        
-                                <Text style={[ 
-                                                { 
-                                                borderBottomWidth:2,
-                                                // borderColor:'red',
-                                                height:35,
-                                                marginBottom:0,
-                                                paddingTop:8,
-                                                paddingLeft:10,
-                                                width:'50%',
-                                                color: annoactual ? colors.text : 'gray',
-                                                borderBottomColor: annoactual ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                                    >
-                                    {annoactual ? annoactual : 'Seleccione el año..'}
-                                </Text>
-                
-                                <TouchableOpacity onPress={() => toggleExpandAno()} style={{paddingTop:10}}>
-
-                                    <AntDesign name={expandedAno ? "caretup" : "caretdown"} size={24} color="white" />
-                                </TouchableOpacity>
-                                
-                        </View>
-                        {
-                            expandedAno &&(
-                                    <View style={{borderLeftWidth:1,borderRightWidth:1,
-                                                borderBottomWidth:1,borderColor:'gray',width:'50%',
-                                                borderBottomLeftRadius:20,borderBottomRightRadius:20
-                                                ,maxHeight:400,marginLeft:10}}>
-                                        
-                                        <FlatList
-                                            data={listannos}
-                                            renderItem={({item}) =>{
-                                                return(
-                                                        <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
-
-                                                            <TouchableOpacity onPress={() => seleccionaranno(item)}>
-                                                                <Text style={{color:colors.text}}>{item.ano}</Text>
-                                                            </TouchableOpacity>
-                                                        </View>
-                                                        )
-                                                }
-                                            }
-                                            keyExtractor={item => item.ano}
-
-                                            />
-                                    </View>
-                                )
-                        }
-                    </View>
-                </View>
-
-                <Button 
-                    style={{marginBottom:10,marginLeft:10,marginRight:10,backgroundColor:'rgba(44,148,228,0.7)'}} 
+                                <View style={{flexDirection: 'row',marginLeft:10}}>
+                                            
+                                    <Text style={[ 
+                                                    { 
+                                                    borderBottomWidth:2,
+                                                    // borderColor:'red',
+                                                    height:35,
+                                                    marginBottom:0,
+                                                    paddingTop:8,
+                                                    paddingLeft:10,
+                                                    width:'60%',
+                                                    color: mesactual ? colors.text : 'gray',
+                                                    borderBottomColor: mesactual ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                                        >
+                                        {mesactual ? mesactual : 'Seleccione el mes..'}
+                                    </Text>
                     
-                    icon={() => {
-                        return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
-                    }}
-                    mode="elevated" 
-                    textColor="white"
-                    onPress={procesar}>
-                    PROCESAR 
-                </Button>
+                                    <TouchableOpacity onPress={() => toggleExpandMes()} style={{paddingTop:10}}>
+
+                                        <AntDesign name={expandedMes ? "caretup" : "caretdown"} size={24} color="white" />
+                                    </TouchableOpacity>
+                                    
+                                </View>
+                                {
+                                    expandedMes &&(
+                                        <View style={{borderLeftWidth:1,borderRightWidth:1,
+                                                    borderBottomWidth:1,borderColor:'gray',width:'60%',
+                                                    borderBottomLeftRadius:20,borderBottomRightRadius:20
+                                                    ,maxHeight:400,marginLeft:10}}>
+                                            
+                                            <FlatList
+                                                data={meses}
+                                                renderItem={({item}) =>{
+                                                    return(
+                                                            <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
+
+                                                                <TouchableOpacity onPress={() => seleccionarmes(item)}>
+                                                                    <Text style={{color:colors.text}}>{item.nombre_mes}</Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                            )
+                                                    }
+                                                }
+                                                keyExtractor={item => item.id}
+
+                                                />
+                                        </View>
+                                    )
+                                }
+                            </View>
+
+                            <View style={{marginLeft:10,marginTop:20}}>
+
+                                <View style={{flexDirection: 'row',marginLeft:10}}>
+                                                
+                                        <Text style={[ 
+                                                        { 
+                                                        borderBottomWidth:2,
+                                                        // borderColor:'red',
+                                                        height:35,
+                                                        marginBottom:0,
+                                                        paddingTop:8,
+                                                        paddingLeft:10,
+                                                        width:'50%',
+                                                        color: annoactual ? colors.text : 'gray',
+                                                        borderBottomColor: annoactual ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                                            >
+                                            {annoactual ? annoactual : 'Seleccione el año..'}
+                                        </Text>
+                        
+                                        <TouchableOpacity onPress={() => toggleExpandAno()} style={{paddingTop:10}}>
+
+                                            <AntDesign name={expandedAno ? "caretup" : "caretdown"} size={24} color="white" />
+                                        </TouchableOpacity>
+                                        
+                                </View>
+                                {
+                                    expandedAno &&(
+                                            <View style={{borderLeftWidth:1,borderRightWidth:1,
+                                                        borderBottomWidth:1,borderColor:'gray',width:'50%',
+                                                        borderBottomLeftRadius:20,borderBottomRightRadius:20
+                                                        ,maxHeight:400,marginLeft:10}}>
+                                                
+                                                <FlatList
+                                                    data={listannos}
+                                                    renderItem={({item}) =>{
+                                                        return(
+                                                                <View style={{marginLeft:15,marginRight:15,borderBottomWidth:0.5,borderBottomColor:'white',marginBottom:10,padding:10}} >
+
+                                                                    <TouchableOpacity onPress={() => seleccionaranno(item)}>
+                                                                        <Text style={{color:colors.text}}>{item.ano}</Text>
+                                                                    </TouchableOpacity>
+                                                                </View>
+                                                                )
+                                                        }
+                                                    }
+                                                    keyExtractor={item => item.ano}
+
+                                                    />
+                                            </View>
+                                        )
+                                }
+                            </View>
+                        </View>
+
+                        <Button 
+                            style={{marginBottom:10,marginLeft:10,marginRight:10,backgroundColor:'rgba(44,148,228,0.7)'}} 
+                            
+                            icon={() => {
+                                return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
+                            }}
+                            mode="elevated" 
+                            textColor="white"
+                            onPress={procesar}>
+                            PROCESAR 
+                        </Button>
+                </View>
             </View>
     
         )

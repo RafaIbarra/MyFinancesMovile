@@ -20,6 +20,7 @@ function Login ({ navigation  }){
     const[password,setPassword]=useState('')
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const {periodo, setPeriodo} = useContext(AuthContext);
+    const {sesiondata, setSesiondata} = useContext(AuthContext);
     const [mensajeusuario,setMensajeusuario]=useState('Comprobando Sesion')
 
     const spinValueRef = useRef(new Animated.Value(0));
@@ -64,7 +65,8 @@ function Login ({ navigation  }){
         if(datos['resp']===200){
             
             // await AsyncStorage.setItem("user", (JSON.stringify(datos['data']['token'])));
-            console.log(datos['data']['datauser'])
+            
+            
             const userdata={
                 token:datos['data']['token'],
                 sesion:datos['data']['sesion'],
@@ -87,6 +89,8 @@ function Login ({ navigation  }){
                 setPeriodo(datestorage2['dataperiodo'])
 
             }
+            
+            setSesiondata(datos['data']['datauser'])
             setActivarsesion(true)
             
            
@@ -119,13 +123,17 @@ function Login ({ navigation  }){
                     // setSesionname(datosstarage['user_name'])
                     const datestorage=await Handelstorage('obtenerdate');
                     setPeriodo(datestorage['dataperiodo'])
+                    // console.log('desde comprobando')
+                    // console.log(result['data']['datauser'])
+                    setSesiondata(result['data']['datauser'])
+
                     await new Promise(resolve => setTimeout(resolve, 7000))
                     setMensajeusuario('Credenciales validas')
                     detenerSpin()
                     await new Promise(resolve => setTimeout(resolve, 2000))
                     setComprobando(false)
                     setActivarsesion(true)
-
+                    
                 }else{
                     await new Promise(resolve => setTimeout(resolve, 7000))
                     setMensajeusuario('Debe reiniciar sesion')

@@ -7,13 +7,17 @@ import { AuthContext } from "./AuthContext";
 
 function AppContent() {
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const {sesiondata, setSesiondata} = useContext(AuthContext);
+
 
     const [sesionname, setSesionname] = useState("");
 
     useEffect(() => {
 
         const cargardatos=()=>{
-            
+          
+
+
             
            
         }
