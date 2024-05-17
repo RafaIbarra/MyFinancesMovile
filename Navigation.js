@@ -121,11 +121,13 @@ function DrawerInicio({navigation}){
                 </TouchableOpacity>
         </View>
       ),
-      headerTitleAlign: 'center',
+      headerTitleAlign:'center',
       headerStyle:{elevation:0},
       headerTintColor: colors.text,
       drawerLabelStyle: {marginLeft: -20},
       tabBarLabelStyle:{borderWidth:1,bordercolor:'red'},
+      
+      
       
       
     }}

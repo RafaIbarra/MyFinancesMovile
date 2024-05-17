@@ -2,7 +2,7 @@ import React,{useState,useEffect, useContext,useRef } from "react";
 
 import { ActivityIndicator, View,Text,SafeAreaView,
     StatusBar,StyleSheet,ImageBackground ,Animated, Easing,  } from "react-native";
-import { TextInput,Button } from 'react-native-paper';
+import { TextInput,Button,Dialog, Portal,PaperProvider, } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
 import Iniciarsesion from "../componentes/PeticionesApi/apiiniciosesion";
 import Generarpeticion from "../componentes/PeticionesApi/apipeticiones";
@@ -46,11 +46,11 @@ function Login ({ navigation  }){
               }, 5000);
         }
       };
-      const detenerSpin = () => {
+    const detenerSpin = () => {
         Animated.timing(spinValueRef.current).stop();
         
       };
-      const spin = spinValueRef.current.interpolate({
+    const spin = spinValueRef.current.interpolate({
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'], // Rango de rotación de 0 a 360 grados
       });
@@ -189,7 +189,7 @@ function Login ({ navigation  }){
 
                                 <View style={styles.elemento}>
                                     <TextInput 
-
+                                        textColor="red"
                                         backgroundColor='rgba(182, 212, 212,0.5)'
                                         label="Usuario" 
                                         value={username} 

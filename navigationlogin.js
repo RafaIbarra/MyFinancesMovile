@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StatusBar } from 'react-native';
 import Login from "./screens/Login";
+import LoginR1 from "./screens/LoginR1";
 import RegistroUsuario from "./screens/RegistroUsuario";
 
 
@@ -41,7 +42,7 @@ function LoginStackGroup(){
         >
             <LoginStack.Screen
             name="LoginStack"
-            component={Login}
+            component={LoginR1}
             />
             <LoginStack.Screen
             name="RegistroUsuarioStack"
