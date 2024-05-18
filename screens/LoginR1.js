@@ -248,8 +248,8 @@ export default function LoginR1({ navigation  }){
                   style={styles.Input}
                   mode="outlined"
                   textColor="white"
-                  label="User Name"
-                   placeholder="User Name"
+                  label="Usuario"
+                   placeholder="Usuario"
                     onChangeText={handleUserChange} 
                     theme={{ colors: { primary: 'rgb(218, 165, 33)' },color:'white' }}
                 />
