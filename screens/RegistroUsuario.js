@@ -9,7 +9,9 @@ import { useTheme } from '@react-navigation/native';
 import { ScrollView } from "react-native-gesture-handler";
 
 import { AntDesign } from '@expo/vector-icons'
+import { FontAwesome5 } from '@expo/vector-icons';
 import Handelstorage from "../Storage/handelstorage";
+import Procesando from "../componentes/Procesando/Procesando";
 import ApiRegistroUsuario from "../componentes/PeticionesApi/apiregistrousuario";
 import { AuthContext } from "../AuthContext";
 
@@ -17,8 +19,10 @@ function RegistroUsuario({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const {periodo, setPeriodo} = useContext(AuthContext);
+    const {sesiondata, setSesiondata} = useContext(AuthContext);
     const { colors } = useTheme();
     const { navigate } = useNavigation();
+    const [guardando,setGuardando]=useState(false)
 
     const [nombre,setNombre]=useState('')
     const [isFocusednombre, setIsFocusednombre] = useState(false);
@@ -116,6 +120,7 @@ function RegistroUsuario({ navigation  }){
     }
 
     const registrar = async()=>{
+        setGuardando(true)
         const datosregistrar = {
             nombre:nombre,
             apellido:apellido,
@@ -156,9 +161,11 @@ function RegistroUsuario({ navigation  }){
                 setPeriodo(datestorage2['dataperiodo'])
 
             }
+            setGuardando(false)
+            setSesiondata(datos['data']['datauser'])
             setActivarsesion(true)
         }else{
-            
+            setGuardando(false)
             const errores=datos['data']['error']
             let mensajeerror = 'Errores: ';
             for (let clave in errores) {
@@ -172,6 +179,7 @@ function RegistroUsuario({ navigation  }){
     return(
         
             <PaperProvider>
+                {guardando &&(<Procesando></Procesando>)}
                 <Portal>
 
                     <Dialog visible={visibledialogo} onDismiss={hideDialog}>
@@ -187,9 +195,13 @@ function RegistroUsuario({ navigation  }){
                         </Dialog.Actions>
                     </Dialog>
                 </Portal>
-                <View style={{flex:1}}>
+                <View style={{flex:1,marginTop:20}}>
 
-                    
+                    <View style={[styles.cabeceracontainer,{borderBottomColor:colors.bordercolor}]}>
+                       <Text style={[styles.titulocabecera, { color: colors.text}]}>Datos Personales</Text>
+
+                       
+                    </View>
                     <ScrollView style={{padding:10,maxHeight:400,marginLeft:10,marginRight:10}}>
 
                         <TextInput style={[styles.inputtextactivo,{color: colors.text,backgroundColor:colors.backgroundInpunt, borderBottomColor: isFocusednombre ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
@@ -278,14 +290,32 @@ function RegistroUsuario({ navigation  }){
                                                 underlineColorAndroid="transparent"
                                 />
                     </ScrollView>
+                    <View style={{flex:1,alignContent:'center',alignItems:'center'}}>
 
-                    <Button style={{marginBottom:10}} icon="account-check-outline" mode="contained" onPress={() => registrar()}>
-                        REGISTRARSE
-                    </Button>
+                        {/* <Button style={{width:'100%'}} icon="account-check-outline" mode="contained" onPress={() => registrar()}>
+                            REGISTRARSE
+                        </Button> */}
 
-                    <Button icon="account-check-outline" mode="contained" onPress={() => volver()}>
-                        Atras
-                    </Button>
+
+                        <Button style={{marginBottom:10,width:'90%',height:50,backgroundColor:'rgba(44,148,228,0.7)',justifyContent:'center'}} 
+                     
+                            icon={() => {return <FontAwesome5 name="user-plus" size={30} color="white" />}}
+                            mode="elevated" 
+                            textColor="white"
+                            onPress={() => registrar()}
+                        >
+                            REGISTRARSE 
+                        </Button>
+
+
+
+                        <Text style={styles.textPulsa}>
+                            ¿Ya tienes una cuenta?{' '}
+                            <TouchableOpacity onPress={() => volver()}>
+                                <Text style={styles.linkText}>Volver al Login.</Text>
+                            </TouchableOpacity>
+                        </Text>
+                    </View>
                 </View>
             </PaperProvider>
 
@@ -294,6 +324,26 @@ function RegistroUsuario({ navigation  }){
 }
 
 const styles = StyleSheet.create({
+
+    cabeceracontainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        marginBottom:50,
+        
+        
+      },
+
+    titulocabecera: {
+        flex: 1,
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        // color:'white'
+      },
     inputtextactivo:{
         //borderBottomColor: 'rgb(44,148,228)', // Cambia el color de la línea inferior aquí
         borderBottomWidth: 2,
@@ -308,6 +358,19 @@ const styles = StyleSheet.create({
   
         marginLeft:'5%',
         marginBottom:27
+      },
+
+    textPulsa: {
+        color: 'white',
+        textAlign: 'center',
+        width: 300,
+        marginTop: 40,
+      },
+
+      linkText: {
+        color: 'rgba(218,165,32,0.7)',
+        textDecorationLine: 'underline',
+        top: 5,
       },
       
 

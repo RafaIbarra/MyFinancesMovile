@@ -47,7 +47,7 @@ function DrawerContentInicio(props){
                   
                   <View style={{marginTop:15,marginLeft:20,alignItems:'flex-start',alignContent:'flex-start',justifyContent:'space-between'}}>
                     <Text style={[ styles.textouser, { color: colors.text}]}>
-                        {sesiondata[0].username}
+                        @{sesiondata[0].username}
                       </Text>
                       <Text style={[ styles.textodatos, {color: colors.text}]}>
                         {sesiondata[0].nombre}

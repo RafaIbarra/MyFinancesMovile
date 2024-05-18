@@ -139,10 +139,6 @@ function CategoriaGastos ({ navigation  }){
 
                 <View style={{ flex: 1 }}>    
                     <View style={styles.cabeceracontainer}>
-
-                        
-                            
-                        
                        <Text style={[styles.titulocabecera, { color: colors.text}]}>Categoria Gastos</Text>
 
                        <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
@@ -150,8 +146,8 @@ function CategoriaGastos ({ navigation  }){
                                 <FontAwesome6 name="add" size={24} color="white" />
                             </Animated.View>
                        </TouchableOpacity>
-                        </View>
-                        <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
+                    </View>
+                    <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
                       
                         <View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center'}}>
                                 <TextInput 

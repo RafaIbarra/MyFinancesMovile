@@ -1,5 +1,5 @@
 import React, {useState,useEffect, useContext,useRef} from "react";
-import { View, Text, StyleSheet,Image,FlatList, Linking, TouchableOpacity,Animated,Easing} from "react-native";
+import { View, Text, StyleSheet,Image,FlatList, Linking, TouchableOpacity,Animated,Easing,Keyboard } from "react-native";
 import { Button, TextInput,Dialog, Portal,PaperProvider } from 'react-native-paper';
 import { useNavigation } from "@react-navigation/native";
 
@@ -13,6 +13,7 @@ import { Fontisto } from '@expo/vector-icons';
 
 // import '../assets/a'
 export default function LoginR1({ navigation  }){
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const { navigate } = useNavigation();
   const [username, setUsername] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -144,6 +145,19 @@ export default function LoginR1({ navigation  }){
 
   useEffect(() => {
 
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // Ocultar el botón cuando el teclado se muestra
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // Mostrar el botón cuando el teclado se oculta
+      }
+    );
+
     const cargardatos=async()=>{
         
         
@@ -175,7 +189,7 @@ export default function LoginR1({ navigation  }){
                 
             }else{
                 await new Promise(resolve => setTimeout(resolve, 7000))
-                setMensajeusuario('Debe reiniciar sesion')
+                setMensajeusuario('Debes reiniciar sesion')
                 detenerSpin()
                 await Handelstorage('borrar')
                 setActivarsesion(false)
@@ -196,6 +210,10 @@ export default function LoginR1({ navigation  }){
         }
     }
     cargardatos()
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
   }, []);
       
   
@@ -248,26 +266,32 @@ export default function LoginR1({ navigation  }){
                   right={
                     <TextInput.Icon
                       icon={mostrarContrasena ? 'eye-off' : 'eye'}
+                      color={'white'}
                        onPress={toggleMostrarContrasena}
                     />}
 
                 />
                 {/* <Text style={styles.TextContra}>Olvidé mi contraseña</Text> */}
 
-              <Button  
-                style={[styles.button, botonActivado ? [styles.buttonActivado] : null]}
-                disabled={!botonActivado}
-                onPress={() => ingresar()}
-                >                                
-                <Text style={[styles.buttonText, botonActivado ? [styles.buttonActivadoText] : null]}>INGRESAR</Text>
-              </Button>
+              {
+                !isKeyboardVisible && (
+
+                  <Button  
+                    style={[styles.button, botonActivado ? [styles.buttonActivado] : null]}
+                    disabled={!botonActivado}
+                    onPress={() => ingresar()}
+                    >                                
+                    <Text style={[styles.buttonText, botonActivado ? [styles.buttonActivadoText] : null]}>INGRESAR</Text>
+                  </Button>
+                )
+              }
 
               <Text style={styles.textPulsa}>
               ¿No tienes una cuenta?{' '}
               <TouchableOpacity onPress={() => registrarse()}>
                 <Text style={styles.linkText}>Regístrate aquí.</Text>
               </TouchableOpacity>
-            </Text>
+              </Text>
 
               
             </View> 
@@ -280,7 +304,13 @@ export default function LoginR1({ navigation  }){
                         <Animated.View style={{ transform: [{ rotate: spin }] }}>
                         <Fontisto name="spinner" size={60} color="blue" />
                         </Animated.View>
-                        <Text style={{color:'rgba(255,255,255,0.6)',fontSize:20 }}>{mensajeusuario}</Text>
+                        <Text style={
+                            {
+                              // color:'rgba(255,255,255,0.6)',
+                              color:'rgb(218,165,32)',
+                              fontSize:20 }
+                              }>
+                          {mensajeusuario}</Text>
                     </View>
                 </View>
                 )
@@ -351,7 +381,8 @@ const styles = StyleSheet.create({
     marginTop:5,    
   },
   buttonActivado: {
-    backgroundColor: '#8fbc8f',
+    // backgroundColor: '#8fbc8f',
+    backgroundColor:'rgba(44,148,228,0.7)',
     width:'80%',
     height: '18%',
     justifyContent: 'center',
@@ -361,7 +392,7 @@ const styles = StyleSheet.create({
   buttonActivadoText: { 
     alignItems: "center",
     fontSize:18, 
-    color:'#006534',       
+    color:'white',       
   },
   containerExtra: {
     flexDirection: 'row',
@@ -391,4 +422,3 @@ const styles = StyleSheet.create({
     top:40,
     },
 });
-

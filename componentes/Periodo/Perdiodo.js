@@ -11,12 +11,14 @@ import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Procesando from "../Procesando/Procesando";
 function Periodo({navigation}){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const {periodo, setPeriodo} = useContext(AuthContext);
     const { colors } = useTheme();
     const { navigate } = useNavigation();
     const [cargacompleta,setCargacopleta]=useState(false)
+    const [guardando,setGuardando]=useState(false)
 
     const [meses,setMeses]=useState([])
     const [numeromesactual,setNumeromesactual]=useState(0)
@@ -47,7 +49,7 @@ function Periodo({navigation}){
     }
 
     const procesar = async ()=>{
-        
+        setGuardando(true)
         const datadate={
             datames:numeromesactual,
             dataanno:annoactual,
@@ -58,6 +60,7 @@ function Periodo({navigation}){
         
         await new Promise(resolve => setTimeout(resolve, 1000))
         setPeriodo(mesactual +'-' + annoactual)
+        setGuardando(false)
         navigate("Gastos")
     }
 
@@ -113,9 +116,11 @@ function Periodo({navigation}){
         return(
     
             <View style={{ flex: 1 }}>
+                {guardando &&(<Procesando></Procesando>)}
                 <View style={{}}>
 
-                        <View style={{flexDirection:'row',marginBottom:100,marginTop:100,alignContent:'center',alignContent:'center',justifyContent:'space-between',marginRight:50}}> 
+                        <View style={{flexDirection:'row',marginBottom:100,marginTop:100,alignContent:'center',
+                        alignContent:'center',justifyContent:'space-between',marginRight:50}}> 
 
                             <View style={{marginLeft:10,marginTop:20}}>
 
@@ -147,7 +152,7 @@ function Periodo({navigation}){
                                         <View style={{borderLeftWidth:1,borderRightWidth:1,
                                                     borderBottomWidth:1,borderColor:'gray',width:'60%',
                                                     borderBottomLeftRadius:20,borderBottomRightRadius:20
-                                                    ,maxHeight:400,marginLeft:10}}>
+                                                    ,maxHeight:300,marginLeft:10}}>
                                             
                                             <FlatList
                                                 data={meses}
@@ -200,7 +205,7 @@ function Periodo({navigation}){
                                             <View style={{borderLeftWidth:1,borderRightWidth:1,
                                                         borderBottomWidth:1,borderColor:'gray',width:'50%',
                                                         borderBottomLeftRadius:20,borderBottomRightRadius:20
-                                                        ,maxHeight:400,marginLeft:10}}>
+                                                        ,maxHeight:300,marginLeft:10}}>
                                                 
                                                 <FlatList
                                                     data={listannos}
