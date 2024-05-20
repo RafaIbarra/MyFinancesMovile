@@ -1,10 +1,11 @@
-import React,{useState,useEffect} from "react";
-import { ActivityIndicator, View,Text,StyleSheet,TouchableOpacity,TextInput } from "react-native";
+import React,{useState,useEffect,useContext} from "react";
+import {  View,Text,StyleSheet,TouchableOpacity,TextInput } from "react-native";
 import { Button, Dialog, Portal,PaperProvider } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 import { AuthContext } from "../../AuthContext";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
@@ -16,6 +17,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 function DatosPersonales({navigation}){
     const { colors } = useTheme();
+    const {sesiondata, setSesiondata} = useContext(AuthContext);
+    const [guardando,setGuardando]=useState(false)
     const [nombre,setNombre]=useState('')
     const [apellido,setApellido]=useState('')
     const [fechanac,setFechanac]=useState('')
@@ -86,7 +89,7 @@ function DatosPersonales({navigation}){
       }
 
       const registrar = async () => {
-        
+        setGuardando(true)
         const body = {
             nombre:nombre,
             apellido:apellido,
@@ -102,18 +105,21 @@ function DatosPersonales({navigation}){
         if (respuesta === 200) {
           
           
-      
-  
+          
+          setSesiondata(result['data']['datauser'])
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          setGuardando(false)
           navigation.goBack();
           
         } else if(respuesta === 403 || respuesta === 401){
-
+          setGuardando(false)
           await Handelstorage('borrar')
           await new Promise(resolve => setTimeout(resolve, 1000))
           setActivarsesion(false)
         } else{
-         setMensajeerror( result['data']['error'])
-         showDialog(true)
+          setGuardando(false)
+          setMensajeerror( result['data']['error'])
+          showDialog(true)
         }
         
 
@@ -133,15 +139,15 @@ function DatosPersonales({navigation}){
                 
                 if (respuesta === 200) {
     
-                    const registros=result['data']
+                    const registros=result['data'][0]
                     
                    
                    
-                   setNombre(result['data'][0].nombre_usuario)
-                   setApellido(result['data'][0].apellido_usuario)
-                   setFechanac(result['data'][0].fecha_nacimiento)
-                   setUsername(result['data'][0].user_name)
-                   setCorreo(result['data'][0].correo)
+                   setNombre(registros.nombre_usuario)
+                   setApellido(registros.apellido_usuario)
+                   setFechanac(registros.fecha_nacimiento)
+                   setUsername(registros.user_name)
+                   setCorreo(registros.correo)
                     
                     
                 }else if(respuesta === 403 || respuesta === 401){
@@ -168,6 +174,7 @@ function DatosPersonales({navigation}){
 
         <PaperProvider>
             <View style={{flex: 1,justifyContent:'flex-start'}}>
+              {guardando &&(<Procesando></Procesando>)}
                 <View style={styles.cabeceracontainer}>           
                     <Text style={[styles.titulocabecera, { color: colors.text}]}>Datos de la cuenta</Text>
 
@@ -264,16 +271,8 @@ function DatosPersonales({navigation}){
                 </ScrollView>
 
                 <Button 
-                        style={{marginTop:10,marginBottom:10,marginLeft:10
-                          ,
-                          // backgroundColor:'rgb(182, 212, 212)'
-                          //backgroundColor:'rgba(0,0,0,0.2)'
-                          backgroundColor:'rgba(44,148,228,0.7)'
-                        }} 
-                        // icon="content-save-check" 
+                        style={{marginTop:10,marginBottom:10,marginLeft:10,backgroundColor:'rgba(44,148,228,0.7)'}} 
                         icon={() => {
-                          // return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
-
                           return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
                         }}
                         mode="elevated" 

@@ -1,15 +1,8 @@
 import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
-
 import {  StyleSheet,View,TextInput,Text } from "react-native";
 import { Button, Dialog, Portal,PaperProvider } from 'react-native-paper';
-
-
-
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-
-
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import Procesando from "../Procesando/Procesando";
@@ -62,12 +55,12 @@ function CategoriaGastosRegistro({ navigation }){
         
 
         };
-        console.log(datosregistrar)
+        
         const endpoint='RegistroCategoria/'
         const result = await Generarpeticion(endpoint, 'POST', datosregistrar);
         
         const respuesta=result['resp']
-        console.log(respuesta)
+        
         if (respuesta === 200) {
           
           concepto.recarga='si'
@@ -191,7 +184,7 @@ const styles = StyleSheet.create({
       },
     modalContainer: {
     
-    // padding: 20,
+    
     paddingBottom:20,
     paddingLeft:20,
     paddingRight:20,
@@ -217,10 +210,10 @@ const styles = StyleSheet.create({
       fontSize: 15,
       height: 40,
       marginBottom: 7,
-      //paddingHorizontal: 5, // Espacio interno horizontal
+      
     },
     inputtextactivo:{
-      //borderBottomColor: 'rgb(44,148,228)', // Cambia el color de la línea inferior aquí
+      
       borderBottomWidth: 2,
       marginBottom:35,
       paddingLeft:10

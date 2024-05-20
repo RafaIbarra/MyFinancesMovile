@@ -1,13 +1,10 @@
 import React,{useState,useEffect,useContext,useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
-import { IconButton } from 'react-native-paper';
 import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
-import ModalIngreso from "./modalingresos";
-
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
 
@@ -155,10 +152,7 @@ function Ingresos ({ navigation  }){
 
                             <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
                             <TextInput 
-                                    style={{color:'white',padding:5,
-                                            // backgroundColor:'rgba(28,44,52,0.1)'
-                                            //backgroundColor:'red', 
-                                            flex: 1,}} 
+                                    style={{color:'white',padding:5,flex: 1,}} 
                                     placeholder="Concepto.."
                                     placeholderTextColor='gray'
                                     value={textobusqueda}
@@ -175,11 +169,8 @@ function Ingresos ({ navigation  }){
                         }
 
                             
-                        <TouchableOpacity style={[styles.botoncabecera,
-                                                { 
-                                                // backgroundColor: colors.iconcolor
-                                                backgroundColor:'rgb(218,165,32)'
-                                                }]} onPress={handlePress}
+                        <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} 
+                                          onPress={handlePress}
                         >
                             <Animated.View style={{ transform: [{ rotate: spin }] }}>
                                 <FontAwesome6 name="add" size={24} color="white" />
@@ -194,14 +185,8 @@ function Ingresos ({ navigation  }){
                                 data={dataingresos}
                                 renderItem={({item}) =>{
                                     return(
-                                        <TouchableOpacity  style={[styles.contenedordatos
-                                                                ,{ 
-                                                                    // borderColor : colors.bordercolor,
-                                                                    borderRightColor: colors.bordercolor,
-                                                                    borderBottomColor:'rgba(235,234,233,0.1)'
-                                                                }]} 
-                                        
-                                        onPress={() => {navigate('IngresoDetalle', { item });}}
+                                        <TouchableOpacity style={[styles.contenedordatos,{ borderRightColor: colors.bordercolor,borderBottomColor:'rgba(235,234,233,0.1)'}]} 
+                                                          onPress={() => {navigate('IngresoDetalle', { item });}}
                                         
                                         >
                                             <View style={[styles.columna, { flex: 2 }]}> 
@@ -258,14 +243,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderBottomWidth: 1,
-        // borderBottomColor: 'lightgray',
-        
+
       },
-    gradient: {
-        flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-      },
+
     titulocabecera: {
         flex: 1,
         fontSize: 20,
@@ -281,10 +261,8 @@ const styles = StyleSheet.create({
     textototal:{
       fontSize:17,
       
-      // color:'white'
     },
     botoncabecera: {
-        // backgroundColor: 'blue',
         width: 40, // Define el ancho del botón
         height: 40, // Define la altura del botón
         borderRadius: 20, // Define la mitad de la dimensión del botón para obtener una forma circular
@@ -292,35 +270,12 @@ const styles = StyleSheet.create({
         alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
       },
 
-    botonaccion: {
-        
-        width: 40, // Define el ancho del botón
-        height: 40  , // Define la altura del botón
-        borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
-        justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
-        alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
-        
-      },
-  textoBoton: {
-        // color: 'white',
-        fontWeight: 'bold',
-      },
-    
   container: {
         flex: 1,
-        // backgroundColor:'#1c2c34'
-        // backgroundColor:'rgba(28,44,52,0.7)'
-        //backgroundColor:'#242c34'
-        //backgroundColor:'#202c34'
+
       },
   contenedordatos:{
         flexDirection: 'row',
-
-        // borderRadius: 10,
-        // borderWidth: 1,
-        // margin:5,
-        //borderColor: '#ccc',
-
         borderBottomWidth:1,
         borderRightWidth:3,
         marginBottom:10,
@@ -332,13 +287,8 @@ const styles = StyleSheet.create({
         
         
     },
-  columnadatos:{
-        flex: 1,
-        height: '100%',
-        // backgroundColor: '#f0f0f0',
-    },
+
   resumencontainer: {
-      //flexDirection: 'row',
       alignItems: 'flex-start',
       justifyContent: 'space-between',
       paddingHorizontal: 20,
@@ -346,11 +296,7 @@ const styles = StyleSheet.create({
       borderWidth:0.5,
       borderTopRightRadius:50,
       borderColor:'gray',
-      // backgroundColor:'white',
-      // backgroundColor:'rgb(28,44,52)',
       paddingLeft:30
-
-      
     },
   contenedortexto:{
       paddingBottom:10,
@@ -361,13 +307,7 @@ const styles = StyleSheet.create({
       fontWeight:'bold',
       fontSize:15
   },
-  Tituloresumen: {
-    
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom:5
-  },
+
 
   });
 export default Ingresos

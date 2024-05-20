@@ -1,7 +1,6 @@
 import React,{useState,useEffect,useContext,useRef } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
-import { StatusBar } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
@@ -135,8 +134,7 @@ function Gastos ({ navigation  }){
               realizarbusqueda(textobusqueda)
             }
             setCargacopleta(true)
-            // setBusqueda(false)
-            // setTextobusqueda('')
+         
 
            
         }
@@ -150,12 +148,6 @@ function Gastos ({ navigation  }){
 
         return(
             <SafeAreaView style={{ flex: 1 }}>
-                {/* <StatusBar /> */}
-
-               
-
-                
-                    
                   <View style={{ flex: 1 }}>    
                       <View style={styles.cabeceracontainer}>
 
@@ -173,10 +165,7 @@ function Gastos ({ navigation  }){
 
                           <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
                             <TextInput 
-                                  style={{color:'white',padding:5,
-                                          // backgroundColor:'rgba(28,44,52,0.1)'
-                                          //backgroundColor:'red', 
-                                          flex: 1,}} 
+                                  style={{color:'white',padding:5,flex: 1,}} 
                                   placeholder="Concepto o Categoria.."
                                   placeholderTextColor='gray'
                                   value={textobusqueda}
@@ -194,9 +183,7 @@ function Gastos ({ navigation  }){
 
                           
                           <TouchableOpacity style={[styles.botoncabecera,
-                                                  { 
-                                                    // backgroundColor: colors.iconcolor
-                                                    backgroundColor:'rgb(218,165,32)'
+                                                  { backgroundColor:'rgb(218,165,32)'
                                                   }]} onPress={handlePress}
                           >
                               <Animated.View style={{ transform: [{ rotate: spin }] }}>
@@ -213,10 +200,7 @@ function Gastos ({ navigation  }){
                               renderItem={({item}) =>{
                                   return(
                                       <TouchableOpacity  style={[styles.contenedordatos
-                                                                ,{ 
-                                                                  // borderColor : colors.bordercolor,
-                                                                  borderRightColor: colors.bordercolor,
-                                                                  borderBottomColor:'rgba(235,234,233,0.1)'
+                                                                ,{ borderRightColor: colors.bordercolor,borderBottomColor:'rgba(235,234,233,0.1)'
                                                                 }]} 
                                       
                                        onPress={() => {navigate('GastosDetalle', { item });}}
@@ -283,14 +267,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderBottomWidth: 1,
-        // borderBottomColor: 'lightgray',
+
         
       },
-    gradient: {
-        flex: 1,
-        // justifyContent: 'center',
-        // alignItems: 'center',
-      },
+
     titulocabecera: {
         flex: 1,
         fontSize: 20,
@@ -317,35 +297,14 @@ const styles = StyleSheet.create({
         alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
       },
 
-    botonaccion: {
-        
-        width: 40, // Define el ancho del botón
-        height: 40  , // Define la altura del botón
-        borderRadius: 5, // Define la mitad de la dimensión del botón para obtener una forma circular
-        justifyContent: 'center', // Alinea el contenido (icono) verticalmente en el centro
-        alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
-        
-      },
-  textoBoton: {
-        // color: 'white',
-        fontWeight: 'bold',
-      },
-    
+
+
   container: {
         flex: 1,
-        // backgroundColor:'#1c2c34'
-        // backgroundColor:'rgba(28,44,52,0.7)'
-        //backgroundColor:'#242c34'
-        //backgroundColor:'#202c34'
+
       },
   contenedordatos:{
         flexDirection: 'row',
-
-        // borderRadius: 10,
-        // borderWidth: 1,
-        // margin:5,
-        //borderColor: '#ccc',
-
         borderBottomWidth:1,
         borderRightWidth:3,
         marginBottom:10,
@@ -357,11 +316,7 @@ const styles = StyleSheet.create({
         
         
     },
-  columnadatos:{
-        flex: 1,
-        height: '100%',
-        // backgroundColor: '#f0f0f0',
-    },
+
   resumencontainer: {
       //flexDirection: 'row',
       alignItems: 'flex-start',
@@ -371,8 +326,7 @@ const styles = StyleSheet.create({
       borderWidth:0.5,
       borderTopRightRadius:50,
       borderColor:'gray',
-      // backgroundColor:'white',
-      // backgroundColor:'rgb(28,44,52)',
+
       paddingLeft:30
 
       
@@ -386,13 +340,7 @@ const styles = StyleSheet.create({
       fontWeight:'bold',
       fontSize:15
   },
-  Tituloresumen: {
-    
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom:5
-  },
+
 
   });
 export default Gastos

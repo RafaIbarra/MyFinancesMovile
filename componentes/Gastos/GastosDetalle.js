@@ -1,9 +1,8 @@
 import React,{useState,useEffect} from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator, View,Text,StyleSheet,TouchableOpacity } from "react-native";
-import { Modal, Portal,  PaperProvider,Dialog,Button,Divider } from 'react-native-paper';
-import { Ionicons } from '@expo/vector-icons';
+import {  View,Text,StyleSheet,TouchableOpacity } from "react-native";
+import {  Portal,  PaperProvider,Dialog,Button,Divider } from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
@@ -13,8 +12,6 @@ function GastosDetalle ({ navigation }){
     const {params: { item },} = useRoute();
     
     const { colors } = useTheme();
-    const [count, setCount] = useState(0);
-    const [countdos, setCountdos] = useState(0);
     const [visibledialogo, setVisibledialogo] = useState(false)
     const { navigate } = useNavigation();
     const showDialog = () => setVisibledialogo(true);
@@ -142,17 +139,7 @@ function GastosDetalle ({ navigation }){
 
 
 
-                    <View style={{flex: 1,
-                                    // borderWidth:1,
-                                    // borderRadius:50,
-                                    // borderStartColor:'white',
-                                    // borderBottomColor:'white',
-                                    // justifyContent: 'center',
-                                    marginTop:50,
-                                    width:'90%',
-                                    marginLeft:20,
-                                    // marginBottom:50,marginTop:50
-                                }}>
+                    <View style={{flex: 1,marginTop:50,width:'90%',marginLeft:20,}}>
 
                         <View style={{flexDirection: 'row', alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
                         borderTopWidth:2,borderTopColor:'white'}}>
@@ -191,9 +178,7 @@ function GastosDetalle ({ navigation }){
                             </Text>
                             <Divider />
                             <Divider />
-                            {/* <Text style={[styles.contenedortexto, { color: colors.text }]}>
-                                    {item.anotacion}
-                                </Text> */}
+                           
 
                             <Text style={[styles.contenedortexto,{ color: colors.text}]}>
                                 
@@ -234,22 +219,8 @@ function GastosDetalle ({ navigation }){
     )
 }
 const styles = StyleSheet.create({
-    container: {
-        width: '90%', 
-        marginLeft:'5%',
-        marginTop:'33%',
-        // borderRadius: 10, 
-        borderWidth: 2, 
-        borderBottomColor: 'rgb(182, 212, 212)', 
-        borderTopColor: 'rgb(182, 212, 212)', 
-        padding:10,
-        justifyContent:'flex-start',
-        
-      },
-    labeltext:{
-        fontWeight:'bold',
-        fontSize:20
-    },
+    
+    
     contenedortexto:{
         paddingBottom:30,
         fontSize:20

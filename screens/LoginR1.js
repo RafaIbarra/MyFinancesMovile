@@ -176,8 +176,7 @@ export default function LoginR1({ navigation  }){
                 // setSesionname(datosstarage['user_name'])
                 const datestorage=await Handelstorage('obtenerdate');
                 setPeriodo(datestorage['dataperiodo'])
-                // console.log('desde comprobando')
-                // console.log(result['data']['datauser'])
+                
                 setSesiondata(result['data']['datauser'])
 
                 await new Promise(resolve => setTimeout(resolve, 7000))

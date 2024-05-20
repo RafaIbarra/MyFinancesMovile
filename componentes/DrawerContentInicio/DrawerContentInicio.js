@@ -1,5 +1,5 @@
-import React,{useState,useEffect,useContext} from "react";
-import { View, Text, Pressable, Image,StyleSheet } from 'react-native'
+import React,{useEffect,useContext} from "react";
+import { View, Text,  Image,StyleSheet } from 'react-native'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
 import { Button} from 'react-native-paper';
 
@@ -23,10 +23,7 @@ function DrawerContentInicio(props){
       useEffect(() => {
 
         const cargardatos=()=>{
-          
-          
-          // console.log('drawer inicio')
-          // console.log(sesiondata)
+
             
            
         }

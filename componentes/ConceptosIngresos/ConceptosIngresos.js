@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useContext,useRef } from "react";
+import React,{useState,useEffect,useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
@@ -14,7 +14,7 @@ import { useTheme } from '@react-navigation/native';
 /*Iconos*/
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+
 
 
 function ConceptosIngresos ({ navigation  }){
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderBottomWidth: 1,
-        // borderBottomColor: 'lightgray',
+
         
       },
     
@@ -259,12 +259,12 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         textAlign: 'center',
-        // color:'white'
+
       },
     textocontenido:{
       fontSize:12.5,
       marginBottom:5,
-      // color:'white'
+
     },
     textoconcepto:{
       fontSize:15,
@@ -272,10 +272,10 @@ const styles = StyleSheet.create({
       fontWeight:'bold',
       fontStyle:'italic'
       
-      // color:'white'
+
     },
     botoncabecera: {
-        // backgroundColor: 'blue',
+
         width: 40, // Define el ancho del botón
         height: 40, // Define la altura del botón
         borderRadius: 20, // Define la mitad de la dimensión del botón para obtener una forma circular
@@ -291,8 +291,7 @@ const styles = StyleSheet.create({
       borderWidth:0.5,
       borderTopRightRadius:50,
       borderColor:'gray',
-      // backgroundColor:'white',
-      // backgroundColor:'rgb(28,44,52)',
+
       paddingLeft:30,
       paddingBottom:20
 
@@ -307,13 +306,7 @@ const styles = StyleSheet.create({
       fontWeight:'bold',
       fontSize:15
   },
-  Tituloresumen: {
-    
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom:5
-  },
+
 
   });
 export default ConceptosIngresos

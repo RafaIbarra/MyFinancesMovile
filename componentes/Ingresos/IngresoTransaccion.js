@@ -33,7 +33,6 @@ function IngresoTransaccion({ navigation }){
     const[productosfijos,setProductosfijos]=useState(null)
     const[productosocacionales,setProductosocacionales]=useState(null)
     const [valueradio, setValueradio] = useState(0);
-    const [opcionesconceptos,setOpcionesconceptos]=useState([])
     const [listaconcepto,setListaconcepto]=useState([])
     const[tiposel,setTiposel]=useState([])
     const[conceptosel,setConceptosel]=useState(0)
@@ -287,13 +286,7 @@ function IngresoTransaccion({ navigation }){
                   </Dialog>
                 </Portal>
                   
-                  <ScrollView style={{padding:10,
-                                maxHeight:350,
-                                marginLeft:10,
-                                marginRight:10
-                                
-                                
-                                }}>
+                  <ScrollView style={{padding:10,maxHeight:350,marginLeft:10,marginRight:10}}>
                         <RadioButton.Group 
                             onValueChange={newValue => seleccionradio(newValue)} 
                             value={valueradio}
@@ -323,7 +316,7 @@ function IngresoTransaccion({ navigation }){
 
                                 
                                 
-                                </Text>
+                            </Text>
             
                             <TouchableOpacity 
                                 style={styles.botonfecha} 
@@ -485,21 +478,14 @@ function IngresoTransaccion({ navigation }){
 }
 
 const styles = StyleSheet.create({
-    label: {
-        fontSize: 16,
-        marginBottom: 5,
-      },
-    containertext:{
-      position: 'relative',
-    marginBottom: 20, 
-    },
+   
+
     overlay: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
       },
     modalContainer: {
-    
-    // padding: 20,
+
     paddingBottom:20,
     paddingLeft:20,
     paddingRight:20,
@@ -535,20 +521,6 @@ const styles = StyleSheet.create({
       
     }
     ,
-    
-  placeholder: {
-    position: 'absolute',
-    left: 10,
-    top: 10,
-    fontSize: 15,
-    color: 'gray',
-    zIndex: -1,
-  },
-  placeholderFocus: {
-    top: -10,
-    fontSize: 12,
-    color: 'black',
-  },
     botonfecha:{
       width: 50, 
       height: 35, 
@@ -556,48 +528,9 @@ const styles = StyleSheet.create({
       marginLeft:'5%',
       marginBottom:27
     },
-    botoncomando:{
-      backgroundColor: 'blue',
-      width: 50, 
-      height: 40, 
-      borderRadius: 5, 
-      justifyContent: 'center', 
-      alignItems: 'center',
-      marginRight:100
-    }
-    ,
-    contornoopciones:{
-      borderWidth:0.5,
-      borderColor:'gray',
-      marginBottom:15,
-      borderRadius:20,
-      fontSize:5
-    }
+    
+
   });
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        fontSize: 16,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'white',
-        paddingRight: 30 // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 12.5,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderWidth: 0.5,
-        borderColor: 'gray',
-        borderRadius: 8,
-        color: 'white',
-        // paddingRight: 30, 
-        marginBottom:35,
-        height:37,
-        
-    }
-});
+
 
 export default IngresoTransaccion

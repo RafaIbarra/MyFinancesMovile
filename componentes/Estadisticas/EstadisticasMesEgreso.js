@@ -1,5 +1,5 @@
-import React,{useState,useEffect,useContext,useRef } from "react";
-import {  View,Text, StyleSheet,Image    } from "react-native";
+import React,{useState,useEffect,useContext } from "react";
+import {  View    } from "react-native";
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import { useTheme } from '@react-navigation/native';
@@ -58,15 +58,7 @@ function EstadisticasMesEgreso ({ navigation  }){
                 
                 <ImagenEstadistica imgprops={imgegreso}></ImagenEstadistica>
 
-                {/* <View style={styles.container}>
-
-                    <Image
-                        source={{ uri: `data:image/png;base64,${imgingreso}` }}
-                        style={styles.image}
-                        resizeMode="contain"
-                    />
-                </View> */}
-
+             
                 
             </View>
             )

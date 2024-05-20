@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useContext} from "react";
-import { ActivityIndicator, View,Text,StyleSheet,TouchableOpacity,TextInput } from "react-native";
+import { ActivityIndicator, View,Text,StyleSheet,TextInput } from "react-native";
 import { ProgressSteps, ProgressStep } from 'react-native-progress-steps'
 import { Button, Dialog, Portal,PaperProvider } from 'react-native-paper';
 import Handelstorage from "../../Storage/handelstorage";
@@ -441,18 +441,8 @@ const styles = StyleSheet.create({
         
       }
       ,
-    botonfecha:{
-        width: 50, 
-        height: 35, 
-  
-        marginLeft:'5%',
-        marginBottom:27
-      },
 
-      loadingContainer: {
-        height: 50, // Ajusta la altura según el tamaño del ActivityIndicator
-        justifyContent: 'center',
-      },
+    
 
       loadingOverlay: {
         ...StyleSheet.absoluteFillObject,

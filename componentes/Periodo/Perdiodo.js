@@ -7,8 +7,7 @@ import Generarpeticion from "../PeticionesApi/apipeticiones";
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
 /*Iconos*/
-import { FontAwesome6 } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
+
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Procesando from "../Procesando/Procesando";

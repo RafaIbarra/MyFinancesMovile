@@ -12,8 +12,6 @@ import { AntDesign } from '@expo/vector-icons'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
-
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
@@ -275,13 +273,7 @@ function GastosTransaccion({ navigation }){
                   </Dialog>
                 </Portal>
                   
-                  <ScrollView style={{padding:10,
-                                maxHeight:350,
-                                marginLeft:10,
-                                marginRight:10
-                                
-                                
-                                }}>
+                  <ScrollView style={{padding:10,maxHeight:350,marginLeft:10,marginRight:10}}>
                       
          
                       <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
@@ -388,16 +380,10 @@ function GastosTransaccion({ navigation }){
                         
                   </ScrollView>
                   <Button 
-                        style={{marginTop:10,marginBottom:10,marginLeft:10
-                          ,
-                          // backgroundColor:'rgb(182, 212, 212)'
-                          //backgroundColor:'rgba(0,0,0,0.2)'
-                          backgroundColor:'rgba(44,148,228,0.7)'
+                        style={{marginTop:10,marginBottom:10,marginLeft:10,backgroundColor:'rgba(44,148,228,0.7)'
                         }} 
-                        // icon="content-save-check" 
+                        
                         icon={() => {
-                          // return <AntDesign style={{marginRight:5,marginTop:5}} name="downcircle" size={27} color="gray" />;
-
                           return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
                         }}
                         mode="elevated" 
@@ -411,7 +397,7 @@ function GastosTransaccion({ navigation }){
                           transparent={true} 
                           onRequestClose={toggleModal}
                           animationType="slide" 
-                          // animationDuration={2000}
+                          
                           >
                           <TouchableOpacity
                               style={styles.overlay}
@@ -480,14 +466,7 @@ function GastosTransaccion({ navigation }){
 }
 
 const styles = StyleSheet.create({
-    label: {
-        fontSize: 16,
-        marginBottom: 5,
-      },
-    containertext:{
-      position: 'relative',
-    marginBottom: 20, 
-    },
+
     overlay: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -530,20 +509,8 @@ const styles = StyleSheet.create({
       
     }
     ,
-    
-  placeholder: {
-    position: 'absolute',
-    left: 10,
-    top: 10,
-    fontSize: 15,
-    color: 'gray',
-    zIndex: -1,
-  },
-  placeholderFocus: {
-    top: -10,
-    fontSize: 12,
-    color: 'black',
-  },
+
+
     botonfecha:{
       width: 50, 
       height: 35, 
@@ -551,48 +518,9 @@ const styles = StyleSheet.create({
       marginLeft:'5%',
       marginBottom:27
     },
-    botoncomando:{
-      backgroundColor: 'blue',
-      width: 50, 
-      height: 40, 
-      borderRadius: 5, 
-      justifyContent: 'center', 
-      alignItems: 'center',
-      marginRight:100
-    }
-    ,
-    contornoopciones:{
-      borderWidth:0.5,
-      borderColor:'gray',
-      marginBottom:15,
-      borderRadius:20,
-      fontSize:5
-    }
+
+
   });
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        fontSize: 16,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'white',
-        paddingRight: 30 // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 12.5,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderWidth: 0.5,
-        borderColor: 'gray',
-        borderRadius: 8,
-        color: 'white',
-        // paddingRight: 30, 
-        marginBottom:35,
-        height:37,
-        
-    }
-});
+
 
 export default GastosTransaccion

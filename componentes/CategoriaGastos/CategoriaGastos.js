@@ -14,7 +14,7 @@ import { useTheme } from '@react-navigation/native';
 /*Iconos*/
 import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+
 
 
 function CategoriaGastos ({ navigation  }){
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     textocontenido:{
       fontSize:12.5,
       marginBottom:5,
-      // color:'white'
+      
     },
     textoconcepto:{
       fontSize:15,
@@ -258,10 +258,10 @@ const styles = StyleSheet.create({
       fontWeight:'bold',
       fontStyle:'italic'
       
-      // color:'white'
+      
     },
     botoncabecera: {
-        // backgroundColor: 'blue',
+        
         width: 40, // Define el ancho del botón
         height: 40, // Define la altura del botón
         borderRadius: 20, // Define la mitad de la dimensión del botón para obtener una forma circular
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', // Alinea el contenido (icono) horizontalmente en el centro
   },
   resumencontainer: {
-      //flexDirection: 'row',
+      
       alignItems: 'flex-start',
       justifyContent: 'space-between',
       paddingHorizontal: 20,
@@ -277,8 +277,7 @@ const styles = StyleSheet.create({
       borderWidth:0.5,
       borderTopRightRadius:50,
       borderColor:'gray',
-      // backgroundColor:'white',
-      // backgroundColor:'rgb(28,44,52)',
+
       paddingLeft:30,
       paddingBottom:20
 

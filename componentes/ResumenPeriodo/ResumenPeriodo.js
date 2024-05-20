@@ -1,5 +1,5 @@
-import React,{useState,useEffect,useContext,useRef } from "react";
-import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
+import React,{useState,useEffect,useContext } from "react";
+import {  View,Text, StyleSheet,FlatList   } from "react-native";
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import { useTheme } from '@react-navigation/native';
@@ -65,9 +65,7 @@ function ResumenPeriodo ({ navigation  }){
 
             return(
             <View>
-                {/* <View style={styles.cabeceracontainer}>
-                        <Text style={[styles.titulocabecera, { color: colors.text}]}>Resumen del mes</Text>
-                </View> */}
+          
 
                 <View style={[{ flexDirection:'row', marginLeft:2,marginTop:50,borderWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}]}>
     
@@ -147,33 +145,14 @@ function ResumenPeriodo ({ navigation  }){
 }
 
 const styles = StyleSheet.create({
-    
-    cabeceracontainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        // borderBottomColor: 'lightgray',
-        
-      },
-      titulocabecera: {
-        flex: 1,
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        // color:'white'
-      },
+
     textocontenido:{
       fontSize:12.5,
-    //   marginRight:50,
+
       alignContent:'flex-start',
-    //   marginBottom:10
+
     },
-    textototal:{
-      fontSize:17,
-    },
+
 
   contenedordatos:{
         flexDirection: 'row',

@@ -362,14 +362,8 @@ function ConceptosGastosRegistro({ navigation }){
 }
 
 const styles = StyleSheet.create({
-    label: {
-        fontSize: 16,
-        marginBottom: 5,
-      },
-    containertext:{
-      position: 'relative',
-    marginBottom: 20, 
-    },
+
+
     overlay: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -433,48 +427,9 @@ const styles = StyleSheet.create({
       marginLeft:'5%',
       marginBottom:27
     },
-    botoncomando:{
-      backgroundColor: 'blue',
-      width: 50, 
-      height: 40, 
-      borderRadius: 5, 
-      justifyContent: 'center', 
-      alignItems: 'center',
-      marginRight:100
-    }
-    ,
-    contornoopciones:{
-      borderWidth:0.5,
-      borderColor:'gray',
-      marginBottom:15,
-      borderRadius:20,
-      fontSize:5
-    }
+
+    
   });
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        fontSize: 16,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'white',
-        paddingRight: 30 // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 12.5,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderWidth: 0.5,
-        borderColor: 'gray',
-        borderRadius: 8,
-        color: 'white',
-        // paddingRight: 30, 
-        marginBottom:35,
-        height:37,
-        
-    }
-});
+
 
 export default ConceptosGastosRegistro

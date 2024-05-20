@@ -1,4 +1,4 @@
-import React,{useState,useContext } from "react";
+import React,{useContext } from "react";
 import {NavigationContainer,DefaultTheme} from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from '@react-navigation/native';
@@ -8,26 +8,21 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { AuthContext } from "./AuthContext";
 import { StatusBar } from 'react-native';
-import { StyleSheet,Button  } from "react-native";
+import { StyleSheet  } from "react-native";
 import { View,Text,TouchableOpacity } from "react-native";
-import { List } from 'react-native-paper';
+
 
 //Componentes///////////////
-// import Resumen from "./componentes/Resumen/Resumen";
 import ResumenPeriodo from "./componentes/ResumenPeriodo/ResumenPeriodo";
 import Gastos from "./componentes/Gastos/Gastos";
-import GastosDetalle from "./componentes/GastosDetalle/GastosDetalle";
+import GastosDetalle from "./componentes/Gastos/GastosDetalle";
 import Ingresos from "./componentes/Ingresos/Ingresos";
 import IngresoTransaccion from "./componentes/Ingresos/IngresoTransaccion";
-import IngresosAgregar from "./componentes/Ingresos/IngresosAgregar";
-// import IngresosDetalle from "./componentes/Ingresos/IngresosDetalle";
 import IngresoDetalle from "./componentes/Ingresos/IngresoDetalle";
 
 import Saldos from "./componentes/Saldos/Saldos";
 import Estadisticas from "./componentes/Estadisticas/Estadisticas";
-import DrawerContent from "./componentes/DrawerContent/DrawerContent";
 import DrawerContentInicio from "./componentes/DrawerContentInicio/DrawerContentInicio";
-import CloseSesion from "./componentes/Closesesion/closesesion";
 import GastosTransaccion from "./componentes/Gastos/GastosTransaccion";
 import EstadisticasMesEgreso from "./componentes/Estadisticas/EstadisticasMesEgreso";
 import EstadisticasMesIngreso from "./componentes/Estadisticas/EstadisticasMesIngreso";
@@ -53,12 +48,9 @@ import Seguridad from "./componentes/Seguridad/Seguridad";
 import Periodo from "./componentes/Periodo/Perdiodo";
 
 
-////////////Storage
-import Handelstorage from "./Storage/handelstorage";
 
 //////////////iconos///////////////////////////////
 import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome6 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -70,12 +62,10 @@ const MyTheme = {
     dark: true,
     colors: {
       ...DefaultTheme.colors,
-      // background: 'rgba(28,44,52,0.7)',
       background: 'rgb(28,44,52)',
       backgroundInpunt: 'rgb(28,44,52)',
       textbordercoloractive:'rgb(44,148,228)',
       textbordercolorinactive:'gray',
-      //background: 'red',
       text:'white',
       color:'red',
       primary:'white',
@@ -83,7 +73,6 @@ const MyTheme = {
       card: 'rgb(28,44,52)', //color de la barra de navegadores
       commentText:'red',
       bordercolor:'#d6d7b3',
-      // iconcolor:'#cddae8cb'
       iconcolor:'white',
       
     },
@@ -95,8 +84,6 @@ const Drawer = createDrawerNavigator();
 function DrawerInicio({navigation}){
   const { colors } = useTheme();
   const sizeicon=25
-  let colorborder='rgb(44,148,228)'
-  const { activarsesion, setActivarsesion } = useContext(AuthContext);
   const {periodo, setPeriodo} = useContext(AuthContext);
   const { navigate } = useNavigation();
   
@@ -197,8 +184,6 @@ function DrawerInicio({navigation}){
           drawerLabel: 'Seguridad',
           title: 'Seguridad',
           drawerIcon: ({size, color})=>(
-            // <AntDesign name="barschart"  size={sizeicon} color={colors.iconcolor} />
-
             <MaterialIcons name="security" size={sizeicon} color={colors.iconcolor} />
           ),
           drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' },
@@ -230,9 +215,7 @@ function TabsGroup({ navigation }) {
     const { colors } = useTheme();
     return (
       <Tab.Navigator 
-      // screenOptions={{ headerShown: false }} 
       initialRouteName="Gastos"
-      // screenOptions={{tabBarStyle:{height:60,elevation:50,borderTopWidth:1,borderTopColor:'black',marginBottom:2,marginTop:5}}}
       >
         <Tab.Screen name="Home2" 
           component={ResumenPeriodo}
@@ -603,11 +586,7 @@ function OpcionesTabEstadisticas({navigation}){
     {
       "tabBarIndicatorStyle": {"backgroundColor": "rgb(44,148,228)"},
       tabBarLabelStyle: { fontSize: 16,textTransform:'none' },
-       
-      
     }
-    
-
   }
   >
 
@@ -699,13 +678,12 @@ function OpcionesHistorialMovimientos({navigation}){
 
 }
 
-function Navigation( {sesionname}){
-  const { colors } = useTheme();
+function Navigation( ){
 return(
     <NavigationContainer theme={MyTheme }>
         
         <StatusBar backgroundColor='rgb(28,44,52)'  />
-        <DrawerInicio  sesionname={sesionname} />
+        <DrawerInicio   />
     </NavigationContainer>
 )
 }
@@ -718,9 +696,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
     marginTop:5
-    // backgroundColor:'blue',
-    // borderWidth:1,
-    // bordercolor:'red'
   },
   focusedIconContainer:{
     flex: 1,
@@ -735,12 +710,7 @@ const styles = StyleSheet.create({
     bordercolor:'rgba(78,78,78,0.2)',
     borderRadius:10
   },
-  drawerContent: {
-    flex: 1, // Esto asegura que DrawerContent ocupe solo el espacio necesario
-    paddingTop: 20, // Espacio en la parte superior para evitar solapamiento con el header del drawer
-    
-    height:10
-  },
+ 
 });
 
 export default Navigation

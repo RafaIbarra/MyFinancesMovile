@@ -1,10 +1,8 @@
 import React,{useState,useEffect,useContext } from "react";
-import { useNavigation } from "@react-navigation/native";
+
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,TextInput,Animated,Modal   } from "react-native";
 import { StatusBar } from 'react-native';
-import { FontAwesome6 } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -19,7 +17,7 @@ import { AuthContext } from "../../AuthContext";
 function MovimientosEgreso ({ navigation  }){
     
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    const [busqueda,setBusqueda]=useState(false)
+    
     const [textobusqueda,setTextobusqueda]=useState('')
     
     const { colors } = useTheme();
@@ -29,12 +27,7 @@ function MovimientosEgreso ({ navigation  }){
     const [dataegresos,setDataegresos]=useState([])
 
     const [optionmeses, setOptionmeses] = useState([]);
-        
-    const { navigate } = useNavigation();
-
-    const [montototalegreso,setMontototalegreso]=useState(0)
-    const [canttotalegreso,setcanttotalegreso]=useState(0)
-    
+          
     const [annoseleccionado,setAnnoseleccionado]=useState('')
     const [isFocusedanno, setIsFocusedanno] = useState(false);
 
@@ -166,11 +159,7 @@ function MovimientosEgreso ({ navigation  }){
               
               setDataegresos(registros)
               setDateegresoscompleto(registros)
-              let totalgasto=0
-              let cantgasto=0
-              registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
-              setMontototalegreso(totalgasto)
-              setcanttotalegreso(cantgasto)
+              
           }
           
       }else if(respuesta === 403 || respuesta === 401){
@@ -224,13 +213,12 @@ function MovimientosEgreso ({ navigation  }){
             
            setCargacopleta(true)
             
-            // setBusqueda(false)
-            // setTextobusqueda('')
+
 
            
         }
         cargardatos()
-        // setRefresh(false)
+
       
       
       }, []);
@@ -465,13 +453,7 @@ function MovimientosEgreso ({ navigation  }){
 }
 const styles = StyleSheet.create({
     
-    inputtextactivo:{
-        //borderBottomColor: 'rgb(44,148,228)', // Cambia el color de la línea inferior aquí
-        borderBottomWidth: 2,
-        //marginBottom:35,
-        // paddingLeft:10
-        
-      },
+
       botonfecha:{
         width: 50, 
         height: 35, 
@@ -506,12 +488,6 @@ const styles = StyleSheet.create({
 
     contenedordatos:{
           flexDirection: 'row',
-  
-          // borderRadius: 10,
-          // borderWidth: 1,
-          // margin:5,
-          //borderColor: '#ccc',
-  
           borderBottomWidth:1,
           borderRightWidth:3,
           marginBottom:10,

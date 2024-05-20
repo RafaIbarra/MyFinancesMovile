@@ -1,4 +1,4 @@
-import React,{useState,useEffect,useContext} from "react";
+import React from "react";
 import {  StyleSheet,View,ActivityIndicator,TouchableWithoutFeedback,Modal } from "react-native";
 function Procesando (){
 

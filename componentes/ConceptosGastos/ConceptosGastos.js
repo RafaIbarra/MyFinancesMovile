@@ -1,8 +1,6 @@
 import React,{useState,useEffect,useContext,useRef,memo  } from "react";
 import { useNavigation } from "@react-navigation/native";
-import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput,ScrollView   } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
-
+import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,TextInput   } from "react-native";
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
@@ -376,14 +374,7 @@ const styles = StyleSheet.create({
   labeltext:{
       fontWeight:'bold',
       fontSize:15
-  },
-  Tituloresumen: {
-    
-    fontSize: 20,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom:5
-  },
+  }
 
   });
 export default ConceptosGastos

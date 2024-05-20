@@ -1,5 +1,5 @@
 import React,{useState,useEffect,useContext,useRef } from "react";
-import {  View,Text, StyleSheet,Image    } from "react-native";
+import {  View    } from "react-native";
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import { useTheme } from '@react-navigation/native';
@@ -56,20 +56,8 @@ function EstadisticasMesIngreso ({ navigation  }){
         {
 
             return(
-            <View  style={{ flex: 1}}>
-                
+            <View  style={{ flex: 1}}>   
                 <ImagenEstadistica imgprops={imgingreso}></ImagenEstadistica>
-
-                {/* <View style={styles.container}>
-
-                    <Image
-                        source={{ uri: `data:image/png;base64,${imgingreso}` }}
-                        style={styles.image}
-                        resizeMode="contain"
-                    />
-                </View> */}
-
-                
             </View>
             )
     }

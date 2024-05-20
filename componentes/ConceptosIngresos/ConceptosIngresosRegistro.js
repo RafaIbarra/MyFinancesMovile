@@ -3,14 +3,7 @@ import { useRoute } from "@react-navigation/native";
 
 import {  StyleSheet,View,TextInput,Text,Modal } from "react-native";
 import { Button, Dialog, Portal,PaperProvider,RadioButton } from 'react-native-paper';
-
-
-
-
-
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
@@ -95,7 +88,7 @@ function ConceptosIngresosRegistro({ navigation }){
     useEffect(() => {
 
         const cargardatos=()=>{
-            // const concepto={'id':0,'nombre_producto':'','tipoproducto':0}
+     
             
             setCodigoconcepto(concepto.id)
             setNombreconcepto(concepto.nombre_producto)
@@ -197,37 +190,8 @@ function ConceptosIngresosRegistro({ navigation }){
 }
 
 const styles = StyleSheet.create({
-    label: {
-        fontSize: 16,
-        marginBottom: 5,
-      },
-    containertext:{
-      position: 'relative',
-    marginBottom: 20, 
-    },
-    overlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      },
-    modalContainer: {
-    
-    // padding: 20,
-    paddingBottom:20,
-    paddingLeft:20,
-    paddingRight:20,
-    position: 'absolute',
-    bottom: 0,
-    left: 5,
-    right: 5,
-    height:'50%',
-    borderTopLeftRadius:50,
-    borderTopRightRadius:50,
-    borderLeftWidth:1,
-    borderTopWidth:1,
-    borderRightWidth:1,
-    
-    borderColor:'gray'
-    },
+
+
     
     input: {
       borderBottomWidth: 1,
@@ -246,70 +210,8 @@ const styles = StyleSheet.create({
       paddingLeft:10
       
     }
-    ,
     
-  placeholder: {
-    position: 'absolute',
-    left: 10,
-    top: 10,
-    fontSize: 15,
-    color: 'gray',
-    zIndex: -1,
-  },
-  placeholderFocus: {
-    top: -10,
-    fontSize: 12,
-    color: 'black',
-  },
-    botonfecha:{
-      width: 50, 
-      height: 35, 
-
-      marginLeft:'5%',
-      marginBottom:27
-    },
-    botoncomando:{
-      backgroundColor: 'blue',
-      width: 50, 
-      height: 40, 
-      borderRadius: 5, 
-      justifyContent: 'center', 
-      alignItems: 'center',
-      marginRight:100
-    }
-    ,
-    contornoopciones:{
-      borderWidth:0.5,
-      borderColor:'gray',
-      marginBottom:15,
-      borderRadius:20,
-      fontSize:5
-    }
   });
-const pickerSelectStyles = StyleSheet.create({
-    inputIOS: {
-        fontSize: 16,
-        paddingVertical: 12,
-        paddingHorizontal: 10,
-        borderWidth: 1,
-        borderColor: 'gray',
-        borderRadius: 4,
-        color: 'white',
-        paddingRight: 30 // to ensure the text is never behind the icon
-    },
-    inputAndroid: {
-        fontSize: 12.5,
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderWidth: 0.5,
-        borderColor: 'gray',
-        borderRadius: 8,
-        color: 'white',
-        // paddingRight: 30, 
-        marginBottom:35,
-        height:37,
-        
-    }
-});
+
 
 export default ConceptosIngresosRegistro
