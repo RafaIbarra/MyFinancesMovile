@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
-
+import Procesando from "../Procesando/Procesando";
 
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
@@ -20,7 +20,7 @@ import { FontAwesome } from '@expo/vector-icons';
 function CategoriaGastos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    
+    const [guardando,setGuardando]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     
     const [rotationValue] = useState(new Animated.Value(0));
@@ -84,7 +84,7 @@ function CategoriaGastos ({ navigation  }){
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             const cargardatos=async()=>{
-                
+                setGuardando(true)
                 const body = {};
                 const endpoint='MisCategorias/0/'
                 const result = await Generarpeticion(endpoint, 'POST', body);
@@ -121,7 +121,7 @@ function CategoriaGastos ({ navigation  }){
                     setActivarsesion(false)
                 }
                 setCargacopleta(true)
-
+                setGuardando(false)
             
             }
             cargardatos()
@@ -132,100 +132,100 @@ function CategoriaGastos ({ navigation  }){
     
     
     
-    if(cargacompleta){
+ 
 
-        return(
-            <SafeAreaView style={{ flex: 1 }}>
+    return(
+        <SafeAreaView style={{ flex: 1 }}>
+            {guardando &&(<Procesando></Procesando>)}
+            <View style={{ flex: 1 }}>    
+                <View style={styles.cabeceracontainer}>
+                    <Text style={[styles.titulocabecera, { color: colors.text}]}>Categoria Gastos</Text>
 
-                <View style={{ flex: 1 }}>    
-                    <View style={styles.cabeceracontainer}>
-                       <Text style={[styles.titulocabecera, { color: colors.text}]}>Categoria Gastos</Text>
+                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
+                        <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                            <FontAwesome6 name="add" size={24} color="white" />
+                        </Animated.View>
+                    </TouchableOpacity>
+                </View>
+                <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
+                  
+                    <View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center'}}>
+                            <TextInput 
+                                    style={{color:colors.text,padding:5,}} 
+                                    placeholder="Buscar.."
+                                    placeholderTextColor='gray'
+                                    value={textobusqueda}
+                                    onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                                    >
 
-                       <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
-                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                <FontAwesome6 name="add" size={24} color="white" />
-                            </Animated.View>
-                       </TouchableOpacity>
+                            </TextInput>
+
+                            <TouchableOpacity style={{ position: 'absolute',right: 10,}}  >  
+                              <FontAwesome name="search" size={24} color={colors.iconcolor}/>
+                            </TouchableOpacity>
                     </View>
-                    <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
-                      
-                        <View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center'}}>
-                                <TextInput 
-                                        style={{color:colors.text,padding:5,}} 
-                                        placeholder="Buscar.."
-                                        placeholderTextColor='gray'
-                                        value={textobusqueda}
-                                        onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                </View>
+
+                
+
+                <FlatList
+                    data={dataingresos}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View style={{ flexDirection: 'row', marginBottom: 10,marginLeft:5,marginRight:5 }}>
+                            {item.map(concepto => (
+                                
+                                  
+                                  
+                                    <TouchableOpacity key={concepto.id} 
+                                                      style={{ flex: 1, marginHorizontal: 5,borderWidth:1,
+                                                          borderRadius:10,borderColor:colors.bordercolor}}
+                                                      onPress={() => {navigate('CategoriaGastosDetalle', { concepto });}}
+                                                      >
+
+
+                                        <LinearGradient key={concepto.nombre_producto} 
+                                                        colors={['#182120', '#12262c', '#0b2a37']}
+                                                        style={{borderRadius:10,padding:10}}
                                         >
 
-                                </TextInput>
+                                          <View style={{flexDirection:'row'}}>
+                                            <FontAwesome6 name="check" size={20} color="green" />
+                                            <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text,paddingRight:10}]}>{concepto.nombre_categoria}</Text>
+                                          </View>
 
-                                <TouchableOpacity style={{ position: 'absolute',right: 10,}}  >  
-                                  <FontAwesome name="search" size={24} color={colors.iconcolor}/>
-                                </TouchableOpacity>
+                                          
+                                          
+                                          
+                                        </LinearGradient>
+
+                                    </TouchableOpacity  >
+                                  
+                                
+                            ))}
                         </View>
-                    </View>
+                    )}
+                    />
+                
 
+
+
+                <View style={styles.resumencontainer}>
+
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                        <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
+                        {Number(canttotalingreso).toLocaleString('es-ES')}
+                    </Text>
                     
-
-                    <FlatList
-                        data={dataingresos}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <View style={{ flexDirection: 'row', marginBottom: 10,marginLeft:5,marginRight:5 }}>
-                                {item.map(concepto => (
-                                    
-                                      
-                                      
-                                        <TouchableOpacity key={concepto.id} 
-                                                          style={{ flex: 1, marginHorizontal: 5,borderWidth:1,
-                                                              borderRadius:10,borderColor:colors.bordercolor}}
-                                                          onPress={() => {navigate('CategoriaGastosDetalle', { concepto });}}
-                                                          >
-
-
-                                            <LinearGradient key={concepto.nombre_producto} 
-                                                            colors={['#182120', '#12262c', '#0b2a37']}
-                                                            style={{borderRadius:10,padding:10}}
-                                            >
-
-                                              <View style={{flexDirection:'row'}}>
-                                                <FontAwesome6 name="check" size={20} color="green" />
-                                                <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text,paddingRight:10}]}>{concepto.nombre_categoria}</Text>
-                                              </View>
-
-                                              
-                                              
-                                              
-                                            </LinearGradient>
-
-                                        </TouchableOpacity  >
-                                      
-                                    
-                                ))}
-                            </View>
-                        )}
-                        />
                     
-
-
-
-                    <View style={styles.resumencontainer}>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
-                            {Number(canttotalingreso).toLocaleString('es-ES')}
-                        </Text>
-                       
-                        
-                    </View>
-
                 </View>
-            </SafeAreaView>
+
+            </View>
+        </SafeAreaView>
+
+        
+    )
     
-            
-        )
-    }
 }
 const styles = StyleSheet.create({
     

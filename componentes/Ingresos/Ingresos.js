@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
 
@@ -22,7 +23,7 @@ function Ingresos ({ navigation  }){
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const [rotationValue] = useState(new Animated.Value(0));
     const { colors } = useTheme();
-
+    const [guardando,setGuardando]=useState(false)
     const [cargacompleta,setCargacopleta]=useState(false)
     const [dataingresos,setDataingresos]=useState([])
     const [dataingresoscompleto,setDataingresoscompleto]=useState([])
@@ -84,6 +85,7 @@ function Ingresos ({ navigation  }){
    
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+            setGuardando(true)
             const cargardatos=async()=>{
                 const datestorage=await Handelstorage('obtenerdate');
                 const mes_storage=datestorage['datames']
@@ -109,11 +111,12 @@ function Ingresos ({ navigation  }){
                         registros.forEach(({ monto_ingreso }) => {totalingreso += monto_ingreso,cantingreso+=1})
                         setMontototalingreso(totalingreso)
                         setcanttotalingreso(cantingreso)
+                        setGuardando(false)
                     }
                     
                 }else if(respuesta === 403 || respuesta === 401){
                 
-                
+                    setGuardando(false)
                     await Handelstorage('borrar')
                     await new Promise(resolve => setTimeout(resolve, 1000))
                     setActivarsesion(false)
@@ -130,109 +133,110 @@ function Ingresos ({ navigation  }){
     
     
     
-    if(cargacompleta){
-
-        return(
-            <SafeAreaView style={{ flex: 1 }}>
-
-                <View style={{ flex: 1 }}>    
-                    <View style={styles.cabeceracontainer}>
-
-                        {!busqueda &&( 
-                            <TouchableOpacity onPress={openbusqueda}>
-                                
-                                <FontAwesome name="search" size={24} color={colors.iconcolor}/>
-                                
-                            </TouchableOpacity>
-                        )}
-                        {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.text}]}>Registro Ingresos</Text>)}
-
-
-                        {busqueda &&(
-
-                            <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
-                            <TextInput 
-                                    style={{color:'white',padding:5,flex: 1,}} 
-                                    placeholder="Concepto.."
-                                    placeholderTextColor='gray'
-                                    value={textobusqueda}
-                                    onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
-                                    >
-
-                            </TextInput>
-
-                            <TouchableOpacity style={{ position: 'absolute',right: 10,}} onPress={closebusqueda} >  
-                                <AntDesign name="closecircleo" size={20} color={colors.iconcolor} />
-                            </TouchableOpacity>
-                            </Animated.View>
-                        )
-                        }
-
-                            
-                        <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} 
-                                          onPress={handlePress}
-                        >
-                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                <FontAwesome6 name="add" size={24} color="white" />
-                            </Animated.View>
-                        </TouchableOpacity>
-                    </View>
-
-                    
-                    <View  style={styles.container}>
-
-                            <FlatList 
-                                data={dataingresos}
-                                renderItem={({item}) =>{
-                                    return(
-                                        <TouchableOpacity style={[styles.contenedordatos,{ borderRightColor: colors.bordercolor,borderBottomColor:'rgba(235,234,233,0.1)'}]} 
-                                                          onPress={() => {navigate('IngresoDetalle', { item });}}
-                                        
-                                        >
-                                            <View style={[styles.columna, { flex: 2 }]}> 
-                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Tipo: {item.TipoIngreso}</Text>
-                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreIngreso}</Text>
-                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Ingreso: {moment(item.fecha_ingreso).format('DD/MM/YYYY')}</Text>
-                                                <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
-                                                
-                                                
-                                            </View>
-
-                                            <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
-
-                                                <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_ingreso).toLocaleString('es-ES')} </Text>
-                                                
-                                            </View>
-                                        </TouchableOpacity >
-                                    )
-                                }
-                            }
-                                keyExtractor={item => item.key}
-                            />
-                        
-                    </View>
-
-
-
-                    <View style={styles.resumencontainer}>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
-                            {Number(canttotalingreso).toLocaleString('es-ES')}
-                        </Text>
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={styles.labeltext}>Total Ingreso:</Text>{' '}
-                            {Number(montototalingreso).toLocaleString('es-ES')} Gs.
-                        </Text>
-                        
-                    </View>
-
-                </View>
-            </SafeAreaView>
     
-            
-        )
-    }
+
+    return(
+        <SafeAreaView style={{ flex: 1 }}>
+
+            <View style={{ flex: 1 }}>
+                {guardando &&(<Procesando></Procesando>)}
+                <View style={styles.cabeceracontainer}>
+
+                    {!busqueda &&( 
+                        <TouchableOpacity onPress={openbusqueda}>
+                            
+                            <FontAwesome name="search" size={24} color={colors.iconcolor}/>
+                            
+                        </TouchableOpacity>
+                    )}
+                    {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.text}]}>Registro Ingresos</Text>)}
+
+
+                    {busqueda &&(
+
+                        <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
+                        <TextInput 
+                                style={{color:'white',padding:5,flex: 1,}} 
+                                placeholder="Concepto.."
+                                placeholderTextColor='gray'
+                                value={textobusqueda}
+                                onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                                >
+
+                        </TextInput>
+
+                        <TouchableOpacity style={{ position: 'absolute',right: 10,}} onPress={closebusqueda} >  
+                            <AntDesign name="closecircleo" size={20} color={colors.iconcolor} />
+                        </TouchableOpacity>
+                        </Animated.View>
+                    )
+                    }
+
+                        
+                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} 
+                                        onPress={handlePress}
+                    >
+                        <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                            <FontAwesome6 name="add" size={24} color="white" />
+                        </Animated.View>
+                    </TouchableOpacity>
+                </View>
+
+                
+                <View  style={styles.container}>
+
+                        <FlatList 
+                            data={dataingresos}
+                            renderItem={({item}) =>{
+                                return(
+                                    <TouchableOpacity style={[styles.contenedordatos,{ borderRightColor: colors.bordercolor,borderBottomColor:'rgba(235,234,233,0.1)'}]} 
+                                                        onPress={() => {navigate('IngresoDetalle', { item });}}
+                                    
+                                    >
+                                        <View style={[styles.columna, { flex: 2 }]}> 
+                                            <Text style={[styles.textocontenido,{ color: colors.text}]}> Tipo: {item.TipoIngreso}</Text>
+                                            <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreIngreso}</Text>
+                                            <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Ingreso: {moment(item.fecha_ingreso).format('DD/MM/YYYY')}</Text>
+                                            <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                            
+                                            
+                                        </View>
+
+                                        <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
+
+                                            <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_ingreso).toLocaleString('es-ES')} </Text>
+                                            
+                                        </View>
+                                    </TouchableOpacity >
+                                )
+                            }
+                        }
+                            keyExtractor={item => item.key}
+                        />
+                    
+                </View>
+
+
+
+                <View style={styles.resumencontainer}>
+
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                        <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
+                        {Number(canttotalingreso).toLocaleString('es-ES')}
+                    </Text>
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                        <Text style={styles.labeltext}>Total Ingreso:</Text>{' '}
+                        {Number(montototalingreso).toLocaleString('es-ES')} Gs.
+                    </Text>
+                    
+                </View>
+
+            </View>
+        </SafeAreaView>
+
+        
+    )
+    
 }
 const styles = StyleSheet.create({
     

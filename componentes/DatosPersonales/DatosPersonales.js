@@ -107,7 +107,7 @@ function DatosPersonales({navigation}){
           
           
           setSesiondata(result['data']['datauser'])
-          await new Promise(resolve => setTimeout(resolve, 1000))
+          
           setGuardando(false)
           navigation.goBack();
           
@@ -131,6 +131,7 @@ function DatosPersonales({navigation}){
         const unsubscribe = navigation.addListener('focus', () => {
        
             const cargardatos=async()=>{
+                setGuardando(true)
                 const body = {};
                 const endpoint='ObtenerDatosUsuario/'
                 const result = await Generarpeticion(endpoint, 'POST', body);
@@ -143,16 +144,17 @@ function DatosPersonales({navigation}){
                     
                    
                    
-                   setNombre(registros.nombre_usuario)
-                   setApellido(registros.apellido_usuario)
-                   setFechanac(registros.fecha_nacimiento)
-                   setUsername(registros.user_name)
-                   setCorreo(registros.correo)
+                    setNombre(registros.nombre_usuario)
+                    setApellido(registros.apellido_usuario)
+                    setFechanac(registros.fecha_nacimiento)
+                    setUsername(registros.user_name)
+                    setCorreo(registros.correo)
+                    setGuardando(false)
                     
                     
                 }else if(respuesta === 403 || respuesta === 401){
                     
-                    
+                    setGuardando(false)
                     await Handelstorage('borrar')
                     await new Promise(resolve => setTimeout(resolve, 1000))
                     setActivarsesion(false)

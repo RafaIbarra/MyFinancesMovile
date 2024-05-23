@@ -6,6 +6,7 @@ import {  Portal,  PaperProvider,Dialog,Button,Divider } from 'react-native-pape
 import { AntDesign } from '@expo/vector-icons';
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 
@@ -13,7 +14,7 @@ function CategoriaGastosDetalle ({ navigation }){
     const {params: { concepto },} = useRoute();
     
     const { colors } = useTheme();
-    
+    const [guardando,setGuardando]=useState(false)
     const [visibledialogo, setVisibledialogo] = useState(false)
     const { navigate } = useNavigation();
     const showDialog = () => setVisibledialogo(true);
@@ -33,7 +34,7 @@ function CategoriaGastosDetalle ({ navigation }){
         
     }
     const confimareliminacion = async()=>{
-      
+        setGuardando(true)
         const datoseliminar = {
             categorias:codigoeliminar,};
     
@@ -43,16 +44,16 @@ function CategoriaGastosDetalle ({ navigation }){
           
         const respuesta=result['resp']
         if (respuesta === 200) {
-        
-          navigation.goBack();
-          hideDialog()
+            setGuardando(false)
+            navigation.goBack();
+            hideDialog()
           
             
         } else if(respuesta === 403 || respuesta === 401){
           
-          
-          await Handelstorage('borrar')
-          setActivarsesion(false)
+            setGuardando(false)
+            await Handelstorage('borrar')
+            setActivarsesion(false)
     
       }
   
@@ -60,70 +61,72 @@ function CategoriaGastosDetalle ({ navigation }){
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-        setDatositem(concepto)
-        setValorConcepto(concepto.TotalIngresos)
+            setGuardando(true)
+            setDatositem(concepto)
+            setValorConcepto(concepto.TotalIngresos)
         
-        setCodigoelimnar(concepto.id)
-        setConceptoelimnar(concepto.nombre_producto)
-        navigation.setOptions({
-          headerRight: () => (
-            <View style={{flexDirection: 'row',alignItems: 'center'}}>
-                <TouchableOpacity style={{ marginRight: 20 }} onPress={ eliminar}>
-                    <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
-                </TouchableOpacity>
+            setCodigoelimnar(concepto.id)
+            setConceptoelimnar(concepto.nombre_producto)
+            navigation.setOptions({
+            headerRight: () => (
+                <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                    <TouchableOpacity style={{ marginRight: 20 }} onPress={ eliminar}>
+                        <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={{ marginRight: 10 }} onPress={() => {navigate("CategoriaGastosRegistro", { concepto});}}>
-                    <AntDesign name="edit" size={30} color="white" />
-                </TouchableOpacity>
-            </View>
-          ),
-            });
-        if(concepto.recarga==='si'){
-            
-
-            
-            const cargardatos=async()=>{
-                const idact=concepto.id
-               
-                const body = {};
-                const endpoint='MisCategorias/' + idact +'/' 
-                const result = await Generarpeticion(endpoint, 'POST', body);
-                const respuesta=result['resp']
-                if (respuesta === 200){
-                    const registros=result['data'][0]
-                    registros.recarga='no'
-                    
-
-
-                    Object.keys(registros).forEach(key => {
-                        concepto[key] = registros[key];
-                      });
-                      
-
-                    setDatositem(registros)
-                    
-                    
-                }else if(respuesta === 403 || respuesta === 401){
-                    
-                    
-                    await Handelstorage('borrar')
-                    await new Promise(resolve => setTimeout(resolve, 1000))
-                    setActivarsesion(false)
-                }
+                    <TouchableOpacity style={{ marginRight: 10 }} onPress={() => {navigate("CategoriaGastosRegistro", { concepto});}}>
+                        <AntDesign name="edit" size={30} color="white" />
+                    </TouchableOpacity>
+                </View>
+            ),
+                });
+            if(concepto.recarga==='si'){
                 
-               
-    
-               
-            }
-            cargardatos()
-        }
+
+                
+                const cargardatos=async()=>{
+                    const idact=concepto.id
+                
+                    const body = {};
+                    const endpoint='MisCategorias/' + idact +'/' 
+                    const result = await Generarpeticion(endpoint, 'POST', body);
+                    const respuesta=result['resp']
+                    if (respuesta === 200){
+                        const registros=result['data'][0]
+                        registros.recarga='no'
+                        
+
+
+                        Object.keys(registros).forEach(key => {
+                            concepto[key] = registros[key];
+                        });
+                        
+
+                        setDatositem(registros)
+                        
+                        
+                    }else if(respuesta === 403 || respuesta === 401){
+                        
+                        
+                        await Handelstorage('borrar')
+                        await new Promise(resolve => setTimeout(resolve, 1000))
+                        setActivarsesion(false)
+                    }
+                    
+                
         
-        })
+                
+                }
+                cargardatos()
+            }
+            setGuardando(false)
+            })
         return unsubscribe;
         
       }, [navigation]);
     return(
             <PaperProvider >
+                {guardando &&(<Procesando></Procesando>)}
                 <View  style={{ flex: 1 }}>
                     
                     <Portal>

@@ -148,7 +148,7 @@ function ConceptosGastosRegistro({ navigation }){
 
         const cargardatos= async()=>{
             // const concepto={'id':0,'nombre_producto':'','tipoproducto':0}
-            
+            setGuardando(true)
             setCodigoconcepto(concepto.id)
             setNombreconcepto(concepto.nombre_gasto)
             setValueradio(concepto.tipogasto)
@@ -179,7 +179,7 @@ function ConceptosGastosRegistro({ navigation }){
                 await new Promise(resolve => setTimeout(resolve, 1000))
                 setActivarsesion(false)
             }
-            
+            setGuardando(false)
             setRealizado(true)
             
             

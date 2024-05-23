@@ -10,14 +10,14 @@ import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
-
+import Procesando from "../Procesando/Procesando";
 import { useTheme } from '@react-navigation/native';
 import { AuthContext } from "../../AuthContext";
 
 function MovimientosEgreso ({ navigation  }){
     
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    
+    const [guardando,setGuardando]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     
     const { colors } = useTheme();
@@ -139,7 +139,7 @@ function MovimientosEgreso ({ navigation  }){
  
 
     const procesar = async ()=>{
-
+      setGuardando(true)
       const body = {};
       const endpoint='MovileMisEgresos/' + annoseleccionado +'/' + messeleccionado + '/'
       const result = await Generarpeticion(endpoint, 'POST', body);
@@ -159,12 +159,12 @@ function MovimientosEgreso ({ navigation  }){
               
               setDataegresos(registros)
               setDateegresoscompleto(registros)
-              
+              setGuardando(false)
           }
           
       }else if(respuesta === 403 || respuesta === 401){
           
-          
+          setGuardando(false)
           await Handelstorage('borrar')
           await new Promise(resolve => setTimeout(resolve, 1000))
           setActivarsesion(false)
@@ -227,7 +227,7 @@ function MovimientosEgreso ({ navigation  }){
 
         return(
             <SafeAreaView style={{ flex: 1 }}>
-                <StatusBar />
+                {guardando &&(<Procesando></Procesando>)}
 
                 
                     

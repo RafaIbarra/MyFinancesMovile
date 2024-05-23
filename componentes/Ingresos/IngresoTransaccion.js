@@ -197,7 +197,7 @@ function IngresoTransaccion({ navigation }){
     useEffect(() => {
 
         const cargardatos=async()=>{
-        
+            setGuardando(true)
             const body = {};
             const endpoint='MisProductosFinancieros/0/'
             const result = await Generarpeticion(endpoint, 'POST', body);
@@ -248,10 +248,11 @@ function IngresoTransaccion({ navigation }){
                 }
                 
 
-                
+                setGuardando(false)
                 setRealizado(true)
                 
             }else if(respuesta === 403 || respuesta === 401){
+                setGuardando(false)
                 await Handelstorage('borrar')
                 await new Promise(resolve => setTimeout(resolve, 1000))
                 setActivarsesion(false)

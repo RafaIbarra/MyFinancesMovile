@@ -4,7 +4,7 @@ import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
-
+import Procesando from "../Procesando/Procesando";
 
 import { AuthContext } from "../../AuthContext";
 import { useTheme } from '@react-navigation/native';
@@ -18,7 +18,7 @@ import { AntDesign } from '@expo/vector-icons';
 function ConceptosGastos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    
+    const [guardando,setGuardando]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     
     const [rotationValue] = useState(new Animated.Value(0));
@@ -106,8 +106,9 @@ function ConceptosGastos ({ navigation  }){
    
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+            
             const cargardatos=async()=>{
-                
+                setGuardando(true)
                 const body = {};
                 const endpoint='MisGastos/0/'
                 const result = await Generarpeticion(endpoint, 'POST', body);
@@ -158,6 +159,7 @@ function ConceptosGastos ({ navigation  }){
                     await new Promise(resolve => setTimeout(resolve, 1000))
                     setActivarsesion(false)
                 }
+                setGuardando(false)
                 setCargacopleta(true)
 
             
@@ -201,113 +203,113 @@ function ConceptosGastos ({ navigation  }){
       </TouchableOpacity>
     ));
     
-    if(cargacompleta){
-
-        return(
-            <SafeAreaView style={{ flex: 1 }}>
-
-                <View style={{ flex: 1 }}>    
-                    <View style={styles.cabeceracontainer}>
-
-                        
-                            
-                        
-                       <Text style={[styles.titulocabecera, { color: colors.text}]}>Conceptos Gastos</Text>
-
-                       <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
-                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                <FontAwesome6 name="add" size={24} color="white" />
-                            </Animated.View>
-                       </TouchableOpacity>
-                        </View>
-                        <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
-                      
-                        <View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center'}}>
-                                <TextInput 
-                                        style={{color:colors.text,padding:5,}} 
-                                        placeholder="Buscar.."
-                                        placeholderTextColor='gray'
-                                        value={textobusqueda}
-                                        onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
-                                        >
-
-                                </TextInput>
-
-                                <TouchableOpacity style={{ position: 'absolute',right: 10,}}  >  
-                                  <FontAwesome name="search" size={24} color={colors.iconcolor}/>
-                                </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <FlatList
-                      data={Object.entries(dataagrupado)}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item, index }) => (
-                        <View key={item[0]}>
-                          <View style={{borderTopWidth:2,
-                                        borderRightWidth:2,
-                                        borderLeftWidth:2,
-                                        borderColor:'gray',
-                                        padding:10,
-                                        alignItems:'center',
-                                        // borderRadius:20,
-                                        borderTopLeftRadius:20,
-                                        marginTop:10,
-                                        backgroundColor:'rgba(0,0,0,0.6)',
-                                        marginLeft:10,
-                                        marginRight:10,
-                                        flexDirection:'row',
-                                        justifyContent:'space-between'
-                                      }} 
-                                        > 
-
-                            <Text style={{ color: 'white',fontSize:17,fontWeight:'bold' }}>{item[0]}</Text>
-                            <TouchableOpacity onPress={() => toggleExpand(index)} >
-
-                            <AntDesign name={expandedGroup === index ? "caretup" : "caretdown"} size={24} color="white" />
-                            </TouchableOpacity>
-                          </View>
-                          {expandedGroup === index && Array.isArray(item[1]) && item[1].length > 0 ? (
-                            <FlatList
-                              data={item[1]}
-                              keyExtractor={(item, index) => index.toString()}
-                              renderItem={({ item }) => (
-                                <View style={{ flexDirection: 'row', marginBottom: 10, marginLeft: 5, marginRight: 5 }}>
-                                  <ConceptoItem
-                                    key={item.id}
-                                    concepto={item}
-                                    navigate={navigate}
-                                    colors={colors}
-                                  />
-                                </View>
-                              )}
-                            />
-                          ) : (
-                            <Text></Text>
-                          )}
-                        </View>
-                      )}
-                    />
-                
-                    <View style={styles.resumencontainer}>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
-                            {Number(canttotalegreso).toLocaleString('es-ES')}
-                        </Text>
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={styles.labeltext}>Total Conceptos:</Text>{' '}
-                            {Number(montototalegreso).toLocaleString('es-ES')} Gs.
-                        </Text>
-                        
-                    </View>
-
-                </View>
-            </SafeAreaView>
     
+
+    return(
+        <SafeAreaView style={{ flex: 1 }}>
+            {guardando &&(<Procesando></Procesando>)}
+            <View style={{ flex: 1 }}>    
+                <View style={styles.cabeceracontainer}>
+
+                    
+                        
+                    
+                    <Text style={[styles.titulocabecera, { color: colors.text}]}>Conceptos Gastos</Text>
+
+                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
+                        <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                            <FontAwesome6 name="add" size={24} color="white" />
+                        </Animated.View>
+                    </TouchableOpacity>
+                    </View>
+                    <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
+                  
+                    <View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center'}}>
+                            <TextInput 
+                                    style={{color:colors.text,padding:5,}} 
+                                    placeholder="Buscar.."
+                                    placeholderTextColor='gray'
+                                    value={textobusqueda}
+                                    onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                                    >
+
+                            </TextInput>
+
+                            <TouchableOpacity style={{ position: 'absolute',right: 10,}}  >  
+                              <FontAwesome name="search" size={24} color={colors.iconcolor}/>
+                            </TouchableOpacity>
+                    </View>
+                </View>
+
+                <FlatList
+                  data={Object.entries(dataagrupado)}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <View key={item[0]}>
+                      <View style={{borderTopWidth:2,
+                                    borderRightWidth:2,
+                                    borderLeftWidth:2,
+                                    borderColor:'gray',
+                                    padding:10,
+                                    alignItems:'center',
+                                    // borderRadius:20,
+                                    borderTopLeftRadius:20,
+                                    marginTop:10,
+                                    backgroundColor:'rgba(0,0,0,0.6)',
+                                    marginLeft:10,
+                                    marginRight:10,
+                                    flexDirection:'row',
+                                    justifyContent:'space-between'
+                                  }} 
+                                    > 
+
+                        <Text style={{ color: 'white',fontSize:17,fontWeight:'bold' }}>{item[0]}</Text>
+                        <TouchableOpacity onPress={() => toggleExpand(index)} >
+
+                        <AntDesign name={expandedGroup === index ? "caretup" : "caretdown"} size={24} color="white" />
+                        </TouchableOpacity>
+                      </View>
+                      {expandedGroup === index && Array.isArray(item[1]) && item[1].length > 0 ? (
+                        <FlatList
+                          data={item[1]}
+                          keyExtractor={(item, index) => index.toString()}
+                          renderItem={({ item }) => (
+                            <View style={{ flexDirection: 'row', marginBottom: 10, marginLeft: 5, marginRight: 5 }}>
+                              <ConceptoItem
+                                key={item.id}
+                                concepto={item}
+                                navigate={navigate}
+                                colors={colors}
+                              />
+                            </View>
+                          )}
+                        />
+                      ) : (
+                        <Text></Text>
+                      )}
+                    </View>
+                  )}
+                />
             
-        )
-    }
+                <View style={styles.resumencontainer}>
+
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                        <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
+                        {Number(canttotalegreso).toLocaleString('es-ES')}
+                    </Text>
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                        <Text style={styles.labeltext}>Total Conceptos:</Text>{' '}
+                        {Number(montototalegreso).toLocaleString('es-ES')} Gs.
+                    </Text>
+                    
+                </View>
+
+            </View>
+        </SafeAreaView>
+
+        
+    )
+    
 }
 const styles = StyleSheet.create({
     

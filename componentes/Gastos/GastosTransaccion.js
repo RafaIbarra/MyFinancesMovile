@@ -190,11 +190,12 @@ function GastosTransaccion({ navigation }){
     useEffect(() => {
 
         const cargardatos=async()=>{
-        
+            setGuardando(true)
             const body = {};
             const endpoint='MisDatosRegistroEgreso/'
             const result = await Generarpeticion(endpoint, 'POST', body);
             const respuesta=result['resp']
+            
             if (respuesta === 200){
               
                 setOptionscategoria(result['data']['datoscategorias'].map(a => ({
@@ -232,10 +233,11 @@ function GastosTransaccion({ navigation }){
                 }
                 
 
-                
+                setGuardando(false)
                 setRealizado(true)
                 
             }else if(respuesta === 403 || respuesta === 401){
+              setGuardando(false)
                 await Handelstorage('borrar')
                 await new Promise(resolve => setTimeout(resolve, 1000))
                 setActivarsesion(false)

@@ -8,7 +8,7 @@ import moment from 'moment';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
-
+import Procesando from "../Procesando/Procesando";
 import { useTheme } from '@react-navigation/native';
 import { AuthContext } from "../../AuthContext";
 
@@ -19,7 +19,7 @@ function Gastos ({ navigation  }){
     const [textobusqueda,setTextobusqueda]=useState('')
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const { colors } = useTheme();
-    
+    const [guardando,setGuardando]=useState(false)
     const [cargacompleta,setCargacopleta]=useState(false)
     const [dateegresoscompleto,setDateegresoscompleto]=useState([])
     const [dataegresos,setDataegresos]=useState([])
@@ -88,9 +88,12 @@ function Gastos ({ navigation  }){
 
 
     useEffect(() => {
+      
       const unsubscribe = navigation.addListener('focus', () => {
         setCargacopleta(false)
+        setGuardando(true)
         const cargardatos=async()=>{
+            
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
             const anno_storage=datestorage['dataanno']
@@ -99,6 +102,7 @@ function Gastos ({ navigation  }){
             const endpoint='MovileMisEgresos/' + anno_storage +'/' + mes_storage + '/'
             const result = await Generarpeticion(endpoint, 'POST', body);
             const respuesta=result['resp']
+            
             if (respuesta === 200){
                 const registros=result['data']
                 
@@ -117,11 +121,12 @@ function Gastos ({ navigation  }){
                     registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
                     setMontototalegreso(totalgasto)
                     setcanttotalegreso(cantgasto)
+                    setGuardando(false)
                 }
                 
             }else if(respuesta === 403 || respuesta === 401){
                 
-                
+                setGuardando(false)
                 await Handelstorage('borrar')
                 await new Promise(resolve => setTimeout(resolve, 1000))
                 setActivarsesion(false)
@@ -138,120 +143,125 @@ function Gastos ({ navigation  }){
 
            
         }
+        
         cargardatos()
+        
         // setRefresh(false)
       })
+      
       return unsubscribe;
       }, [navigation]);
 
-    if(cargacompleta){
+    
 
-        return(
-            <SafeAreaView style={{ flex: 1 }}>
-                  <View style={{ flex: 1 }}>    
-                      <View style={styles.cabeceracontainer}>
+    return(
+        <SafeAreaView style={{ flex: 1 }}>
+              
+              <View style={{ flex: 1 }}>    
+                {guardando &&(<Procesando></Procesando>)}
+                  <View style={styles.cabeceracontainer}>
 
-                      {!busqueda &&( 
-                          <TouchableOpacity onPress={openbusqueda}>
-                              
-                              <FontAwesome name="search" size={24} color={colors.iconcolor}/>
-                              
-                          </TouchableOpacity>
-                      )}
-                      {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.text}]}>Registro Gastos</Text>)}
-
-
-                      {busqueda &&(
-
-                          <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
-                            <TextInput 
-                                  style={{color:'white',padding:5,flex: 1,}} 
-                                  placeholder="Concepto o Categoria.."
-                                  placeholderTextColor='gray'
-                                  value={textobusqueda}
-                                  onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
-                                  >
-
-                            </TextInput>
-
-                            <TouchableOpacity style={{ position: 'absolute',right: 10,}} onPress={closebusqueda} >  
-                              <AntDesign name="closecircleo" size={20} color={colors.iconcolor} />
-                            </TouchableOpacity>
-                          </Animated.View>
-                        )
-                        }
-
+                  {!busqueda &&( 
+                      <TouchableOpacity onPress={openbusqueda}>
                           
-                          <TouchableOpacity style={[styles.botoncabecera,
-                                                  { backgroundColor:'rgb(218,165,32)'
-                                                  }]} onPress={handlePress}
-                          >
-                              <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                  <FontAwesome6 name="add" size={24} color="white" />
-                              </Animated.View>
-                          </TouchableOpacity>
-                      </View>
+                          <FontAwesome name="search" size={24} color={colors.iconcolor}/>
+                          
+                      </TouchableOpacity>
+                  )}
+                  {!busqueda &&( <Text style={[styles.titulocabecera, { color: colors.text}]}>Registro Gastos</Text>)}
+
+
+                  {busqueda &&(
+
+                      <Animated.View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center',width:'80%',opacity: fadeAnim}}>
+                        <TextInput 
+                              style={{color:'white',padding:5,flex: 1,}} 
+                              placeholder="Concepto o Categoria.."
+                              placeholderTextColor='gray'
+                              value={textobusqueda}
+                              onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                              >
+
+                        </TextInput>
+
+                        <TouchableOpacity style={{ position: 'absolute',right: 10,}} onPress={closebusqueda} >  
+                          <AntDesign name="closecircleo" size={20} color={colors.iconcolor} />
+                        </TouchableOpacity>
+                      </Animated.View>
+                    )
+                    }
 
                       
-                    <View  style={styles.container}>
-
-                          <FlatList 
-                              data={dataegresos}
-                              renderItem={({item}) =>{
-                                  return(
-                                      <TouchableOpacity  style={[styles.contenedordatos
-                                                                ,{ borderRightColor: colors.bordercolor,borderBottomColor:'rgba(235,234,233,0.1)'
-                                                                }]} 
-                                      
-                                       onPress={() => {navigate('GastosDetalle', { item });}}
-                                      
-                                      >
-                                          <View style={[styles.columna, { flex: 2 }]}> 
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
-                                              
-                                              
-                                          </View>
-
-                                          <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
-
-                                              <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_gasto).toLocaleString('es-ES')} </Text>
-                                              
-                                          </View>
-                                      </TouchableOpacity >
-                                  )
-                              }
-                          }
-                              keyExtractor={item => item.key}
-                          />
-                        
-                    </View>
-
-
-                    
-                    <View style={styles.resumencontainer}>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                          <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
-                            {Number(canttotalegreso).toLocaleString('es-ES')}
-                        </Text>
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                          <Text style={styles.labeltext}>Total Gasto:</Text>{' '}
-                            {Number(montototalegreso).toLocaleString('es-ES')} Gs.
-                        </Text>
-                        
-                    </View>
-
+                      <TouchableOpacity style={[styles.botoncabecera,
+                                              { backgroundColor:'rgb(218,165,32)'
+                                              }]} onPress={handlePress}
+                      >
+                          <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                              <FontAwesome6 name="add" size={24} color="white" />
+                          </Animated.View>
+                      </TouchableOpacity>
                   </View>
+
+                  
+                <View  style={styles.container}>
+
+                      <FlatList 
+                          data={dataegresos}
+                          renderItem={({item}) =>{
+                              return(
+                                  <TouchableOpacity  style={[styles.contenedordatos
+                                                            ,{ borderRightColor: colors.bordercolor,borderBottomColor:'rgba(235,234,233,0.1)'
+                                                            }]} 
+                                  
+                                    onPress={() => {navigate('GastosDetalle', { item });}}
+                                  
+                                  >
+                                      <View style={[styles.columna, { flex: 2 }]}> 
+                                          <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
+                                          <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
+                                          <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
+                                          <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                          
+                                          
+                                      </View>
+
+                                      <View style={[styles.columna, { flex: 1,marginTop:30 }]}> 
+
+                                          <Text style={[styles.textototal,{ color: colors.text,fontWeight:'bold'}]}> Gs.: {Number(item.monto_gasto).toLocaleString('es-ES')} </Text>
+                                          
+                                      </View>
+                                  </TouchableOpacity >
+                              )
+                          }
+                      }
+                          keyExtractor={item => item.key}
+                      />
                     
+                </View>
+
+
                 
-            </SafeAreaView>
-    
+                <View style={styles.resumencontainer}>
+
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                      <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
+                        {Number(canttotalegreso).toLocaleString('es-ES')}
+                    </Text>
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                      <Text style={styles.labeltext}>Total Gasto:</Text>{' '}
+                        {Number(montototalegreso).toLocaleString('es-ES')} Gs.
+                    </Text>
+                    
+                </View>
+
+              </View>
+                
             
-        )
-    }
+        </SafeAreaView>
+
+        
+    )
+    
 
 
 

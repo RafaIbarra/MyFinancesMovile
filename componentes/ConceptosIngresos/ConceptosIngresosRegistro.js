@@ -89,13 +89,13 @@ function ConceptosIngresosRegistro({ navigation }){
 
         const cargardatos=()=>{
      
-            
+            setGuardando(true)
             setCodigoconcepto(concepto.id)
             setNombreconcepto(concepto.nombre_producto)
             setValueradio(concepto.tipoproducto)
             
             setRealizado(true)
-            
+            setGuardando(false)
             
 
            

@@ -6,6 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import Procesando from "../Procesando/Procesando";
 
 
 import { AuthContext } from "../../AuthContext";
@@ -20,7 +21,7 @@ import { FontAwesome } from '@expo/vector-icons';
 function ConceptosIngresos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    
+    const [guardando,setGuardando]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     
     const [rotationValue] = useState(new Animated.Value(0));
@@ -84,6 +85,7 @@ function ConceptosIngresos ({ navigation  }){
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             const cargardatos=async()=>{
+                setGuardando(true)
                 
                 const body = {};
                 const endpoint='MisProductosFinancieros/0/'
@@ -119,6 +121,7 @@ function ConceptosIngresos ({ navigation  }){
                     await new Promise(resolve => setTimeout(resolve, 1000))
                     setActivarsesion(false)
                 }
+                setGuardando(false)
                 setCargacopleta(true)
 
             
@@ -131,115 +134,115 @@ function ConceptosIngresos ({ navigation  }){
     
     
     
-    if(cargacompleta){
+    
 
-        return(
-            <SafeAreaView style={{ flex: 1 }}>
+    return(
+        <SafeAreaView style={{ flex: 1 }}>
+            {guardando &&(<Procesando></Procesando>)}
+            <View style={{ flex: 1 }}>    
+                <View style={styles.cabeceracontainer}>
 
-                <View style={{ flex: 1 }}>    
-                    <View style={styles.cabeceracontainer}>
-
+                    
                         
-                            
-                        
-                       <Text style={[styles.titulocabecera, { color: colors.text}]}>Conceptos Ingresos</Text>
+                    
+                    <Text style={[styles.titulocabecera, { color: colors.text}]}>Conceptos Ingresos</Text>
 
-                       <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
-                            <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                                <FontAwesome6 name="add" size={24} color="white" />
-                            </Animated.View>
-                       </TouchableOpacity>
-                        </View>
-                        <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
-                      
-                        <View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center'}}>
-                                <TextInput 
-                                        style={{color:colors.text,padding:5,}} 
-                                        placeholder="Buscar.."
-                                        placeholderTextColor='gray'
-                                        value={textobusqueda}
-                                        onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
+                        <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                            <FontAwesome6 name="add" size={24} color="white" />
+                        </Animated.View>
+                    </TouchableOpacity>
+                    </View>
+                    <View style={{marginLeft:10,marginRight:10,padding:10,marginBottom:20}}>
+                  
+                    <View style={{ borderWidth:1,backgroundColor:'rgba(28,44,52,0.1)',borderRadius:10,borderColor:'white',flexDirection: 'row',alignItems: 'center'}}>
+                            <TextInput 
+                                    style={{color:colors.text,padding:5,}} 
+                                    placeholder="Buscar.."
+                                    placeholderTextColor='gray'
+                                    value={textobusqueda}
+                                    onChangeText={textobusqueda => realizarbusqueda(textobusqueda)}
+                                    >
+
+                            </TextInput>
+
+                            <TouchableOpacity style={{ position: 'absolute',right: 10,}}  >  
+                              <FontAwesome name="search" size={24} color={colors.iconcolor}/>
+                            </TouchableOpacity>
+                    </View>
+                </View>
+
+                
+
+                <FlatList
+                    data={dataingresos}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View style={{ flexDirection: 'row', marginBottom: 10,marginLeft:5,marginRight:5 }}>
+                            {item.map(concepto => (
+                                
+                                  
+                                  
+                                    <TouchableOpacity key={concepto.id} 
+                                                      style={{ flex: 1, marginHorizontal: 5,borderWidth:1,
+                                                          borderRadius:10,borderColor:colors.bordercolor}}
+                                                      onPress={() => {navigate('ConceptoIngresoDetalle', { concepto });}}
+                                                      >
+
+
+                                        <LinearGradient
+                                        key={concepto.nombre_producto} 
+                                        
+                                        // colors={['rgba(0,0,0,0.7)', 'transparent']}
+                                        colors={['#182120', '#12262c', '#0b2a37']}
+                                        // colors={['rgb(28,44,52)', 'rgba(0,0,0,0.5)']}
+                                        // colors={['rgba(44,148,228,0.3)', 'rgb(28,44,52)', 'transparent']}
+                                        style={{flex: 1,borderRadius:10,padding:10}}
                                         >
 
-                                </TextInput>
+                                          <View style={{flexDirection:'row'}}>
+                                            <FontAwesome6 name="check" size={20} color="green" />
+                                            <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text,paddingRight:10}]}>{concepto.nombre_producto}</Text>
+                                          </View>
 
-                                <TouchableOpacity style={{ position: 'absolute',right: 10,}}  >  
-                                  <FontAwesome name="search" size={24} color={colors.iconcolor}/>
-                                </TouchableOpacity>
-                        </View>
-                    </View>
+                                          <Text style={[styles.textocontenido,{ color: colors.text}]} >{concepto.DescripcionTipoProducto}</Text>
+                                          {/* <Text style={[styles.textocontenido,{ color: colors.text}]} >{moment(concepto.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text> */}
+                                          <Text style={[styles.textocontenido,{ color: colors.text}]}>
+                            
+                                            Gs. {Number(concepto.TotalIngresos).toLocaleString('es-ES')}
+                                        </Text>
+                                        </LinearGradient>
 
-                    
-
-                    <FlatList
-                        data={dataingresos}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <View style={{ flexDirection: 'row', marginBottom: 10,marginLeft:5,marginRight:5 }}>
-                                {item.map(concepto => (
-                                    
-                                      
-                                      
-                                        <TouchableOpacity key={concepto.id} 
-                                                          style={{ flex: 1, marginHorizontal: 5,borderWidth:1,
-                                                              borderRadius:10,borderColor:colors.bordercolor}}
-                                                          onPress={() => {navigate('ConceptoIngresoDetalle', { concepto });}}
-                                                          >
-
-
-                                            <LinearGradient
-                                            key={concepto.nombre_producto} 
-                                            
-                                            // colors={['rgba(0,0,0,0.7)', 'transparent']}
-                                            colors={['#182120', '#12262c', '#0b2a37']}
-                                            // colors={['rgb(28,44,52)', 'rgba(0,0,0,0.5)']}
-                                            // colors={['rgba(44,148,228,0.3)', 'rgb(28,44,52)', 'transparent']}
-                                            style={{flex: 1,borderRadius:10,padding:10}}
-                                            >
-
-                                              <View style={{flexDirection:'row'}}>
-                                                <FontAwesome6 name="check" size={20} color="green" />
-                                                <Text style={[styles.textoconcepto,{ marginLeft:5,color: colors.text,paddingRight:10}]}>{concepto.nombre_producto}</Text>
-                                              </View>
-
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]} >{concepto.DescripcionTipoProducto}</Text>
-                                              {/* <Text style={[styles.textocontenido,{ color: colors.text}]} >{moment(concepto.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text> */}
-                                              <Text style={[styles.textocontenido,{ color: colors.text}]}>
+                                    </TouchableOpacity  >
+                                  
                                 
-                                                Gs. {Number(concepto.TotalIngresos).toLocaleString('es-ES')}
-                                            </Text>
-                                            </LinearGradient>
+                            ))}
+                        </View>
+                    )}
+                    />
+                
 
-                                        </TouchableOpacity  >
-                                      
-                                    
-                                ))}
-                            </View>
-                        )}
-                        />
+
+
+                <View style={styles.resumencontainer}>
+
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                        <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
+                        {Number(canttotalingreso).toLocaleString('es-ES')}
+                    </Text>
+                    <Text style={[styles.contenedortexto,{ color: colors.text}]}>
+                        <Text style={styles.labeltext}>Total Conceptos:</Text>{' '}
+                        {Number(montototalingreso).toLocaleString('es-ES')} Gs.
+                    </Text>
                     
-
-
-
-                    <View style={styles.resumencontainer}>
-
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={styles.labeltext}>Cantidad Registros:</Text>{' '}
-                            {Number(canttotalingreso).toLocaleString('es-ES')}
-                        </Text>
-                        <Text style={[styles.contenedortexto,{ color: colors.text}]}>
-                            <Text style={styles.labeltext}>Total Conceptos:</Text>{' '}
-                            {Number(montototalingreso).toLocaleString('es-ES')} Gs.
-                        </Text>
-                        
-                    </View>
-
                 </View>
-            </SafeAreaView>
+
+            </View>
+        </SafeAreaView>
+
+        
+    )
     
-            
-        )
-    }
 }
 const styles = StyleSheet.create({
     

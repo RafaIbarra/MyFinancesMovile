@@ -29,7 +29,7 @@ export default function LoginR1({ navigation  }){
   const [guardando,setGuardando]=useState(false)
   const [visibledialogo, setVisibledialogo] = useState(false)
   const[mensajeerror,setMensajeerror]=useState('')
-
+  const [errorred,setErrorred]=useState(false)
 
   const showDialog = () => setVisibledialogo(true);
   const hideDialog = () => setVisibledialogo(false);
@@ -55,6 +55,7 @@ export default function LoginR1({ navigation  }){
                 spinValueRef.current.stopAnimation();
                 control=1
               }, 5000);
+            
         }
       };
   const detenerSpin = () => {
@@ -143,6 +144,66 @@ export default function LoginR1({ navigation  }){
     navigate("RegistroUsuarioStack")
   }
 
+  const cargardatos=async()=>{
+        
+    setErrorred(false)
+    setMensajeusuario('Comprobando Sesion')
+    const datosstarage = await ComprobarStorage()
+    
+    const credenciales=datosstarage['datosesion']
+    if (credenciales) {
+        setComprobando(true)
+        activarspin()
+        
+          const body = {};
+          const endpoint='ComprobarSesionUsuario/'
+          const result = await Generarpeticion(endpoint, 'POST', body);
+          const respuesta=result['resp']
+          
+          if (respuesta === 200){
+              
+              // setSesionname(datosstarage['user_name'])
+              const datestorage=await Handelstorage('obtenerdate');
+              setPeriodo(datestorage['dataperiodo'])
+              
+              setSesiondata(result['data']['datauser'])
+
+              await new Promise(resolve => setTimeout(resolve, 7000))
+              setMensajeusuario('Credenciales validas')
+              detenerSpin()
+              await new Promise(resolve => setTimeout(resolve, 2000))
+              setComprobando(false)
+              setActivarsesion(true)
+              
+          }else if (respuesta === 6000){
+            setErrorred(true)
+            setMensajeusuario('Conexion con el servidor')
+              //setActivarsesion(true)
+          } else {
+              await new Promise(resolve => setTimeout(resolve, 7000))
+              setMensajeusuario('Debes reiniciar sesion')
+              detenerSpin()
+              await Handelstorage('borrar')
+              setActivarsesion(false)
+              // setSesionname('')
+              await new Promise(resolve => setTimeout(resolve, 2000))
+              setComprobando(false)
+          }
+        
+
+    
+
+    } else {
+        detenerSpin()
+        setComprobando(false)
+        await Handelstorage('borrar')
+        setActivarsesion(false)
+        // setSesionname('')
+    }
+}
+
+
+
   useEffect(() => {
 
     const keyboardDidShowListener = Keyboard.addListener(
@@ -158,56 +219,7 @@ export default function LoginR1({ navigation  }){
       }
     );
 
-    const cargardatos=async()=>{
-        
-        
-        const datosstarage = await ComprobarStorage()
-        
-        const credenciales=datosstarage['datosesion']
-        if (credenciales) {
-            setComprobando(true)
-            activarspin()
-            const body = {};
-            const endpoint='ComprobarSesionUsuario/'
-            const result = await Generarpeticion(endpoint, 'POST', body);
-            const respuesta=result['resp']
-            if (respuesta === 200){
-                
-                // setSesionname(datosstarage['user_name'])
-                const datestorage=await Handelstorage('obtenerdate');
-                setPeriodo(datestorage['dataperiodo'])
-                
-                setSesiondata(result['data']['datauser'])
-
-                await new Promise(resolve => setTimeout(resolve, 7000))
-                setMensajeusuario('Credenciales validas')
-                detenerSpin()
-                await new Promise(resolve => setTimeout(resolve, 2000))
-                setComprobando(false)
-                setActivarsesion(true)
-                
-            }else{
-                await new Promise(resolve => setTimeout(resolve, 7000))
-                setMensajeusuario('Debes reiniciar sesion')
-                detenerSpin()
-                await Handelstorage('borrar')
-                setActivarsesion(false)
-                // setSesionname('')
-                await new Promise(resolve => setTimeout(resolve, 2000))
-                setComprobando(false)
-                //setActivarsesion(true)
-            }
-
-        
     
-        } else {
-            detenerSpin()
-            setComprobando(false)
-            await Handelstorage('borrar')
-            setActivarsesion(false)
-            // setSesionname('')
-        }
-    }
     cargardatos()
     return () => {
       keyboardDidShowListener.remove();
@@ -298,8 +310,8 @@ export default function LoginR1({ navigation  }){
             {
                 comprobando &&(
 
-                <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
-                    <View style={{ alignItems: 'center' }}>
+                <View style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}>
+                    <View style={{ alignItems: 'center'}}>
                         <Animated.View style={{ transform: [{ rotate: spin }] }}>
                         <Fontisto name="spinner" size={60} color="blue" />
                         </Animated.View>
@@ -307,10 +319,20 @@ export default function LoginR1({ navigation  }){
                             {
                               // color:'rgba(255,255,255,0.6)',
                               color:'rgb(218,165,32)',
-                              fontSize:20 }
+                              fontSize:25 }
                               }>
                           {mensajeusuario}</Text>
+                        
                     </View>
+                    {errorred &&(
+                           <Button  
+                           style={[styles.button, [styles.buttonActivado],{height:50,marginTop:100} ]}
+                           
+                           onPress={() => cargardatos()}
+                           >                                
+                           <Text style={[styles.buttonText, [styles.buttonActivadoText]]}>REINTENTAR</Text>
+                         </Button>
+                        )}
                 </View>
                 )
             }
