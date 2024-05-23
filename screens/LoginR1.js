@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import Handelstorage from "../Storage/handelstorage";
 import ComprobarStorage from "../Storage/verificarstorage";
 import Iniciarsesion from "../componentes/PeticionesApi/apiiniciosesion";
-import Generarpeticion from "../componentes/PeticionesApi/apipeticiones";
+import Comprobarsesion from "../componentes/PeticionesApi/apicomprobarsesion";
 import Procesando from "../componentes/Procesando/Procesando";
 import { AuthContext } from "../AuthContext";
 import { Fontisto } from '@expo/vector-icons';
@@ -157,7 +157,7 @@ export default function LoginR1({ navigation  }){
         
           const body = {};
           const endpoint='ComprobarSesionUsuario/'
-          const result = await Generarpeticion(endpoint, 'POST', body);
+          const result = await Comprobarsesion(endpoint, 'POST', body);
           const respuesta=result['resp']
           
           if (respuesta === 200){

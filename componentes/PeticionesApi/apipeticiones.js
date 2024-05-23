@@ -2,71 +2,45 @@ import APIBASE from "./baseurls";
 import Handelstorage from "../../Storage/handelstorage";
 
 
-const fetchWithTimeout = (url, options, timeout = 7000) => {
-    return Promise.race([
-      fetch(url, options),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout')), timeout)
-      )
-    ]);
-  };
-
 async function Generarpeticion(endpoint,metodo,bodyoptions){
-    let data={}
-    let resp=0
-    let datos={}
-    let requestOptions = {};
-    const datosstarage=await Handelstorage('obtener');
-    const tokenstorage=datosstarage['token']
-    const sesionstorage=datosstarage['sesion']
-    
-    bodyoptions.SESION=sesionstorage;
-    
-    
-    if (metodo.toUpperCase()==='GET'){
-        requestOptions = {
-            method: metodo.toUpperCase(),
-            headers: {
-                        'Authorization':`Bearer ${tokenstorage}`,
-                    }
-            }
+  let data={}
+  let resp=0
+  let datos={}
+  let requestOptions = {};
+  const datosstarage=await Handelstorage('obtener');
+  const tokenstorage=datosstarage['token']
+  const sesionstorage=datosstarage['sesion']
+  
+  bodyoptions.SESION=sesionstorage;
+  
+  if (metodo.toUpperCase()==='GET'){
+      requestOptions = {
+          method: metodo.toUpperCase(),
+          headers: {
+                      'Authorization':`Bearer ${tokenstorage}`,
+                  }
+          }
 
-    } else{
-        requestOptions = {
-            method: metodo.toUpperCase(),
-            headers: {  'Content-Type': 'application/json',
-                        
-                        'Authorization':`Bearer ${tokenstorage}`,
-                    },
-            body: JSON.stringify(bodyoptions)
-            }
-    }
-    
-    try {
-        const response = await fetchWithTimeout(`${APIBASE}/${endpoint}`, requestOptions); 
-        
-        if (!response.ok) {
-          
-          data = [];
-          resp = response.status; // Usar el status real del error
-          datos = { data, resp };
-        } else {
-          data = await response.json();
-          resp = response.status;
-          
-          datos = { data, resp };
-        }
-      } catch (err) {
-        
-        data = [];
-        resp = 6000; // Código de error personalizado para indicar que no se pudo conectar al servidor
-        datos = { data, resp };
-      }
-    
-      return datos; // Siempre retorna datos, incluso en caso de error
-                
-            
-    
+  } else{
+      requestOptions = {
+          method: metodo.toUpperCase(),
+          headers: {  'Content-Type': 'application/json',
+                      
+                      'Authorization':`Bearer ${tokenstorage}`,
+                  },
+          body: JSON.stringify(bodyoptions)
+          }
+  }
+  
+
+  const response = await fetch(`${APIBASE}/${endpoint}`, requestOptions);  
+  
+  data= await response.json();
+  
+  resp= response.status;
+  
+  datos={data,resp}
+  return datos
 }
 
 export default Generarpeticion
