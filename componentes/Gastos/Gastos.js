@@ -15,6 +15,7 @@ import { AuthContext } from "../../AuthContext";
 function Gastos ({ navigation  }){
     
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { actualizargastos, setActualizargastos } = useContext(AuthContext);
     const [busqueda,setBusqueda]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -89,11 +90,11 @@ function Gastos ({ navigation  }){
 
     useEffect(() => {
       
-      const unsubscribe = navigation.addListener('focus', () => {
+      
         setCargacopleta(false)
         setGuardando(true)
         const cargardatos=async()=>{
-            
+          console.log('peticion en gastos')
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
             const anno_storage=datestorage['dataanno']
@@ -146,11 +147,8 @@ function Gastos ({ navigation  }){
         
         cargardatos()
         
-        // setRefresh(false)
-      })
-      
-      return unsubscribe;
-      }, [navigation]);
+  
+      }, [actualizargastos]);
 
     
 

@@ -22,6 +22,7 @@ import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 function GastosTransaccion({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { actualizargastos, setActualizargastos } = useContext(AuthContext);
     const { colors } = useTheme();
     
     const {params: { item },} = useRoute();
@@ -159,7 +160,7 @@ function GastosTransaccion({ navigation }){
         
         const respuesta=result['resp']
         if (respuesta === 200) {
-          
+          setActualizargastos(!actualizargastos)
           item.recarga='si'
       
   

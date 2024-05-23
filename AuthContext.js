@@ -8,9 +8,21 @@ export const AuthProvider = ({ children }) => {
   const [activarsesion, setActivarsesion] = useState(false);
   const [periodo, setPeriodo] = useState(false);
   const [sesiondata, setSesiondata] = useState();
+  const [actualizargastos, setActualizargastos] = useState(false);
+  const [actualizaringresos, setActualizaringresos] = useState(false);
+
+
+  const [actualizarresumen, setActualizarresumen] = useState(true);
+  const [dataresumen,setDataresumen]=useState([])
+
 
   return (
-    <AuthContext.Provider value={{ activarsesion, setActivarsesion,periodo,setPeriodo,sesiondata,setSesiondata}}>
+    <AuthContext.Provider value={{ activarsesion, setActivarsesion,periodo,
+                                  setPeriodo,sesiondata,setSesiondata,actualizargastos,setActualizargastos,
+                                  actualizaringresos,setActualizaringresos,
+                                  actualizarresumen,setActualizarresumen,
+                                  dataresumen,setDataresumen
+        }}>
       {children}
     </AuthContext.Provider>
   );

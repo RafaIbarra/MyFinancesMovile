@@ -18,6 +18,7 @@ import { AntDesign } from '@expo/vector-icons';
 function Ingresos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { actualizaringresos, setActualizaringresos } = useContext(AuthContext);
     const [busqueda,setBusqueda]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -84,9 +85,11 @@ function Ingresos ({ navigation  }){
     }
    
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setGuardando(true)
+        
+            
             const cargardatos=async()=>{
+                console.log('peticion en ingresos')
+                setGuardando(true)
                 const datestorage=await Handelstorage('obtenerdate');
                 const mes_storage=datestorage['datames']
                 const anno_storage=datestorage['dataanno']
@@ -103,7 +106,7 @@ function Ingresos ({ navigation  }){
                         elemento.key = elemento.id;
                         elemento.recarga='no'
                         })
-                        
+                        setActualizaringresos(false)
                         setDataingresos(registros)
                         setDataingresoscompleto(registros)
                         let totalingreso=0
@@ -127,9 +130,8 @@ function Ingresos ({ navigation  }){
             }
             cargardatos()
 
-         })
-        return unsubscribe;
-    }, [navigation]);
+        
+    }, [actualizaringresos]);
     
     
     

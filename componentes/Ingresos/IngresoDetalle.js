@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text,StyleSheet,TouchableOpacity } from "react-native";
@@ -6,6 +6,7 @@ import {  Portal,  PaperProvider,Dialog,Button,Divider } from 'react-native-pape
 import { AntDesign } from '@expo/vector-icons';
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
+import { AuthContext } from "../../AuthContext";
 import Procesando from "../Procesando/Procesando";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
@@ -13,6 +14,7 @@ import { useTheme } from '@react-navigation/native';
 function IngresoDetalle ({ navigation }){
     const {params: { item },} = useRoute();
     const [guardando,setGuardando]=useState(false)
+    const { actualizaringresos, setActualizaringresos } = useContext(AuthContext);
     const { colors } = useTheme();
     const [visibledialogo, setVisibledialogo] = useState(false)
     const { navigate } = useNavigation();
@@ -42,6 +44,7 @@ function IngresoDetalle ({ navigation }){
           
         const respuesta=result['resp']
         if (respuesta === 200) {
+            setActualizaringresos(true)
             setGuardando(false)
             navigation.goBack();
             hideDialog()

@@ -260,7 +260,7 @@ function TabsGroup({ navigation }) {
             titulolabel = focused ? "Ingresos" : "";
             return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
           },
-          unmountOnBlur: true,
+          // unmountOnBlur: true,
           headerShown:false
         }}
 
@@ -283,7 +283,7 @@ function TabsGroup({ navigation }) {
             titulolabel = focused ? "Gastos" : "";
             return <Text style={{ color: colors.text,fontSize:10}}>{titulolabel}</Text>
           },
-          unmountOnBlur: true,
+          // unmountOnBlur: true,
           headerShown:false
         }}
          />

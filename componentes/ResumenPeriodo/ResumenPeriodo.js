@@ -9,6 +9,8 @@ import AntDesign from '@expo/vector-icons/AntDesign'
 
 function ResumenPeriodo ({ navigation  }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { actualizarresumen, setActualizarresumen } = useContext(AuthContext);
+    const { dataresumen, setDataresumen } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const { colors } = useTheme();
     const [cargacompleta,setCargacopleta]=useState(false)
@@ -20,18 +22,41 @@ function ResumenPeriodo ({ navigation  }){
         const unsubscribe = navigation.addListener('focus', () => {
             setGuardando(true)
             const cargardatos=async()=>{
-                const datestorage=await Handelstorage('obtenerdate');
-                const mes_storage=datestorage['datames']
-                const anno_storage=datestorage['dataanno']
+                if (actualizarresumen){
+                    console.log('en resumen hara la peticion')
+                    const datestorage=await Handelstorage('obtenerdate');
+                    const mes_storage=datestorage['datames']
+                    const anno_storage=datestorage['dataanno']
 
-                const body = {};
-                const endpoint='MovileResumenMes/' + anno_storage +'/' + mes_storage + '/'
-                const result = await Generarpeticion(endpoint, 'POST', body);
-                const respuesta=result['resp']
-                if (respuesta === 200){
-        
-                    
-                    registros=result['data']
+                    const body = {};
+                    const endpoint='MovileResumenMes/' + anno_storage +'/' + mes_storage + '/'
+                    const result = await Generarpeticion(endpoint, 'POST', body);
+                    const respuesta=result['resp']
+                    if (respuesta === 200){
+            
+                        setActualizarresumen(false)
+                        registros=result['data']
+                        setDatadetalle(registros)
+                        setDataresumen(registros)
+                        let totalgasto=0
+                        let totalingreso=0
+                        registros.forEach(({ MontoIngreso, MontoEgreso}) => {totalgasto += MontoEgreso,totalingreso+=MontoIngreso})
+                        setEgresototal(totalgasto)
+                        setIngresototal(totalingreso)
+                        setSaldo(totalingreso - totalgasto)
+                        setGuardando(false)  
+                        
+                    }else if(respuesta === 403 || respuesta === 401){
+                        
+                        setGuardando(false)
+                        await Handelstorage('borrar')
+                        await new Promise(resolve => setTimeout(resolve, 1000))
+                        setActivarsesion(false)
+                    }
+
+                }else{
+                    console.log('en resumen toma de lo ultimo gurdado')
+                    registros=dataresumen
                     setDatadetalle(registros)
                     let totalgasto=0
                     let totalingreso=0
@@ -39,15 +64,10 @@ function ResumenPeriodo ({ navigation  }){
                     setEgresototal(totalgasto)
                     setIngresototal(totalingreso)
                     setSaldo(totalingreso - totalgasto)
-                    setGuardando(false)  
-                    
-                }else if(respuesta === 403 || respuesta === 401){
-                    
-                    setGuardando(false)
-                    await Handelstorage('borrar')
-                    await new Promise(resolve => setTimeout(resolve, 1000))
-                    setActivarsesion(false)
                 }
+                
+
+                setGuardando(false)
                 
                 setCargacopleta(true)
         
