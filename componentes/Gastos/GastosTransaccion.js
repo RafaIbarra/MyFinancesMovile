@@ -23,6 +23,10 @@ import { FlatList, ScrollView } from "react-native-gesture-handler";
 function GastosTransaccion({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { actualizargastos, setActualizargastos } = useContext(AuthContext);
+    const { actualizarresumen, setActualizarresumen } = useContext(AuthContext);
+    const {actualizarsaldos,setActualizarsaldos}=useContext(AuthContext)
+    const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
+  
     const { colors } = useTheme();
     
     const {params: { item },} = useRoute();
@@ -161,6 +165,9 @@ function GastosTransaccion({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
           setActualizargastos(!actualizargastos)
+          setActualizarresumen(true)
+          setActualizarsaldos(true)
+          setUpdstastsaldo(true)
           item.recarga='si'
       
   

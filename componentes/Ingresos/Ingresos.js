@@ -88,7 +88,7 @@ function Ingresos ({ navigation  }){
         
             
             const cargardatos=async()=>{
-                console.log('peticion en ingresos')
+                
                 setGuardando(true)
                 const datestorage=await Handelstorage('obtenerdate');
                 const mes_storage=datestorage['datames']
@@ -106,7 +106,7 @@ function Ingresos ({ navigation  }){
                         elemento.key = elemento.id;
                         elemento.recarga='no'
                         })
-                        setActualizaringresos(false)
+                        
                         setDataingresos(registros)
                         setDataingresoscompleto(registros)
                         let totalingreso=0

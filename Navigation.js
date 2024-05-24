@@ -595,7 +595,7 @@ function OpcionesTabEstadisticas({navigation}){
       component={Estadisticas}
       options={{
         title:'Saldos',
-        unmountOnBlur:true ,
+        // unmountOnBlur:true ,
         
       }}
     >
@@ -614,7 +614,7 @@ function OpcionesTabEstadisticas({navigation}){
     <TabEstadisticas.Screen name="EstadisticasEgreso" component={EstadisticasMesEgreso}
     options={{
       title:'Gastos',
-      unmountOnBlur:true
+      // unmountOnBlur:true
     }}
     >
 

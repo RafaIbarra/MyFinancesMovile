@@ -94,7 +94,7 @@ function Gastos ({ navigation  }){
         setCargacopleta(false)
         setGuardando(true)
         const cargardatos=async()=>{
-          console.log('peticion en gastos')
+          
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
             const anno_storage=datestorage['dataanno']

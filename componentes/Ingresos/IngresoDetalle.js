@@ -15,6 +15,10 @@ function IngresoDetalle ({ navigation }){
     const {params: { item },} = useRoute();
     const [guardando,setGuardando]=useState(false)
     const { actualizaringresos, setActualizaringresos } = useContext(AuthContext);
+    const { actualizarresumen, setActualizarresumen } = useContext(AuthContext);
+    const {actualizarsaldos,setActualizarsaldos}=useContext(AuthContext)
+    const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
+
     const { colors } = useTheme();
     const [visibledialogo, setVisibledialogo] = useState(false)
     const { navigate } = useNavigation();
@@ -44,7 +48,10 @@ function IngresoDetalle ({ navigation }){
           
         const respuesta=result['resp']
         if (respuesta === 200) {
-            setActualizaringresos(true)
+            setActualizaringresos(!actualizaringresos)
+            setActualizarresumen(true)
+            setActualizarsaldos(true)
+            setUpdstastsaldo(true)
             setGuardando(false)
             navigation.goBack();
             hideDialog()

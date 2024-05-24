@@ -23,7 +23,7 @@ function ResumenPeriodo ({ navigation  }){
             setGuardando(true)
             const cargardatos=async()=>{
                 if (actualizarresumen){
-                    console.log('en resumen hara la peticion')
+                    
                     const datestorage=await Handelstorage('obtenerdate');
                     const mes_storage=datestorage['datames']
                     const anno_storage=datestorage['dataanno']
@@ -55,7 +55,7 @@ function ResumenPeriodo ({ navigation  }){
                     }
 
                 }else{
-                    console.log('en resumen toma de lo ultimo gurdado')
+                    
                     registros=dataresumen
                     setDatadetalle(registros)
                     let totalgasto=0
@@ -84,77 +84,95 @@ function ResumenPeriodo ({ navigation  }){
     <View>
         {guardando &&(<Procesando></Procesando>)}
 
-        <View style={[{ flexDirection:'row', marginLeft:2,marginTop:50,borderWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}]}>
+        
 
-                        <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5,alignContent:'center',alignItems:'center'}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>CONCEPTO</Text>
-                        </View>
+        {cargacompleta && (
 
-                        <View style={{width:'21.8%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>INGRESO </Text>
-                        </View>
-                        <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>EGRESO</Text>
-                        </View>
-                        
-        </View>
+        <View>
 
-        <View style={{borderLeftWidth:1,borderRightWidth:1,borderBottomWidth:1,borderColor:'white',marginLeft:5,marginRight:5,maxHeight:'63%'}}>
 
-            <FlatList
-                data={datadetalle}
-                renderItem={({ item }) => (
-                    <View style={styles.contenedordatos}>
 
-                        <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{item.Descripcion}</Text>
-                        </View>
+            <View style={[{ flexDirection:'row', marginLeft:2,marginTop:50,borderWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}]}>
 
-                        <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(item.MontoIngreso).toLocaleString('es-ES')}</Text>
-                        </View>
-                        <View style={{borderRightWidth:0.5,borderRightColor:'white',width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(item.MontoEgreso).toLocaleString('es-ES')}</Text>
-                        </View>
-                        <View style={{width:'12%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-
-                            <View style={{borderWidth:2,borderColor:'white',marginLeft:2,width:22,borderRadius:100,backgroundColor:'white',alignItems:'center'}}> 
-
-                                    <AntDesign name= { item.MontoIngreso > 0 ? "upcircle": "downcircle" } size={18} color={ item.MontoIngreso > 0 ? "green": "rgb(255,115,96)" } />
+                            <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5,alignContent:'center',alignItems:'center'}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>CONCEPTO</Text>
                             </View>
-                        </View>
-                    </View>
-                )}
-                keyExtractor={item => item.Descripcion.toString()}
-                />
-        </View>
-        <View style={{marginLeft:2,borderRightWidth:2,borderLeftWidth:2,borderBottomWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}}>
 
-            <View style={[{ flexDirection:'row',borderBottomWidth:0.5,borderBottomColor: colors.bordercolor}]}>
-
-                <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5,alignContent:'center',alignItems:'center'}}> 
-                    <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>TOTALES {'>>>>>>>>>>>>>>'}</Text>
-                </View>
-
-                <View style={{width:'21.8%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                    <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>{Number(ingresototal).toLocaleString('es-ES')} </Text>
-                </View>
-                <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                    <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>{Number(egresototal).toLocaleString('es-ES')}</Text>
-                </View>
+                            <View style={{width:'21.8%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>INGRESO </Text>
+                            </View>
+                            <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>EGRESO</Text>
+                            </View>
                             
             </View>
-            <View style={{margin:10,alignContent:'center',alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
-                    <Text style={[ { color: colors.text,fontWeight:'bold',marginRight:10,fontSize:15,}]}>SALDO :</Text>
-                    <Text style={[ 
-                                { color: saldo >0 ? colors.text :'rgb(255,115,96)',
-                                fontSize:15,
-                                fontWeight:'bold'}]}
-                                >
-                                {Number(saldo).toLocaleString('es-ES')}
-                    </Text>
+            
+
+            <View style={{borderLeftWidth:1,borderRightWidth:1,borderBottomWidth:1,borderColor:'white',marginLeft:5,marginRight:5,maxHeight:'63%'}}>
+
+                <FlatList
+                    data={datadetalle}
+                    renderItem={({ item }) => (
+                        <View style={styles.contenedordatos}>
+
+                            <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{item.Descripcion}</Text>
+                            </View>
+
+                            <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(item.MontoIngreso).toLocaleString('es-ES')}</Text>
+                            </View>
+                            <View style={{borderRightWidth:0.5,borderRightColor:'white',width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(item.MontoEgreso).toLocaleString('es-ES')}</Text>
+                            </View>
+                            <View style={{width:'12%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+
+                                <View style={{borderWidth:2,borderColor:'white',marginLeft:2,width:22,borderRadius:100,backgroundColor:'white',alignItems:'center'}}> 
+
+                                        <AntDesign name= { item.MontoIngreso > 0 ? "upcircle": "downcircle" } size={18} color={ item.MontoIngreso > 0 ? "green": "rgb(255,115,96)" } />
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                    keyExtractor={item => item.Descripcion.toString()}
+                    />
             </View>
+            
+
+            <View style={{marginLeft:2,borderRightWidth:2,borderLeftWidth:2,borderBottomWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}}>
+
+                <View style={[{ flexDirection:'row',borderBottomWidth:0.5,borderBottomColor: colors.bordercolor}]}>
+
+                    <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5,alignContent:'center',alignItems:'center'}}> 
+                        <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>TOTALES {'>>>>>>>>>>>>>>'}</Text>
+                    </View>
+
+                    <View style={{width:'21.8%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                        <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>{Number(ingresototal).toLocaleString('es-ES')} </Text>
+                    </View>
+                    <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                        <Text style={[ styles.textocontenido, { color: colors.text,fontWeight:'bold'}]}>{Number(egresototal).toLocaleString('es-ES')}</Text>
+                    </View>
+                                
+                </View>
+                <View style={{margin:10,alignContent:'center',alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
+                        <Text style={[ { color: colors.text,fontWeight:'bold',marginRight:10,fontSize:15,}]}>SALDO :</Text>
+                        <Text style={[ 
+                                    { color: saldo >0 ? colors.text :'rgb(255,115,96)',
+                                    fontSize:15,
+                                    fontWeight:'bold'}]}
+                                    >
+                                    {Number(saldo).toLocaleString('es-ES')}
+                        </Text>
+                </View>
+            </View>
+
         </View>
+        )}
+
+            
+        
+
     </View>
     )
         

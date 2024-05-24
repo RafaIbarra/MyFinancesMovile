@@ -14,6 +14,8 @@ import { useTheme } from '@react-navigation/native';
 function GastosDetalle ({ navigation }){
     const { actualizargastos, setActualizargastos } = useContext(AuthContext);
     const { actualizarresumen, setActualizarresumen } = useContext(AuthContext);
+    const {actualizarsaldos,setActualizarsaldos}=useContext(AuthContext)
+    const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
     const {params: { item },} = useRoute();
     const [guardando,setGuardando]=useState(false)
     const { colors } = useTheme();
@@ -49,6 +51,9 @@ function GastosDetalle ({ navigation }){
             setGuardando(false)
             setActualizargastos(!actualizargastos)
             setActualizarresumen(true)
+            setActualizarsaldos(true)
+            setUpdstastsaldo(true)
+        
             navigation.goBack();
             hideDialog()
           //setRecargadatos(!recargadatos)
