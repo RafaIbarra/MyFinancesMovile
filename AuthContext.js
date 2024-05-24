@@ -24,11 +24,28 @@ export const AuthProvider = ({ children }) => {
   const [updstastegreso, setUpdstastegreso] = useState(true);
   const [imgestadisticaegreso,setImgestadisticaegreso]=useState([])
 
+  const [updstastingreso, setUpdstastingreso] = useState(true);
+  const [imgestadisticaingreso,setImgestadisticaingreso]=useState([])
+
+  const [estadocomponente,setEstadocomponente]=useState({
+    categoriagasto:true,
+    conceptosingresos:true,
+    conceptosgastos:true
+  })
+
+  const actualizarEstadocomponente = (campo, valor) => {
+    setEstadocomponente(prevState => ({
+      ...prevState,
+      [campo]: valor,
+    }));
+  };
+
 
   return (
     <AuthContext.Provider value={{ activarsesion, setActivarsesion,
                                   periodo,setPeriodo,
                                   sesiondata,setSesiondata,
+
                                   actualizargastos,setActualizargastos,
                                   actualizaringresos,setActualizaringresos,
                                   actualizarresumen,setActualizarresumen,
@@ -38,7 +55,11 @@ export const AuthProvider = ({ children }) => {
                                   updstastsaldo,setUpdstastsaldo,
                                   imgestadisticasaldo,setImgestadisticasaldo,
                                   updstastegreso, setUpdstastegreso,
-                                  imgestadisticaegreso,setImgestadisticaegreso
+                                  imgestadisticaegreso,setImgestadisticaegreso,
+                                  updstastingreso, setUpdstastingreso,
+                                  imgestadisticaingreso,setImgestadisticaingreso,
+                                  
+                                  estadocomponente,actualizarEstadocomponente
 
         }}>
       {children}

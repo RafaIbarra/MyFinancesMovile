@@ -18,6 +18,8 @@ function IngresoDetalle ({ navigation }){
     const { actualizarresumen, setActualizarresumen } = useContext(AuthContext);
     const {actualizarsaldos,setActualizarsaldos}=useContext(AuthContext)
     const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
+    const { updstastegreso, setUpdstastegreso } = useContext(AuthContext);
+    const { updstastingreso, setUpdstastingreso } = useContext(AuthContext);
 
     const { colors } = useTheme();
     const [visibledialogo, setVisibledialogo] = useState(false)
@@ -52,6 +54,8 @@ function IngresoDetalle ({ navigation }){
             setActualizarresumen(true)
             setActualizarsaldos(true)
             setUpdstastsaldo(true)
+            setUpdstastegreso(true)
+            setUpdstastingreso(true)
             setGuardando(false)
             navigation.goBack();
             hideDialog()

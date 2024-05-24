@@ -12,6 +12,7 @@ import {  ScrollView } from "react-native-gesture-handler";
 
 function CategoriaGastosRegistro({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const { colors } = useTheme();
     const [guardando,setGuardando]=useState(false)
     
@@ -62,7 +63,7 @@ function CategoriaGastosRegistro({ navigation }){
         const respuesta=result['resp']
         
         if (respuesta === 200) {
-          
+          actualizarEstadocomponente('categoriagasto',!estadocomponente.categoriagasto)
           concepto.recarga='si'
       
   

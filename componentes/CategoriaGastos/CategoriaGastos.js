@@ -20,6 +20,7 @@ import { FontAwesome } from '@expo/vector-icons';
 function CategoriaGastos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     
@@ -82,8 +83,9 @@ function CategoriaGastos ({ navigation  }){
     }
    
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
+        
             const cargardatos=async()=>{
+                console.log(estadocomponente.categoriagasto)
                 setGuardando(true)
                 const body = {};
                 const endpoint='MisCategorias/0/'
@@ -126,9 +128,9 @@ function CategoriaGastos ({ navigation  }){
             }
             cargardatos()
 
-         })
-        return unsubscribe;
-    }, [navigation]);
+         
+        
+    }, [estadocomponente.categoriagasto]);
     
     
     

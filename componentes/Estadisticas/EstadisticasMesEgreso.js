@@ -59,7 +59,7 @@ function EstadisticasMesEgreso ({ navigation  }){
           // setRefresh(false)
         })
         return unsubscribe;
-        }, [navigation]);
+        }, [updstastegreso,setImgestadisticaegreso,imgestadisticaegreso,navigation]);
     
     
 

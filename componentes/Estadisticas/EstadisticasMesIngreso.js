@@ -10,6 +10,9 @@ import ImagenEstadistica from "./ImagenEstadistica";
 
 function EstadisticasMesIngreso ({ navigation  }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { updstastingreso, setUpdstastingreso } = useContext(AuthContext);
+    const { imgestadisticaingreso, setImgestadisticaingreso } = useContext(AuthContext);
+
     const { colors } = useTheme();
     const [cargacompleta,setCargacopleta]=useState(false)
     const [guardando,setGuardando]=useState(false)
@@ -21,29 +24,35 @@ function EstadisticasMesIngreso ({ navigation  }){
           
           const cargardatos=async()=>{
                 setGuardando(true)
-                const datestorage=await Handelstorage('obtenerdate');
-                const mes_storage=datestorage['datames']
-                const anno_storage=datestorage['dataanno']
+                if(updstastingreso){
 
-                const body = {};
-                const endpoint='MovileEstadisticaMesIngreso/' + anno_storage +'/' + mes_storage + '/'
-                const result = await Generarpeticion(endpoint, 'POST', body);
-                const respuesta=result['resp']
-                if (respuesta === 200){
-        
-                    setGuardando(false)
-                    const registros=result['data']
-                
-                    setImgingreso(registros[0].imgIngresos)
-                
-                }else if(respuesta === 403 || respuesta === 401){
+                    const datestorage=await Handelstorage('obtenerdate');
+                    const mes_storage=datestorage['datames']
+                    const anno_storage=datestorage['dataanno']
+    
+                    const body = {};
+                    const endpoint='MovileEstadisticaMesIngreso/' + anno_storage +'/' + mes_storage + '/'
+                    const result = await Generarpeticion(endpoint, 'POST', body);
+                    const respuesta=result['resp']
+                    if (respuesta === 200){
+                        setUpdstastingreso(false)
+                        setGuardando(false)
+                        const registros=result['data']
                     
-                    setGuardando(false)
-                    await Handelstorage('borrar')
-                    await new Promise(resolve => setTimeout(resolve, 1000))
-                    setActivarsesion(false)
+                        setImgingreso(registros[0].imgIngresos)
+                        setImgestadisticaingreso(registros[0].imgIngresos)
+                    
+                    }else if(respuesta === 403 || respuesta === 401){
+                        
+                        setGuardando(false)
+                        await Handelstorage('borrar')
+                        await new Promise(resolve => setTimeout(resolve, 1000))
+                        setActivarsesion(false)
+                    }
+                }else{
+                    setImgingreso(imgestadisticaingreso)
                 }
-                
+                setGuardando(false)
                 setCargacopleta(true)
     
              
@@ -52,7 +61,7 @@ function EstadisticasMesIngreso ({ navigation  }){
           // setRefresh(false)
         })
         return unsubscribe;
-        }, [navigation]);
+        }, [updstastingreso,setImgestadisticaingreso,imgestadisticaingreso,navigation]);
     
     if(cargacompleta)
         {

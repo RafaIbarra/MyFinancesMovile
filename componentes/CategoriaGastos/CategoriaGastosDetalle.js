@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text,StyleSheet,TouchableOpacity } from "react-native";
@@ -9,10 +9,11 @@ import Generarpeticion from "../PeticionesApi/apipeticiones";
 import Procesando from "../Procesando/Procesando";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
+import { AuthContext } from "../../AuthContext";
 
 function CategoriaGastosDetalle ({ navigation }){
     const {params: { concepto },} = useRoute();
-    
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const { colors } = useTheme();
     const [guardando,setGuardando]=useState(false)
     const [visibledialogo, setVisibledialogo] = useState(false)
@@ -45,6 +46,7 @@ function CategoriaGastosDetalle ({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
             setGuardando(false)
+            actualizarEstadocomponente('categoriagasto',!estadocomponente.categoriagasto)
             navigation.goBack();
             hideDialog()
           

@@ -37,15 +37,15 @@ function Estadisticas ({ navigation  }){
                 const respuesta = result["resp"];
         
                 if (respuesta === 200) {
-                setUpdstastsaldo(false);
-                const registros = result["data"];
-                setImgresumen(registros[0].imgResumen);
-                setImgestadisticasaldo(registros[0].imgResumen);
+                    setUpdstastsaldo(false);
+                    const registros = result["data"];
+                    setImgresumen(registros[0].imgResumen);
+                    setImgestadisticasaldo(registros[0].imgResumen);
                 } else if (respuesta === 403 || respuesta === 401) {
-                setGuardando(false);
-                await Handelstorage("borrar");
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                setActivarsesion(false);
+                    setGuardando(false);
+                    await Handelstorage("borrar");
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                    setActivarsesion(false);
                 }
             } else {
                 setImgresumen(imgestadisticasaldo);
