@@ -9,8 +9,8 @@ import AntDesign from '@expo/vector-icons/AntDesign'
 
 function ResumenPeriodo ({ navigation  }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    const { actualizarresumen, setActualizarresumen } = useContext(AuthContext);
-    const { dataresumen, setDataresumen } = useContext(AuthContext);
+    
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const { colors } = useTheme();
     const [cargacompleta,setCargacopleta]=useState(false)
@@ -22,7 +22,7 @@ function ResumenPeriodo ({ navigation  }){
         const unsubscribe = navigation.addListener('focus', () => {
             setGuardando(true)
             const cargardatos=async()=>{
-                if (actualizarresumen){
+                if (estadocomponente.compresumen){
                     
                     const datestorage=await Handelstorage('obtenerdate');
                     const mes_storage=datestorage['datames']
@@ -34,10 +34,11 @@ function ResumenPeriodo ({ navigation  }){
                     const respuesta=result['resp']
                     if (respuesta === 200){
             
-                        setActualizarresumen(false)
+                        
+                        actualizarEstadocomponente('compresumen',false)
                         registros=result['data']
                         setDatadetalle(registros)
-                        setDataresumen(registros)
+                        actualizarEstadocomponente('dataresumen',registros)
                         let totalgasto=0
                         let totalingreso=0
                         registros.forEach(({ MontoIngreso, MontoEgreso}) => {totalgasto += MontoEgreso,totalingreso+=MontoIngreso})
@@ -56,7 +57,7 @@ function ResumenPeriodo ({ navigation  }){
 
                 }else{
                     
-                    registros=dataresumen
+                    registros=estadocomponente.dataresumen
                     setDatadetalle(registros)
                     let totalgasto=0
                     let totalingreso=0

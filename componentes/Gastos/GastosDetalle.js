@@ -12,12 +12,15 @@ import { AuthContext } from "../../AuthContext";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 function GastosDetalle ({ navigation }){
-    const { actualizargastos, setActualizargastos } = useContext(AuthContext);
-    const { actualizarresumen, setActualizarresumen } = useContext(AuthContext);
-    const {actualizarsaldos,setActualizarsaldos}=useContext(AuthContext)
+    
+    
+    
     const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
     const { updstastegreso, setUpdstastegreso } = useContext(AuthContext);
     const { updstastingreso, setUpdstastingreso } = useContext(AuthContext);
+
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+
     const {params: { item },} = useRoute();
     const [guardando,setGuardando]=useState(false)
     const { colors } = useTheme();
@@ -51,12 +54,17 @@ function GastosDetalle ({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
             setGuardando(false)
-            setActualizargastos(!actualizargastos)
-            setActualizarresumen(true)
-            setActualizarsaldos(true)
+            
+            
             setUpdstastsaldo(true)
             setUpdstastegreso(true)
             setUpdstastingreso(true)
+
+
+
+            actualizarEstadocomponente('compgastos',true)
+            actualizarEstadocomponente('compresumen',true)
+            actualizarEstadocomponente('compsaldos',true)
         
             navigation.goBack();
             hideDialog()

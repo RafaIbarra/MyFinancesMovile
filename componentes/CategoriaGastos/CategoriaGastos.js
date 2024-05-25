@@ -85,7 +85,7 @@ function CategoriaGastos ({ navigation  }){
     useEffect(() => {
         
             const cargardatos=async()=>{
-                console.log(estadocomponente.categoriagasto)
+                
                 setGuardando(true)
                 const body = {};
                 const endpoint='MisCategorias/0/'

@@ -8,15 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [activarsesion, setActivarsesion] = useState(false);
   const [periodo, setPeriodo] = useState(false);
   const [sesiondata, setSesiondata] = useState();
-  const [actualizargastos, setActualizargastos] = useState(false);
-  const [actualizaringresos, setActualizaringresos] = useState(false);
 
+  
 
-  const [actualizarresumen, setActualizarresumen] = useState(true);
-  const [dataresumen,setDataresumen]=useState([])
-
-  const [actualizarsaldos, setActualizarsaldos] = useState(true);
-  const [datasaldos,setDatasaldos]=useState([])
+  
 
   const [updstastsaldo, setUpdstastsaldo] = useState(true);
   const [imgestadisticasaldo,setImgestadisticasaldo]=useState([])
@@ -28,9 +23,22 @@ export const AuthProvider = ({ children }) => {
   const [imgestadisticaingreso,setImgestadisticaingreso]=useState([])
 
   const [estadocomponente,setEstadocomponente]=useState({
+    compgastos:true,
+    datagastos:[],
+
+    compingresos:true,
+    dataingresos:[],
+
+    compresumen:true,
+    dataresumen:[],
+
+    compsaldos:true,
+    datasaldos:[],
+
     categoriagasto:true,
     conceptosingresos:true,
-    conceptosgastos:true
+    conceptosgastos:true,
+
   })
 
   const actualizarEstadocomponente = (campo, valor) => {
@@ -46,12 +54,8 @@ export const AuthProvider = ({ children }) => {
                                   periodo,setPeriodo,
                                   sesiondata,setSesiondata,
 
-                                  actualizargastos,setActualizargastos,
-                                  actualizaringresos,setActualizaringresos,
-                                  actualizarresumen,setActualizarresumen,
-                                  dataresumen,setDataresumen,
-                                  actualizarsaldos,setActualizarsaldos,
-                                  datasaldos,setDatasaldos,
+                                  
+                                  
                                   updstastsaldo,setUpdstastsaldo,
                                   imgestadisticasaldo,setImgestadisticasaldo,
                                   updstastegreso, setUpdstastegreso,

@@ -18,6 +18,8 @@ import { AntDesign } from '@expo/vector-icons';
 function ConceptosGastos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+
     const [guardando,setGuardando]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     
@@ -105,7 +107,7 @@ function ConceptosGastos ({ navigation  }){
    
    
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
+        
             
             const cargardatos=async()=>{
                 setGuardando(true)
@@ -166,9 +168,9 @@ function ConceptosGastos ({ navigation  }){
             }
             cargardatos()
 
-         })
-        return unsubscribe;
-    }, [navigation]);
+         
+        
+    }, [estadocomponente.conceptosgastos]);
     
     const ConceptoItem = memo(({ concepto, navigate, colors }) => (
       <TouchableOpacity

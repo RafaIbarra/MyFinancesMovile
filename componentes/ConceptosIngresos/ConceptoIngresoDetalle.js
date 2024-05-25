@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import {  View,Text,StyleSheet,TouchableOpacity } from "react-native";
@@ -7,11 +7,13 @@ import { AntDesign } from '@expo/vector-icons';
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import Procesando from "../Procesando/Procesando";
+import { AuthContext } from "../../AuthContext";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 
 function ConceptoIngresoDetalle ({ navigation }){
     const {params: { concepto },} = useRoute();
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const { colors } = useTheme();
     const [visibledialogo, setVisibledialogo] = useState(false)
@@ -44,6 +46,7 @@ function ConceptoIngresoDetalle ({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
             setGuardando(false)
+            actualizarEstadocomponente('conceptosingresos',!estadocomponente.conceptosingresos)
             navigation.goBack();
             hideDialog()
           //setRecargadatos(!recargadatos)

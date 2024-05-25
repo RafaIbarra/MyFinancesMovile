@@ -8,8 +8,7 @@ import { AuthContext } from "../../AuthContext";
 
 function Saldos ({ navigation  }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    const {actualizarsaldos,setActualizarsaldos}=useContext(AuthContext)
-    const {datasaldos,setDatasaldos}=useContext(AuthContext)
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     
     const { colors } = useTheme();
     const [cargacompleta,setCargacopleta]=useState(false)
@@ -25,7 +24,7 @@ function Saldos ({ navigation  }){
             setGuardando(true)
             const cargardatos=async()=>{
                 
-                if(actualizarsaldos){
+                if(estadocomponente.compsaldos){
                     
                     const datestorage=await Handelstorage('obtenerdate');
                     const anno_storage=datestorage['dataanno']
@@ -35,10 +34,11 @@ function Saldos ({ navigation  }){
                     const result = await Generarpeticion(endpoint, 'POST', body);
                     const respuesta=result['resp']
                     if (respuesta === 200){
-                        setActualizarsaldos(false)
+                        
+                        actualizarEstadocomponente('compsaldos',false)
                         const registros=result['data']
                         setDatadetalle(registros)
-                        setDatasaldos(registros)
+                        actualizarEstadocomponente('datasaldos',registros)
                         let totalgasto=0
                         let ingresos=0
                         let totalsaldo=0
@@ -61,7 +61,7 @@ function Saldos ({ navigation  }){
                     }
                 }else{
                     
-                    const registros=datasaldos
+                    const registros=estadocomponente.datasaldos
                     setDatadetalle(registros)
                     let totalgasto=0
                     let ingresos=0

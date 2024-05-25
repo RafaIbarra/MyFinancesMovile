@@ -21,6 +21,7 @@ import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 function ConceptosGastosRegistro({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const { colors } = useTheme();
     const [guardando,setGuardando]=useState(false)
     const {params: { concepto },} = useRoute();
@@ -124,7 +125,7 @@ function ConceptosGastosRegistro({ navigation }){
         
         const respuesta=result['resp']
         if (respuesta === 200) {
-          
+          actualizarEstadocomponente('conceptosgastos',!estadocomponente.conceptosgastos)
           concepto.recarga='si'
       
   

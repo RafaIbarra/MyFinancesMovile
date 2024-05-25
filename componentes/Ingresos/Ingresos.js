@@ -18,7 +18,8 @@ import { AntDesign } from '@expo/vector-icons';
 function Ingresos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    const { actualizaringresos, setActualizaringresos } = useContext(AuthContext);
+    
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const [busqueda,setBusqueda]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -86,43 +87,57 @@ function Ingresos ({ navigation  }){
    
     useEffect(() => {
         
-            
+        const unsubscribe = navigation.addListener('focus', () => {
+          setGuardando(true)
             const cargardatos=async()=>{
                 
-                setGuardando(true)
-                const datestorage=await Handelstorage('obtenerdate');
-                const mes_storage=datestorage['datames']
-                const anno_storage=datestorage['dataanno']
-                const body = {};
-                const endpoint='MovileMisIngresos/' + anno_storage +'/' + mes_storage + '/'
-                const result = await Generarpeticion(endpoint, 'POST', body);
-                const respuesta=result['resp']
-                if (respuesta === 200){
-                    const registros=result['data']
-                    
-                    if(Object.keys(registros).length>0){
-                        registros.forEach((elemento) => {
-                        
-                        elemento.key = elemento.id;
-                        elemento.recarga='no'
-                        })
-                        
-                        setDataingresos(registros)
-                        setDataingresoscompleto(registros)
-                        let totalingreso=0
-                        let cantingreso=0
-                        registros.forEach(({ monto_ingreso }) => {totalingreso += monto_ingreso,cantingreso+=1})
-                        setMontototalingreso(totalingreso)
-                        setcanttotalingreso(cantingreso)
-                        setGuardando(false)
-                    }
-                    
-                }else if(respuesta === 403 || respuesta === 401){
-                
-                    setGuardando(false)
-                    await Handelstorage('borrar')
-                    await new Promise(resolve => setTimeout(resolve, 1000))
-                    setActivarsesion(false)
+                if(estadocomponente.compingresos){
+
+                  const datestorage=await Handelstorage('obtenerdate');
+                  const mes_storage=datestorage['datames']
+                  const anno_storage=datestorage['dataanno']
+                  const body = {};
+                  const endpoint='MovileMisIngresos/' + anno_storage +'/' + mes_storage + '/'
+                  const result = await Generarpeticion(endpoint, 'POST', body);
+                  const respuesta=result['resp']
+                  if (respuesta === 200){
+                      const registros=result['data']
+                      
+                      if(Object.keys(registros).length>0){
+                          registros.forEach((elemento) => {
+                          
+                          elemento.key = elemento.id;
+                          elemento.recarga='no'
+                          })
+                          
+                          setDataingresos(registros)
+                          setDataingresoscompleto(registros)
+                          let totalingreso=0
+                          let cantingreso=0
+                          registros.forEach(({ monto_ingreso }) => {totalingreso += monto_ingreso,cantingreso+=1})
+                          setMontototalingreso(totalingreso)
+                          setcanttotalingreso(cantingreso)
+                          setGuardando(false)
+                          actualizarEstadocomponente('compingresos',false)
+                          actualizarEstadocomponente('dataingresos',registros)
+                      }
+                      
+                  }else if(respuesta === 403 || respuesta === 401){
+                  
+                      setGuardando(false)
+                      await Handelstorage('borrar')
+                      await new Promise(resolve => setTimeout(resolve, 1000))
+                      setActivarsesion(false)
+                  }
+                }else{
+                      const registros=estadocomponente.dataingresos
+                      setDataingresoscompleto(registros)
+                      let totalingreso=0
+                      let cantingreso=0
+                      registros.forEach(({ monto_ingreso }) => {totalingreso += monto_ingreso,cantingreso+=1})
+                      setMontototalingreso(totalingreso)
+                      setcanttotalingreso(cantingreso)
+                      setGuardando(false)
                 }
                 setCargacopleta(true)
 
@@ -130,8 +145,9 @@ function Ingresos ({ navigation  }){
             }
             cargardatos()
 
-        
-    }, [actualizaringresos]);
+        })
+          return unsubscribe;
+    }, [estadocomponente.compingresos,actualizarEstadocomponente,navigation]);
     
     
     

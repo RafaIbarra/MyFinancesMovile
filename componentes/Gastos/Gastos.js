@@ -15,7 +15,7 @@ import { AuthContext } from "../../AuthContext";
 function Gastos ({ navigation  }){
     
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    const { actualizargastos, setActualizargastos } = useContext(AuthContext);
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const [busqueda,setBusqueda]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -89,48 +89,63 @@ function Gastos ({ navigation  }){
 
 
     useEffect(() => {
-      
+      const unsubscribe = navigation.addListener('focus', () => {
       
         setCargacopleta(false)
         setGuardando(true)
         const cargardatos=async()=>{
-          
-            const datestorage=await Handelstorage('obtenerdate');
-            const mes_storage=datestorage['datames']
-            const anno_storage=datestorage['dataanno']
             
-            const body = {};
-            const endpoint='MovileMisEgresos/' + anno_storage +'/' + mes_storage + '/'
-            const result = await Generarpeticion(endpoint, 'POST', body);
-            const respuesta=result['resp']
-            
-            if (respuesta === 200){
-                const registros=result['data']
-                
-                if(Object.keys(registros).length>0){
-                    registros.forEach((elemento) => {
+            if(estadocomponente.compgastos){
+
+              const datestorage=await Handelstorage('obtenerdate');
+              const mes_storage=datestorage['datames']
+              const anno_storage=datestorage['dataanno']
+              
+              const body = {};
+              const endpoint='MovileMisEgresos/' + anno_storage +'/' + mes_storage + '/'
+              const result = await Generarpeticion(endpoint, 'POST', body);
+              const respuesta=result['resp']
+              
+              if (respuesta === 200){
+                  const registros=result['data']
+                  
+                  if(Object.keys(registros).length>0){
+                      registros.forEach((elemento) => {
+                        
+                        elemento.key = elemento.id;
+                        elemento.recarga='no'
+                      })
                       
-                      elemento.key = elemento.id;
-                      elemento.recarga='no'
-                    })
-                    
-                    
-                    setDataegresos(registros)
-                    setDateegresoscompleto(registros)
-                    let totalgasto=0
-                    let cantgasto=0
-                    registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
-                    setMontototalegreso(totalgasto)
-                    setcanttotalegreso(cantgasto)
-                    setGuardando(false)
-                }
-                
-            }else if(respuesta === 403 || respuesta === 401){
-                
+                      
+                      setDataegresos(registros)
+                      setDateegresoscompleto(registros)
+                      let totalgasto=0
+                      let cantgasto=0
+                      registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
+                      setMontototalegreso(totalgasto)
+                      setcanttotalegreso(cantgasto)
+                      setGuardando(false)
+                      actualizarEstadocomponente('compgastos',false)
+                      actualizarEstadocomponente('datagastos',registros)
+                  }
+                  
+              }else if(respuesta === 403 || respuesta === 401){
+                  
+                  setGuardando(false)
+                  await Handelstorage('borrar')
+                  await new Promise(resolve => setTimeout(resolve, 1000))
+                  setActivarsesion(false)
+              }
+            }else{
+                const registros=estadocomponente.datagastos
+                setDataegresos(registros)
+                setDateegresoscompleto(registros)
+                let totalgasto=0
+                let cantgasto=0
+                registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
+                setMontototalegreso(totalgasto)
+                setcanttotalegreso(cantgasto)
                 setGuardando(false)
-                await Handelstorage('borrar')
-                await new Promise(resolve => setTimeout(resolve, 1000))
-                setActivarsesion(false)
             }
             
            
@@ -147,8 +162,10 @@ function Gastos ({ navigation  }){
         
         cargardatos()
         
-  
-      }, [actualizargastos]);
+      })
+      return unsubscribe;
+
+      }, [estadocomponente.compgastos,actualizarEstadocomponente,navigation]);
 
     
 

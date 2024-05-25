@@ -21,6 +21,7 @@ import { FontAwesome } from '@expo/vector-icons';
 function ConceptosIngresos ({ navigation  }){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const [textobusqueda,setTextobusqueda]=useState('')
     
@@ -83,7 +84,7 @@ function ConceptosIngresos ({ navigation  }){
     }
    
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
+        
             const cargardatos=async()=>{
                 setGuardando(true)
                 
@@ -128,9 +129,8 @@ function ConceptosIngresos ({ navigation  }){
             }
             cargardatos()
 
-         })
-        return unsubscribe;
-    }, [navigation]);
+         
+    }, [estadocomponente.conceptosingresos]);
     
     
     
