@@ -1,5 +1,5 @@
 import React,{useContext } from "react";
-import {NavigationContainer,DefaultTheme,DarkTheme} from "@react-navigation/native";
+import {NavigationContainer,DefaultTheme,DarkTheme as NavigationDarkTheme} from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme,useColorScheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -58,11 +58,33 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
+// const MyTheme = {
+//   ...DefaultTheme,
+//     DarkTheme: true,
+//     colors: {
+//       ...DefaultTheme.colors,
+//       background: 'rgb(28,44,52)',
+//       backgroundInpunt: 'rgb(28,44,52)',
+//       textbordercoloractive:'rgb(44,148,228)',
+//       textbordercolorinactive:'gray',
+//       text:'white',
+//       color:'red',
+//       primary:'white',
+//       tintcolor:'red',
+//       card: 'rgb(28,44,52)', //color de la barra de navegadores
+//       commentText:'red',
+//       bordercolor:'#d6d7b3',
+//       iconcolor:'white',
+      
+//     },
+    
+// };
+
 const MyTheme = {
-  ...DefaultTheme,
-    DarkTheme: true,
+  ...NavigationDarkTheme,
+    
     colors: {
-      ...DefaultTheme.colors,
+      ...NavigationDarkTheme.colors,
       background: 'rgb(28,44,52)',
       backgroundInpunt: 'rgb(28,44,52)',
       textbordercoloractive:'rgb(44,148,228)',

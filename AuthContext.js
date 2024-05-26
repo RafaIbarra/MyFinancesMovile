@@ -48,6 +48,32 @@ export const AuthProvider = ({ children }) => {
     }));
   };
 
+  const reiniciarvalores=()=>{
+    setUpdstastsaldo(true)
+    setUpdstastegreso(true)
+    setUpdstastingreso(true)
+    
+    actualizarEstadocomponente('compgastos',true)
+    actualizarEstadocomponente('compingresos',true)
+    actualizarEstadocomponente('compresumen',true)
+    actualizarEstadocomponente('compsaldos',true)
+
+    actualizarEstadocomponente('categoriagasto',true)
+    actualizarEstadocomponente('conceptosingresos',true)
+    actualizarEstadocomponente('conceptosgastos',true)
+  }
+
+  const reiniciarvalorestransaccion=()=>{
+    setUpdstastsaldo(true)
+    setUpdstastegreso(true)
+    setUpdstastingreso(true)
+    
+    actualizarEstadocomponente('compgastos',true)
+    actualizarEstadocomponente('compingresos',true)
+    actualizarEstadocomponente('compresumen',true)
+    actualizarEstadocomponente('compsaldos',true)
+
+  }
 
   return (
     <AuthContext.Provider value={{ activarsesion, setActivarsesion,
@@ -58,13 +84,16 @@ export const AuthProvider = ({ children }) => {
                                   
                                   updstastsaldo,setUpdstastsaldo,
                                   imgestadisticasaldo,setImgestadisticasaldo,
+
                                   updstastegreso, setUpdstastegreso,
                                   imgestadisticaegreso,setImgestadisticaegreso,
+
                                   updstastingreso, setUpdstastingreso,
                                   imgestadisticaingreso,setImgestadisticaingreso,
                                   
                                   estadocomponente,actualizarEstadocomponente,
-                                  versionsys,setVersionsys
+                                  versionsys,setVersionsys,
+                                  reiniciarvalores,reiniciarvalorestransaccion
 
         }}>
       {children}

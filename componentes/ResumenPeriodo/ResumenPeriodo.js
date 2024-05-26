@@ -78,7 +78,7 @@ function ResumenPeriodo ({ navigation  }){
           // setRefresh(false)
         })
         return unsubscribe;
-        }, [navigation]);
+        }, [estadocomponente.compresumen,actualizarEstadocomponente,navigation]);
     
 
     return(

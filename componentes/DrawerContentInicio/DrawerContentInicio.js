@@ -1,26 +1,66 @@
-import React,{useEffect,useContext} from "react";
+import React,{useEffect,useContext,useState} from "react";
 import { View, Text,  Image,StyleSheet } from 'react-native'
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
-import { Button} from 'react-native-paper';
+import { Button, Dialog, Portal,PaperProvider} from 'react-native-paper';
 
 import Handelstorage from "../../Storage/handelstorage";
 import { AuthContext } from "../../AuthContext";
-
+import Procesando from "../Procesando/Procesando";
 import { useTheme } from '@react-navigation/native';
 import { Entypo } from '@expo/vector-icons';
 
 function DrawerContentInicio(props){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { reiniciarvalores } = useContext(AuthContext);
+    
     const { versionsys,setVersionsys } = useContext(AuthContext);
     
     const {sesiondata, setSesiondata} = useContext(AuthContext);
+
     const { colors } = useTheme();
+
+    const [guardando,setGuardando]=useState(false)
+    const [visibledialogo, setVisibledialogo] = useState(false)
+    const [mensajeerror,setMensajeerror]=useState('')
+
+    const showDialog = () => setVisibledialogo(true);
+    const hideDialog = () => setVisibledialogo(false);
+    
     const cerrar=async ()=>{
+
+        setGuardando(true)
+        
         await Handelstorage('borrar')
         await new Promise(resolve => setTimeout(resolve, 1000))
         
-        setActivarsesion(false)
+        
+        const datosstarage=await Handelstorage('obtener');
+        const tokenstorage=datosstarage['token']
+        
+        if(tokenstorage){
+          
+          await Handelstorage('borrar')
+          await new Promise(resolve => setTimeout(resolve, 3000))
+
+          const datosstarage2=await Handelstorage('obtener');
+          const tokenstorage2=datosstarage2['token']
+          if(tokenstorage2){
+            
+            setMensajeerror('Hubo en error al completar el cierre de sesion, favor intente de vuelta')
+            showDialog(true)
+          }else{
+            reiniciarvalores()
+            setActivarsesion(false)
+
+          }
+
+        }else{
+          reiniciarvalores()
+          setActivarsesion(false)
+        }
+
+        setGuardando(false)
       }
       useEffect(() => {
 
@@ -32,7 +72,25 @@ function DrawerContentInicio(props){
         cargardatos()
       }, []);
     return(
+      <PaperProvider >
+
         <View style={{flex: 1}} >
+            {guardando &&(<Procesando></Procesando>)}
+            <Portal>
+
+                <Dialog visible={visibledialogo} onDismiss={hideDialog}>
+                    <Dialog.Icon icon="alert-circle" size={50} color="red"/>
+                    <Dialog.Title>ERROR</Dialog.Title>
+                    <Dialog.Content>
+                        <Text variant="bodyMedium">{mensajeerror}</Text>
+                        
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button onPress={hideDialog}>OK</Button>
+                        
+                    </Dialog.Actions>
+                </Dialog>
+            </Portal>
             <DrawerContentScrollView {...props} scrollEnabled={false}>
                 <View style={{flex:1,flexDirection:'row',borderBottomWidth:1,borderBottomColor:colors.bordercolor,paddingBottom:10}}>
 
@@ -86,7 +144,8 @@ function DrawerContentInicio(props){
                 <Text style={{color: colors.text,fontSize:10,marginTop:5}}> {versionsys} </Text>
             </View>
 
-    </View>
+        </View>
+      </PaperProvider>
     )
 }
 

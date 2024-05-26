@@ -87,7 +87,7 @@ function Saldos ({ navigation  }){
             // setRefresh(false)
             })
         return unsubscribe;
-        }, [navigation]);
+        }, [estadocomponente.compsaldos,actualizarEstadocomponente,navigation]);
 
     
 

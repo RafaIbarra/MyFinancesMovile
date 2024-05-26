@@ -15,11 +15,9 @@ function GastosDetalle ({ navigation }){
     
     
     
-    const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
-    const { updstastegreso, setUpdstastegreso } = useContext(AuthContext);
-    const { updstastingreso, setUpdstastingreso } = useContext(AuthContext);
-
-    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+   
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
 
     const {params: { item },} = useRoute();
     const [guardando,setGuardando]=useState(false)
@@ -56,15 +54,7 @@ function GastosDetalle ({ navigation }){
             setGuardando(false)
             
             
-            setUpdstastsaldo(true)
-            setUpdstastegreso(true)
-            setUpdstastingreso(true)
-
-
-
-            actualizarEstadocomponente('compgastos',true)
-            actualizarEstadocomponente('compresumen',true)
-            actualizarEstadocomponente('compsaldos',true)
+            reiniciarvalorestransaccion()
         
             navigation.goBack();
             hideDialog()

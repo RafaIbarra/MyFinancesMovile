@@ -17,6 +17,8 @@ export default function LoginR1({ navigation  }){
   const { navigate } = useNavigation();
   const { activarsesion, setActivarsesion } = useContext(AuthContext);
   const { versionsys,setVersionsys } = useContext(AuthContext);
+  const { reiniciarvalores } = useContext(AuthContext);
+
   const { colors } = useTheme();
   const [username, setUsername] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -125,6 +127,7 @@ export default function LoginR1({ navigation  }){
             setPeriodo(datestorage2['dataperiodo'])
 
         }
+        reiniciarvalores()
         setGuardando(false)
         setSesiondata(datos['data']['datauser'])
         

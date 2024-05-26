@@ -15,12 +15,9 @@ function IngresoDetalle ({ navigation }){
     const {params: { item },} = useRoute();
     const [guardando,setGuardando]=useState(false)
     
-    
-    
-    const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
-    const { updstastegreso, setUpdstastegreso } = useContext(AuthContext);
-    const { updstastingreso, setUpdstastingreso } = useContext(AuthContext);
-    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
+
     const { colors } = useTheme();
     const [visibledialogo, setVisibledialogo] = useState(false)
     const { navigate } = useNavigation();
@@ -53,13 +50,9 @@ function IngresoDetalle ({ navigation }){
             
             
             
-            setUpdstastsaldo(true)
-            setUpdstastegreso(true)
-            setUpdstastingreso(true)
+            reiniciarvalorestransaccion()
             setGuardando(false)
-            actualizarEstadocomponente('compingresos',true)
-            actualizarEstadocomponente('compresumen',true)
-            actualizarEstadocomponente('compsaldos',true)
+           
             navigation.goBack();
             hideDialog()
             //setRecargadatos(!recargadatos)

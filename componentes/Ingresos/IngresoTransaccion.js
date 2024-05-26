@@ -24,13 +24,8 @@ import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 function IngresoTransaccion({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    
-    
-    
-    const { updstastsaldo, setUpdstastsaldo } = useContext(AuthContext);
-    const { updstastegreso, setUpdstastegreso } = useContext(AuthContext);
-    const { updstastingreso, setUpdstastingreso } = useContext(AuthContext);
-    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
+
     const { colors } = useTheme();
     
     const {params: { item },} = useRoute();
@@ -173,13 +168,7 @@ function IngresoTransaccion({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
           
-          actualizarEstadocomponente('compingresos',true)
-          actualizarEstadocomponente('compresumen',true)
-          actualizarEstadocomponente('compsaldos',true)
-          
-          setUpdstastsaldo(true)
-          setUpdstastegreso(true)
-          setUpdstastingreso(true)
+          reiniciarvalorestransaccion()
           item.recarga='si'
       
   
