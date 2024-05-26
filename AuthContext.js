@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   
 
-  
+  const [versionsys,setVersionsys]=useState('Version 1.4')
 
   const [updstastsaldo, setUpdstastsaldo] = useState(true);
   const [imgestadisticasaldo,setImgestadisticasaldo]=useState([])
@@ -63,7 +63,8 @@ export const AuthProvider = ({ children }) => {
                                   updstastingreso, setUpdstastingreso,
                                   imgestadisticaingreso,setImgestadisticaingreso,
                                   
-                                  estadocomponente,actualizarEstadocomponente
+                                  estadocomponente,actualizarEstadocomponente,
+                                  versionsys,setVersionsys
 
         }}>
       {children}

@@ -1,5 +1,8 @@
 import React,{useEffect} from "react";
 import {  StyleSheet,View,ActivityIndicator,TouchableWithoutFeedback,Modal } from "react-native";
+
+
+;
 function Procesando (){
     // useEffect(()=>{
     //   
@@ -17,6 +20,7 @@ function Procesando (){
           </View>
         </View>
       </Modal>
+      
     )
 
 }

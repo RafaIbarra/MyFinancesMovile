@@ -1,7 +1,6 @@
 import React,{useState,useEffect,useContext } from "react";
 
 import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,TextInput,Animated,Modal   } from "react-native";
-import { StatusBar } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
@@ -155,12 +154,10 @@ function MovimientosEgreso ({ navigation  }){
                 elemento.key = elemento.id;
                 elemento.recarga='no'
               })
-              
-              
-              setDataegresos(registros)
-              setDateegresoscompleto(registros)
-              setGuardando(false)
           }
+          setDataegresos(registros)
+          setDateegresoscompleto(registros)
+          setGuardando(false)
           
       }else if(respuesta === 403 || respuesta === 401){
           

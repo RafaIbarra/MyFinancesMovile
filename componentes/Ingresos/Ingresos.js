@@ -100,6 +100,7 @@ function Ingresos ({ navigation  }){
                   const endpoint='MovileMisIngresos/' + anno_storage +'/' + mes_storage + '/'
                   const result = await Generarpeticion(endpoint, 'POST', body);
                   const respuesta=result['resp']
+                  
                   if (respuesta === 200){
                       const registros=result['data']
                       
@@ -109,18 +110,17 @@ function Ingresos ({ navigation  }){
                           elemento.key = elemento.id;
                           elemento.recarga='no'
                           })
-                          
-                          setDataingresos(registros)
-                          setDataingresoscompleto(registros)
-                          let totalingreso=0
-                          let cantingreso=0
-                          registros.forEach(({ monto_ingreso }) => {totalingreso += monto_ingreso,cantingreso+=1})
-                          setMontototalingreso(totalingreso)
-                          setcanttotalingreso(cantingreso)
-                          setGuardando(false)
-                          actualizarEstadocomponente('compingresos',false)
-                          actualizarEstadocomponente('dataingresos',registros)
                       }
+                      setDataingresos(registros)
+                      setDataingresoscompleto(registros)
+                      let totalingreso=0
+                      let cantingreso=0
+                      registros.forEach(({ monto_ingreso }) => {totalingreso += monto_ingreso,cantingreso+=1})
+                      setMontototalingreso(totalingreso)
+                      setcanttotalingreso(cantingreso)
+                      setGuardando(false)
+                      actualizarEstadocomponente('compingresos',false)
+                      actualizarEstadocomponente('dataingresos',registros)
                       
                   }else if(respuesta === 403 || respuesta === 401){
                   
@@ -139,6 +139,9 @@ function Ingresos ({ navigation  }){
                       setcanttotalingreso(cantingreso)
                       setGuardando(false)
                 }
+                if (textobusqueda.length>0){
+                  realizarbusqueda(textobusqueda)
+                 }
                 setCargacopleta(true)
 
             
@@ -147,7 +150,7 @@ function Ingresos ({ navigation  }){
 
         })
           return unsubscribe;
-    }, [estadocomponente.compingresos,actualizarEstadocomponente,navigation]);
+    }, [estadocomponente.compingresos,actualizarEstadocomponente,navigation,textobusqueda]);
     
     
     

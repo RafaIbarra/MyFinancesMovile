@@ -10,16 +10,19 @@ import Comprobarsesion from "../componentes/PeticionesApi/apicomprobarsesion";
 import Procesando from "../componentes/Procesando/Procesando";
 import { AuthContext } from "../AuthContext";
 import { Fontisto } from '@expo/vector-icons';
-
+import { useTheme } from '@react-navigation/native';
 // import '../assets/a'
 export default function LoginR1({ navigation  }){
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const { navigate } = useNavigation();
+  const { activarsesion, setActivarsesion } = useContext(AuthContext);
+  const { versionsys,setVersionsys } = useContext(AuthContext);
+  const { colors } = useTheme();
   const [username, setUsername] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [botonActivado, setBotonActivado] = useState(false);
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
-  const { activarsesion, setActivarsesion } = useContext(AuthContext);
+  
   const {periodo, setPeriodo} = useContext(AuthContext);
   const {sesiondata, setSesiondata} = useContext(AuthContext);
 
@@ -303,7 +306,7 @@ export default function LoginR1({ navigation  }){
                 <Text style={styles.linkText}>Regístrate aquí.</Text>
               </TouchableOpacity>
               </Text>
-
+              <Text style={{color: colors.text,fontSize:12,marginTop:7}}> {versionsys} </Text>
               
             </View> 
 

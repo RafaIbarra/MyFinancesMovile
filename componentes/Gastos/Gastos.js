@@ -84,6 +84,7 @@ function Gastos ({ navigation  }){
         item.NombreGasto.toLowerCase().includes(pal) ||
         item.CategoriaGasto.toLowerCase().includes(pal)
         );
+      
       setDataegresos(arrayencontrado)
     }
 
@@ -94,7 +95,7 @@ function Gastos ({ navigation  }){
         setCargacopleta(false)
         setGuardando(true)
         const cargardatos=async()=>{
-            
+          
             if(estadocomponente.compgastos){
 
               const datestorage=await Handelstorage('obtenerdate');
@@ -115,19 +116,18 @@ function Gastos ({ navigation  }){
                         elemento.key = elemento.id;
                         elemento.recarga='no'
                       })
-                      
-                      
-                      setDataegresos(registros)
-                      setDateegresoscompleto(registros)
-                      let totalgasto=0
-                      let cantgasto=0
-                      registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
-                      setMontototalegreso(totalgasto)
-                      setcanttotalegreso(cantgasto)
-                      setGuardando(false)
-                      actualizarEstadocomponente('compgastos',false)
-                      actualizarEstadocomponente('datagastos',registros)
                   }
+
+                  setDataegresos(registros)
+                  setDateegresoscompleto(registros)
+                  let totalgasto=0
+                  let cantgasto=0
+                  registros.forEach(({ monto_gasto }) => {totalgasto += monto_gasto,cantgasto+=1})
+                  setMontototalegreso(totalgasto)
+                  setcanttotalegreso(cantgasto)
+                  setGuardando(false)
+                  actualizarEstadocomponente('compgastos',false)
+                  actualizarEstadocomponente('datagastos',registros)
                   
               }else if(respuesta === 403 || respuesta === 401){
                   
@@ -137,6 +137,7 @@ function Gastos ({ navigation  }){
                   setActivarsesion(false)
               }
             }else{
+                
                 const registros=estadocomponente.datagastos
                 setDataegresos(registros)
                 setDateegresoscompleto(registros)
@@ -148,12 +149,10 @@ function Gastos ({ navigation  }){
                 setGuardando(false)
             }
             
+           if (textobusqueda.length>0){
+            realizarbusqueda(textobusqueda)
+           }
            
-            if(busqueda){
-              
-              
-              realizarbusqueda(textobusqueda)
-            }
             setCargacopleta(true)
          
 
@@ -165,7 +164,7 @@ function Gastos ({ navigation  }){
       })
       return unsubscribe;
 
-      }, [estadocomponente.compgastos,actualizarEstadocomponente,navigation]);
+      }, [estadocomponente.compgastos,actualizarEstadocomponente,navigation,textobusqueda]);
 
     
 

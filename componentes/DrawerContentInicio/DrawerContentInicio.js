@@ -12,6 +12,8 @@ import { Entypo } from '@expo/vector-icons';
 function DrawerContentInicio(props){
 
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { versionsys,setVersionsys } = useContext(AuthContext);
+    
     const {sesiondata, setSesiondata} = useContext(AuthContext);
     const { colors } = useTheme();
     const cerrar=async ()=>{
@@ -66,20 +68,23 @@ function DrawerContentInicio(props){
 
 
             </DrawerContentScrollView>
+            <View style={{alignContent:'center',alignItems:'center',marginBottom:10,marginLeft:5}}>
 
-            <Button 
-                    style={{marginBottom:20,marginLeft:10,width:'90%',height:40,
-                      //backgroundColor:'rgb(44,148,228)',
-                      backgroundColor:'rgba(218,165,32,0.7)',
-                      alignContent:'center',alignItems:'center',justifyContent:'center'
-                    }} 
-                  
-                    icon={() => {return <Entypo name="log-out" size={30} color="white" />}}
-                    mode="elevated" 
-                    textColor="white"
-                    onPress={cerrar}>
-                        CERRAR SESION 
+                <Button 
+                        style={{width:'90%',height:40,
+                          //backgroundColor:'rgb(44,148,228)',
+                          backgroundColor:'rgba(218,165,32,0.7)',
+                          alignContent:'center',alignItems:'center',justifyContent:'center'
+                        }} 
+                      
+                        icon={() => {return <Entypo name="log-out" size={30} color="white" />}}
+                        mode="elevated" 
+                        textColor="white"
+                        onPress={cerrar}>
+                            CERRAR SESION 
                 </Button>
+                <Text style={{color: colors.text,fontSize:10,marginTop:5}}> {versionsys} </Text>
+            </View>
 
     </View>
     )

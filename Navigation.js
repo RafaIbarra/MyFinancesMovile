@@ -1,7 +1,7 @@
 import React,{useContext } from "react";
-import {NavigationContainer,DefaultTheme} from "@react-navigation/native";
+import {NavigationContainer,DefaultTheme,DarkTheme} from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import { useTheme } from '@react-navigation/native';
+import { useTheme,useColorScheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -43,6 +43,7 @@ import CategoriaGastosDetalle from "./componentes/CategoriaGastos/CategoriaGasto
 import CategoriaGastosRegistro from "./componentes/CategoriaGastos/CategoriaGastosRegistro";
 
 import DatosPersonales from "./componentes/DatosPersonales/DatosPersonales";
+import Procesando from "./componentes/Procesando/Procesando";
 
 import Seguridad from "./componentes/Seguridad/Seguridad";
 import Periodo from "./componentes/Periodo/Perdiodo";
@@ -59,7 +60,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 const MyTheme = {
   ...DefaultTheme,
-    dark: true,
+    DarkTheme: true,
     colors: {
       ...DefaultTheme.colors,
       background: 'rgb(28,44,52)',
@@ -76,6 +77,7 @@ const MyTheme = {
       iconcolor:'white',
       
     },
+    
 };
 
 
@@ -565,7 +567,6 @@ function CategoriaGastosStackGroup(){
                           
                         }}
         />
-
         
     
     
@@ -679,6 +680,7 @@ function OpcionesHistorialMovimientos({navigation}){
 }
 
 function Navigation( ){
+  
 return(
     <NavigationContainer theme={MyTheme }>
         
