@@ -56,7 +56,7 @@ import { Feather } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-
+import { FontAwesome6 } from '@expo/vector-icons';
 
 // const MyTheme = {
 //   ...DefaultTheme,
@@ -184,6 +184,19 @@ function DrawerInicio({navigation}){
           title: 'Conceptos Gastos',
           drawerIcon: ({size, color})=>(
             <Feather name="trending-down" size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+          }}
+
+        />
+
+      <Drawer.Screen name="MediosPagos" 
+        component={GastosStackGroup}
+        options={{
+          drawerLabel: 'Medios de Pagos',
+          title: 'Medios de Pagos',
+          drawerIcon: ({size, color})=>(
+            <FontAwesome6 name="hand-holding-dollar" size={sizeicon} color={colors.iconcolor} />
           ),
           drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
           }}

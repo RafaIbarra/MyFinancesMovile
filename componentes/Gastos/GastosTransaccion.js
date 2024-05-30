@@ -2,7 +2,7 @@ import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 
 import {  StyleSheet,View,TouchableOpacity,TextInput,Text,Modal } from "react-native";
-import { Button, Dialog, Portal,PaperProvider } from 'react-native-paper';
+import { Button, Dialog, Portal,PaperProvider,Divider } from 'react-native-paper';
 import { TextInputMask } from 'react-native-masked-text';
 
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -132,8 +132,7 @@ function GastosTransaccion({ navigation }){
       };
 
     const cargarmontogasto= (formatted, extracted,key) => {
-      // console.log('aca')
-      // console.log(key)
+
       const valorformato=formatted.replace(/[,.]/g, '')
       
       
@@ -160,9 +159,22 @@ function GastosTransaccion({ navigation }){
   }
 
   const comparar = (original, actual) => {
+    
     const mediosActuales = actual.map(item => item.medio);
     original.filter(item => !mediosActuales.includes(item.medio));
-    return original.filter(item => !mediosActuales.includes(item.medio));
+    valores= original.filter(item => !mediosActuales.includes(item.medio));
+    
+    return valores
+  }
+  const agregarfaltantesedicion = (original, actual) => {
+    
+    const mediosActuales = actual.map(item => item.medio);
+    original.filter(item => !mediosActuales.includes(item.medio));
+    valores= original.filter(item => !mediosActuales.includes(item.medio));
+    
+    setDistribucion(prevDistribucion => [...actual, ...valores]);
+    ordenarPorNombre()
+     
   }
   const eliminarItem = (key) => {
     if (distribucion.length > 1) {
@@ -175,7 +187,7 @@ function GastosTransaccion({ navigation }){
       setDistribucion(updatedDistribucion);
       sumarmontos(updatedDistribucion);
     } else {
-      // console.log('Debe haber al menos un elemento en la lista.');
+      
       setMensajeerror('Se debe incluir al menos un medio de pago')
       showDialog(true)
     }
@@ -208,39 +220,42 @@ function GastosTransaccion({ navigation }){
 
     const registrar_egreso = async () => {
         setGuardando(true)
-        console.log(distribucion)
-        // const datosregistrar = {
-        //     codgasto:codigoregistro,
-        //     gasto:selectedOptiongasto,
-        //     monto:parseInt(monto,10),
-        //     fecha:fechaegreso,
-        //     anotacion:anotacion,
-            
+        const filteredData = distribucion.filter(item => item.monto > 0);
+        const transformedData = filteredData.map(item => ({ mediopago: item.medio, monto: item.monto }));
+        
+        const jsonData = JSON.stringify(transformedData);
+        const datosregistrar = {
+            codgasto:codigoregistro,
+            gasto:selectedOptiongasto,
+            monto:parseInt(monto,10),
+            fecha:fechaegreso,
+            anotacion:anotacion,
+            distribucion:jsonData
 
-        // };
+        };
         
-        // const endpoint='RegistroEgreso/'
-        // const result = await Generarpeticion(endpoint, 'POST', datosregistrar);
+        const endpoint='RegistroEgreso/'
+        const result = await Generarpeticion(endpoint, 'POST', datosregistrar);
         
-        // const respuesta=result['resp']
-        // if (respuesta === 200) {
+        const respuesta=result['resp']
+        if (respuesta === 200) {
           
           
-        //   reiniciarvalorestransaccion()
-        //   item.recarga='si'
+          reiniciarvalorestransaccion()
+          item.recarga='si'
       
   
-        //   navigation.goBack();
+          navigation.goBack();
           
-        // } else if(respuesta === 403 || respuesta === 401){
+        } else if(respuesta === 403 || respuesta === 401){
 
-        //   await Handelstorage('borrar')
-        //   await new Promise(resolve => setTimeout(resolve, 1000))
-        //   setActivarsesion(false)
-        // } else{
-        //  setMensajeerror( result['data']['error'])
-        //  showDialog(true)
-        // }
+          await Handelstorage('borrar')
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          setActivarsesion(false)
+        } else{
+         setMensajeerror( result['data']['error'])
+         showDialog(true)
+        }
         setGuardando(false)
 
      };
@@ -272,8 +287,8 @@ function GastosTransaccion({ navigation }){
                   nombre: a.nombre_medio,
                   key:a.id
                 }));
-                // console.log(distri)
-                setDistribucion(distri)
+                
+                
                 setDistribucionoriginal(distri)
                 setOptionscategoria(result['data']['datoscategorias'].map(a => ({
                   opcion: a.nombre_categoria,
@@ -284,11 +299,21 @@ function GastosTransaccion({ navigation }){
                 setListagastos(result['data']['datosgastos'])
                 setCodigoregisto(item.id)
                 if(item.id===0){
+                  setDistribucion(distri)
                   setCategoriasel('')
                   setGastosel('')
 
                 }else{
                   const listadocategorias = result['data']['datosgastos']
+                  
+                  const distriitem=item['Distribucion'].map(a => ({
+                    medio: a.mediopago_id,
+                    monto:a.monto,
+                    nombre: a.descripcionmedio,
+                    key:a.mediopago_id
+                  }));
+                  agregarfaltantesedicion(distri,distriitem)
+                  
                   
                   setSelectedOptioncategoria(item.CodigoCategoriaGasto) ;
                   setCategoriasel(item.CategoriaGasto)
@@ -352,15 +377,18 @@ function GastosTransaccion({ navigation }){
                   </Dialog>
                 </Portal>
                 
-                <View style={{height:40, backgroundColor:'gray',alignContent:'center',
-                              justifyContent:'center',marginLeft:5,marginRight:5,borderRadius:5,borderWidth:0.3,borderColor:colors.bordercolor,marginBottom:5}}>
+                <View style={{height:40, 
+                              backgroundColor:'rgba(32,93,93,255)',
+                              alignContent:'center',
+                              justifyContent:'center',marginLeft:5,marginRight:5,borderRadius:5,
+                              borderWidth:0.3,borderColor:colors.bordercolor,marginBottom:5}}>
 
                   <Text style={{ color: colors.text,marginLeft:20}}>DATOS DEL GASTO</Text>
                 </View>
 
                 <View style={{width:'90%', borderWidth:1,borderColor:'gray',marginLeft:'5%',borderRadius:20 }}>
 
-                    <ScrollView style={{padding:10,maxHeight:180,marginLeft:10,marginRight:10,marginTop:10}}>
+                    <ScrollView style={{padding:10,maxHeight:160,marginLeft:10,marginRight:10,marginTop:10}}>
                         
           
                         <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
@@ -440,14 +468,16 @@ function GastosTransaccion({ navigation }){
                     </ScrollView>
                 </View>
 
-                <View style={{height:40, backgroundColor:'gray',alignContent:'center',alignItems:'flex-start',
+                <View style={{height:40, 
+                                backgroundColor:'rgba(32,93,93,255)',
+                                alignContent:'center',alignItems:'center',
                                 justifyContent:'space-between',flexDirection:'row',
                                 marginLeft:5,marginRight:5,marginBottom:5,marginTop:20,
                                 borderRadius:5,borderWidth:0.3,borderColor:colors.bordercolor}}>
 
                         <View>
                             <Text style={{ color: colors.text,marginLeft:20}}>MEDIOS DE PAGOS</Text>
-                            <Text style={{ color: colors.text,marginLeft:20}}>TOTAL GASTO Gs.: {Number(monto).toLocaleString('es-ES')} </Text>
+                            
                         </View>
                         {botonfaltantes &&(<TouchableOpacity 
                                               style={{width:35,height:35,borderRadius:20,alignItems:'center',
@@ -460,7 +490,8 @@ function GastosTransaccion({ navigation }){
 
                
                 
-                  <ScrollView style={{ padding:10,maxHeight:200,minHeight:40,width:'90%', borderWidth:1,borderColor:'gray',marginLeft:'5%',borderRadius:20 }}>
+                  <ScrollView style={{ padding:10,maxHeight:1000,minHeight:40,width:'90%', borderWidth:1,borderColor:'gray',
+                  marginLeft:'5%',borderTopLeftRadius:20,borderTopRightRadius:20 }}>
                     
                       
                         {Object.keys(distribucion).map((key) => (
@@ -501,48 +532,30 @@ function GastosTransaccion({ navigation }){
                     
                   </ScrollView>
 
-                  {/* <FlatList
-                      style={{padding:10,maxHeight:350,marginLeft:10,marginRight:10,marginTop:10}} 
-                      data={distribucion}
-                          renderItem={({item}) =>{
-                              return(
-                                  
-                                      <View style={{flexDirection:'row',alignContent:'center',alignItems:'center',justifyContent:'space-between',marginBottom:20}}> 
-                                          <Text style={{ color: colors.text,width:'35%'}}>  {item.nombre}</Text>
-                                          <TextInputMask style={{color: colors.text,backgroundColor:colors.backgroundInpunt, 
-                                                                  width:'65%',borderBottomWidth: 2,
-                                                                borderBottomColor: isFocusedgasto ? colors.textbordercoloractive : colors.textbordercolorinactive }}
-                                            type={'money'}
-                                            options={{
-                                              precision: 0, // Sin decimales
-                                              separator: ',', // Separador de miles
-                                              delimiter: '.', // Separador decimal
-                                              unit: '', // No se muestra una unidad
-                                              suffixUnit: '', // No se muestra una unidad al final
-                                            }}
-                                            value={item.nombre}
-                                            onChangeText={handleTextChange}
-                                            onFocus={() => setIsFocusedgasto(true)}
-                                            onBlur={() => setIsFocusedgasto(false)}
-                                            underlineColorAndroid="transparent"
-                                            keyboardType="numeric"
-                                            placeholder="Monto Gasto"
-                                            placeholderTextColor='gray'
-                                          />
-                                          
-                                          
-                                      </View>
+                  <View style={{height:40, 
+                                // backgroundColor:'rgba(31,211,164,255)',
+                                backgroundColor:'rgba(32,93,93,255)',
+                                // backgroundColor:'rgba(101,172,227,255)',
+                                alignContent:'center',alignItems:'center',
+                                justifyContent:'center',marginLeft:20,marginRight:20,
+                                borderBottomLeftRadius:20,borderBottomRightRadius:20,
+                                // marginBottom:50,
+                                borderWidth:1,borderColor:colors.bordercolor}}>
 
-                                      
-                                  
-                              )
-                          }
-                      }
-                      keyExtractor={item => item.key}
-                  /> */}
+                        <View>
+                            
+                            <Text style={{ color: colors.text,marginLeft:20,fontWeight:'bold'}}>TOTAL GASTO Gs.: {Number(monto).toLocaleString('es-ES')} </Text>
+                        </View>
+                        
+                </View>
+
+                  
                 
                 <TextInput style={[styles.inputtextactivo,{color: colors.text,
-                  backgroundColor:colors.backgroundInpunt, borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive }]}
+                                    backgroundColor:colors.backgroundInpunt, 
+                                    marginTop:20,marginLeft:'5%',marginRight:10,
+                                    borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive 
+                                  }]}
                                     placeholder='Observacion'
                                     placeholderTextColor='gray'
                                     //label='Obserbacion'
@@ -567,6 +580,7 @@ function GastosTransaccion({ navigation }){
                       onPress={registrar_egreso}>
                       REGISTRAR 
                 </Button>
+             
 
                   
                   <Modal visible={estadomodal} 
@@ -680,7 +694,7 @@ const styles = StyleSheet.create({
     inputtextactivo:{
       //borderBottomColor: 'rgb(44,148,228)', // Cambia el color de la línea inferior aquí
       borderBottomWidth: 2,
-      marginBottom:35,
+      marginBottom:25,
       paddingLeft:10
       
     }
@@ -692,7 +706,7 @@ const styles = StyleSheet.create({
       height: 35, 
 
       marginLeft:'5%',
-      marginBottom:27
+      marginBottom:20
     },
 
 

@@ -1,7 +1,7 @@
 import React,{useState,useEffect,useContext} from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import {  View,Text,StyleSheet,TouchableOpacity } from "react-native";
+import {  View,Text,StyleSheet,TouchableOpacity,ScrollView } from "react-native";
 import {  Portal,  PaperProvider,Dialog,Button,Divider } from 'react-native-paper';
 import { AntDesign } from '@expo/vector-icons';
 import Handelstorage from "../../Storage/handelstorage";
@@ -29,7 +29,7 @@ function GastosDetalle ({ navigation }){
     const [codigoeliminar,setCodigoelimnar]=useState('')
     const [conceptoeliminar,setConceptoelimnar]=useState('')
     const [datositem, setDatositem]=useState([])
-
+    const [distribucionmediopagos,setDistribucionmediopagos]=useState([])
     const eliminar=()=>{
         // Realiza una animación de rotación cuando se presiona el botón
         const valdel=[item.id]
@@ -73,7 +73,8 @@ function GastosDetalle ({ navigation }){
         const unsubscribe = navigation.addListener('focus', () => {
             setGuardando(true)
             setDatositem(item)
-        
+            
+            setDistribucionmediopagos(item['Distribucion'])
             setCodigoelimnar(item.id)
             setConceptoelimnar(item.NombreGasto)
             navigation.setOptions({
@@ -111,7 +112,7 @@ function GastosDetalle ({ navigation }){
                             item[key] = registros[key];
                         });
                         setDatositem(registros)
-                        
+                        setDistribucionmediopagos(item['Distribucion'])
                         
                     }else if(respuesta === 403 || respuesta === 401){
                         
@@ -204,6 +205,40 @@ function GastosDetalle ({ navigation }){
 
                         
                         <Divider />
+                        <View style={{flexDirection: 'row', alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
+                        borderTopWidth:2,borderTopColor:'white'}}>
+
+                            
+                                <Text style={[{ color: colors.text}]}>MEDIOS DE PAGOS:</Text>
+                                
+                            
+                            
+                        </View>
+                        <ScrollView style={{ padding:10,maxHeight:180,minHeight:40,width:'90%', borderWidth:1,borderColor:'gray',
+                            marginLeft:'5%',borderTopLeftRadius:20,borderTopRightRadius:20}}>
+                                
+                                
+                                    {Object.keys(distribucionmediopagos).map((key) => (
+                                    <View  key={key} style={{flexDirection:'row',alignContent:'center',
+                                            alignItems:'center',justifyContent:'space-between',
+                                            borderBottomWidth:0.5,paddingBottom:5,borderColor:'white',
+                                            marginTop:10,marginBottom:10,marginRight:5
+                                            }}> 
+                                        <Text style={{ color: colors.text,width:'35%'}}>  {distribucionmediopagos[key].descripcionmedio}</Text>
+
+                                        <Text style={{ color: colors.text,fontWeight:'bold'}}>
+                                
+                                            Gs. {Number(distribucionmediopagos[key].monto).toLocaleString('es-ES')}
+                                        </Text>
+
+                                        
+                                        
+
+
+                                    </View>
+                                    ))}
+                                
+                        </ScrollView>
 
                         {item.anotacion ? (
 
