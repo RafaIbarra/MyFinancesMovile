@@ -130,8 +130,8 @@ function DrawerContentInicio(props){
 
                 <Button 
                         style={{width:'90%',height:40,
-                          //backgroundColor:'rgb(44,148,228)',
-                          backgroundColor:'rgba(218,165,32,0.7)',
+                          backgroundColor:colors.botoncolor,
+                          // backgroundColor:'rgba(218,165,32,0.7)',
                           alignContent:'center',alignItems:'center',justifyContent:'center'
                         }} 
                       

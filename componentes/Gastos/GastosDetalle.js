@@ -12,10 +12,7 @@ import { AuthContext } from "../../AuthContext";
 import moment from 'moment';
 import { useTheme } from '@react-navigation/native';
 function GastosDetalle ({ navigation }){
-    
-    
-    
-   
+  
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { reiniciarvalorestransaccion } = useContext(AuthContext);
 
@@ -30,6 +27,24 @@ function GastosDetalle ({ navigation }){
     const [conceptoeliminar,setConceptoelimnar]=useState('')
     const [datositem, setDatositem]=useState([])
     const [distribucionmediopagos,setDistribucionmediopagos]=useState([])
+
+    const [contentHeight, setContentHeight] = useState(45);
+    const maxHeight = 132;
+    //const minHeight = 43;
+    const minHeight = 45;
+
+    const establecertamano = (cantidreg) => {
+        const total=cantidreg * minHeight
+        
+        if (total>maxHeight){
+            setContentHeight(maxHeight);
+        }else{
+            
+            setContentHeight(total);
+        }
+        
+      };
+
     const eliminar=()=>{
         // Realiza una animación de rotación cuando se presiona el botón
         const valdel=[item.id]
@@ -73,7 +88,7 @@ function GastosDetalle ({ navigation }){
         const unsubscribe = navigation.addListener('focus', () => {
             setGuardando(true)
             setDatositem(item)
-            
+            establecertamano(item['Distribucion'].length)
             setDistribucionmediopagos(item['Distribucion'])
             setCodigoelimnar(item.id)
             setConceptoelimnar(item.NombreGasto)
@@ -112,6 +127,7 @@ function GastosDetalle ({ navigation }){
                             item[key] = registros[key];
                         });
                         setDatositem(registros)
+                        establecertamano(item['Distribucion'].length)
                         setDistribucionmediopagos(item['Distribucion'])
                         
                     }else if(respuesta === 403 || respuesta === 401){
@@ -159,10 +175,10 @@ function GastosDetalle ({ navigation }){
                     <View style={{flex: 1,marginTop:50,width:'90%',marginLeft:20,}}>
 
                         <View style={{flexDirection: 'row', alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
-                        borderTopWidth:2,borderTopColor:'white'}}>
+                        borderTopWidth:2,borderTopColor:'white', backgroundColor:colors.subtitulo}}>
 
-                            <Text style={[{ color: colors.text}]}>
-                                <Text style={[{ color: colors.text}]}>ID Operacion:</Text>{' '}
+                            <Text style={[{ color: colors.text,fontWeight:'bold'}]}>
+                                <Text style={[{ color: colors.text,fontWeight:'bold'}]}>ID Operacion:</Text>{' '}
                                 {datositem.id}
                             </Text>
                             <Text style={[{ color: colors.text}]}>
@@ -206,16 +222,25 @@ function GastosDetalle ({ navigation }){
                         
                         <Divider />
                         <View style={{flexDirection: 'row', alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
-                        borderTopWidth:2,borderTopColor:'white'}}>
+                        borderTopWidth:2,borderTopColor:'white',  backgroundColor:colors.subtitulo}}>
 
                             
-                                <Text style={[{ color: colors.text}]}>MEDIOS DE PAGOS:</Text>
+                                <Text style={[{ color: colors.text,fontWeight:'bold'}]}>MEDIOS DE PAGOS:</Text>
                                 
                             
                             
                         </View>
-                        <ScrollView style={{ padding:10,maxHeight:180,minHeight:40,width:'90%', borderWidth:1,borderColor:'gray',
-                            marginLeft:'5%',borderTopLeftRadius:20,borderTopRightRadius:20}}>
+                        <ScrollView style={[
+                                        styles.scrollView,
+                                        {
+                                        // maxHeight,height: contentHeight < maxHeight ? Math.max(minHeight, contentHeight) : maxHeight,
+                                        // maxHeight,height: {contentHeight},
+                                        maxHeight:contentHeight
+                                        },
+                                    ]}
+                                    
+                                    // onContentSizeChange={onContentSizeChange}
+                                            >
                                 
                                 
                                     {Object.keys(distribucionmediopagos).map((key) => (
@@ -275,7 +300,16 @@ const styles = StyleSheet.create({
     contenedortexto:{
         paddingBottom:30,
         fontSize:20
-    }
+    },
+    scrollView: {
+        padding: 10,
+        borderBottomWidth: 2,
+        borderBottomColor: 'white',
+        
+      },
+      contentContainer: {
+        // Esto asegura que el contenido ocupe todo el espacio disponible
+      },
 
   });
 export default GastosDetalle

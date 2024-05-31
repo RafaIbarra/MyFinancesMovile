@@ -145,7 +145,7 @@ function MediosPagos ({ navigation  }){
                 <View style={styles.cabeceracontainer}>
                     <Text style={[styles.titulocabecera, { color: colors.text}]}>Medios Pagos</Text>
 
-                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
+                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:colors.botoncolor}]} onPress={handlePress}>
                         <Animated.View style={{ transform: [{ rotate: spin }] }}>
                             <FontAwesome6 name="add" size={24} color="white" />
                         </Animated.View>

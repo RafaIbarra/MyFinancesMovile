@@ -161,7 +161,7 @@ function ConceptosGastosDetalle ({ navigation }){
                                 }}>
 
                         <View style={{ flexDirection: 'row',alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
-                        borderTopWidth:2,borderTopColor:'white'}}>
+                        borderTopWidth:2,borderTopColor:'white',backgroundColor:colors.subtitulo}}>
 
                             <Text style={[{ color: colors.text}]}>
                                 <Text style={[{ color: colors.text}]}>ID Concepto:</Text>{' '}

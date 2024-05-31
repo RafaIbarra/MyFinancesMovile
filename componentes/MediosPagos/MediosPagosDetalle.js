@@ -188,7 +188,8 @@ function MediosPagosDetalle ({ navigation }){
                                     marginLeft:20,
                                 }}>
 
-                        <View style={{ alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'center',
+                        <View style={{ alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,
+                        justifyContent:'center',backgroundColor:colors.subtitulo,
                         borderTopWidth:2,borderTopColor:'white'}}>
 
                             <Text style={[{ color: colors.text}]}>

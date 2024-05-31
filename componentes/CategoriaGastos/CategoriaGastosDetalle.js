@@ -158,7 +158,7 @@ function CategoriaGastosDetalle ({ navigation }){
                                 }}>
 
                         <View style={{ alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'center',
-                        borderTopWidth:2,borderTopColor:'white'}}>
+                        borderTopWidth:2,borderTopColor:'white',backgroundColor:colors.subtitulo}}>
 
                             <Text style={[{ color: colors.text}]}>
                                 <Text style={[{ color: colors.text}]}>ID Categoria:</Text>{' '}

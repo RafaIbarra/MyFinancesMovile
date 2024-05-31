@@ -147,7 +147,7 @@ function ConceptosIngresos ({ navigation  }){
                     
                     <Text style={[styles.titulocabecera, { color: colors.text}]}>Conceptos Ingresos</Text>
 
-                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:'rgb(218,165,32)'}]} onPress={handlePress}>
+                    <TouchableOpacity style={[styles.botoncabecera,{ backgroundColor:colors.botoncolor}]} onPress={handlePress}>
                         <Animated.View style={{ transform: [{ rotate: spin }] }}>
                             <FontAwesome6 name="add" size={24} color="white" />
                         </Animated.View>

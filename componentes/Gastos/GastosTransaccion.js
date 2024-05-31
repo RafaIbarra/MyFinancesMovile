@@ -353,144 +353,145 @@ function GastosTransaccion({ navigation }){
 
     if(realizado){
         return(
+          <ScrollView>
 
-          <PaperProvider >
+            <PaperProvider >
 
-             {guardando &&(<Procesando></Procesando>)}
-            <View style={{flex: 1,justifyContent:'flex-start',marginTop:5}}>
+              {guardando &&(<Procesando></Procesando>)}
+              <View style={{flex: 1,justifyContent:'flex-start',marginTop:5}}>
 
-             
+              
+                    
+                  <Portal>
+
+                    <Dialog visible={visibledialogo} onDismiss={hideDialog}>
+                        <Dialog.Icon icon="alert-circle" size={50} color="red"/>
+                        <Dialog.Title>ERROR</Dialog.Title>
+                        <Dialog.Content>
+                            <Text variant="bodyMedium">{mensajeerror}</Text>
+                            
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button onPress={hideDialog}>OK</Button>
+                            
+                        </Dialog.Actions>
+                    </Dialog>
+                  </Portal>
                   
-                <Portal>
-
-                  <Dialog visible={visibledialogo} onDismiss={hideDialog}>
-                      <Dialog.Icon icon="alert-circle" size={50} color="red"/>
-                      <Dialog.Title>ERROR</Dialog.Title>
-                      <Dialog.Content>
-                          <Text variant="bodyMedium">{mensajeerror}</Text>
-                          
-                      </Dialog.Content>
-                      <Dialog.Actions>
-                          <Button onPress={hideDialog}>OK</Button>
-                          
-                      </Dialog.Actions>
-                  </Dialog>
-                </Portal>
-                
-                <View style={{height:40, 
-                              backgroundColor:'rgba(32,93,93,255)',
-                              alignContent:'center',
-                              justifyContent:'center',marginLeft:5,marginRight:5,borderRadius:5,
-                              borderWidth:0.3,borderColor:colors.bordercolor,marginBottom:5}}>
-
-                  <Text style={{ color: colors.text,marginLeft:20}}>DATOS DEL GASTO</Text>
-                </View>
-
-                <View style={{width:'90%', borderWidth:1,borderColor:'gray',marginLeft:'5%',borderRadius:20 }}>
-
-                    <ScrollView style={{padding:10,maxHeight:160,marginLeft:10,marginRight:10,marginTop:10}}>
-                        
-          
-                        <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
-                            
-                            <Text style={[styles.inputtextactivo, 
-                                          { width:'85%',
-                                            color: categoriasel ? colors.text : 'gray',
-                                            borderBottomColor: categoriasel ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                              >
-                              {categoriasel ? categoriasel : 'Seleccione Categoria'}
-                              </Text>
-          
-                            <TouchableOpacity 
-                              style={styles.botonfecha} 
-                              onPress={abrircategoria}>         
-                                <FontAwesome name="search-plus" size={30} color={colors.iconcolor} />
-                            </TouchableOpacity>
-          
-                            
-          
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
-                            
-                            <Text style={[styles.inputtextactivo, 
-                                          { width:'85%',
-                                            color: gasttosel ? colors.text : 'gray',
-                                            borderBottomColor: gasttosel ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                              >
-                              {gasttosel ? gasttosel : 'Seleccione Gasto'}
-
-                              
-                              
-                              </Text>
-          
-                            <TouchableOpacity 
-                              style={styles.botonfecha} 
-                              onPress={abrirgasto}>         
-                                <FontAwesome name="search-plus" size={30} color={colors.iconcolor} />
-                            </TouchableOpacity>
-          
-                            
-          
-                        </View>
-                      
-                        
-
-                        <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
-                            
-                            <Text style={[styles.inputtextactivo, 
-                                          { width:'50%',
-                                            color: fechaegreso ? colors.text : 'gray',
-                                            borderBottomColor: fechaegreso ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
-                              onPress={showDatePicker} >
-                              {fechaegreso ? moment(fechaegreso).format('DD/MM/YYYY') : 'Fecha Gasto'}
-                              
-                              </Text>
-          
-                            <TouchableOpacity 
-                              style={styles.botonfecha} 
-                              onPress={showDatePicker}>         
-                                <AntDesign name="calendar" size={30} color={colors.iconcolor} />
-                            </TouchableOpacity>
-          
-                            <DateTimePickerModal
-                                
-                                isVisible={isDatePickerVisible}
-                                mode="date"
-                                onConfirm={handleConfirm}
-                                onCancel={hideDatePicker}
-                            />
-          
-                        </View>
-                        
-                        
-                          
-                    </ScrollView>
-                </View>
-
-                <View style={{height:40, 
+                  <View style={{height:40, 
                                 backgroundColor:'rgba(32,93,93,255)',
-                                alignContent:'center',alignItems:'center',
-                                justifyContent:'space-between',flexDirection:'row',
-                                marginLeft:5,marginRight:5,marginBottom:5,marginTop:20,
-                                borderRadius:5,borderWidth:0.3,borderColor:colors.bordercolor}}>
+                                alignContent:'center',
+                                justifyContent:'center',marginLeft:5,marginRight:5,borderRadius:5,
+                                borderWidth:0.3,borderColor:colors.bordercolor,marginBottom:5}}>
 
-                        <View>
-                            <Text style={{ color: colors.text,marginLeft:20}}>MEDIOS DE PAGOS</Text>
-                            
-                        </View>
-                        {botonfaltantes &&(<TouchableOpacity 
-                                              style={{width:35,height:35,borderRadius:20,alignItems:'center',
-                                                      justifyContent:'center',backgroundColor:'rgb(218,165,32)',marginRight:20,marginTop:2}}
-                                              onPress={cargarfaltantes}>
-                                              <FontAwesome6 name="add" size={24} color="white" />
+                    <Text style={{ color: colors.text,marginLeft:20,fontWeight:'bold'}}>DATOS DEL GASTO</Text>
+                  </View>
+
+                  <View style={{width:'90%', borderWidth:1,borderColor:'gray',marginLeft:'5%',borderRadius:20 }}>
+
+                      <ScrollView style={{padding:10,maxHeight:160,marginLeft:10,marginRight:10,marginTop:10}}>
                           
-                                          </TouchableOpacity>)}
-                </View>
+            
+                          <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
+                              
+                              <Text style={[styles.inputtextactivo, 
+                                            { width:'85%',
+                                              color: categoriasel ? colors.text : 'gray',
+                                              borderBottomColor: categoriasel ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                                >
+                                {categoriasel ? categoriasel : 'Seleccione Categoria'}
+                                </Text>
+            
+                              <TouchableOpacity 
+                                style={styles.botonfecha} 
+                                onPress={abrircategoria}>         
+                                  <FontAwesome name="search-plus" size={30} color={colors.iconcolor} />
+                              </TouchableOpacity>
+            
+                              
+            
+                          </View>
 
-               
+                          <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
+                              
+                              <Text style={[styles.inputtextactivo, 
+                                            { width:'85%',
+                                              color: gasttosel ? colors.text : 'gray',
+                                              borderBottomColor: gasttosel ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                                >
+                                {gasttosel ? gasttosel : 'Seleccione Gasto'}
+
+                                
+                                
+                                </Text>
+            
+                              <TouchableOpacity 
+                                style={styles.botonfecha} 
+                                onPress={abrirgasto}>         
+                                  <FontAwesome name="search-plus" size={30} color={colors.iconcolor} />
+                              </TouchableOpacity>
+            
+                              
+            
+                          </View>
+                        
+                          
+
+                          <View style={{ flexDirection: 'row', alignItems:'stretch' }}>
+                              
+                              <Text style={[styles.inputtextactivo, 
+                                            { width:'50%',
+                                              color: fechaegreso ? colors.text : 'gray',
+                                              borderBottomColor: fechaegreso ? colors.textbordercoloractive : colors.textbordercolorinactive}]} 
+                                onPress={showDatePicker} >
+                                {fechaegreso ? moment(fechaegreso).format('DD/MM/YYYY') : 'Fecha Gasto'}
+                                
+                                </Text>
+            
+                              <TouchableOpacity 
+                                style={styles.botonfecha} 
+                                onPress={showDatePicker}>         
+                                  <AntDesign name="calendar" size={30} color={colors.iconcolor} />
+                              </TouchableOpacity>
+            
+                              <DateTimePickerModal
+                                  
+                                  isVisible={isDatePickerVisible}
+                                  mode="date"
+                                  onConfirm={handleConfirm}
+                                  onCancel={hideDatePicker}
+                              />
+            
+                          </View>
+                          
+                          
+                            
+                      </ScrollView>
+                  </View>
+
+                  <View style={{height:40, 
+                                  backgroundColor:'rgba(32,93,93,255)',
+                                  alignContent:'center',alignItems:'center',
+                                  justifyContent:'space-between',flexDirection:'row',
+                                  marginLeft:5,marginRight:5,marginBottom:5,marginTop:20,
+                                  borderRadius:5,borderWidth:0.3,borderColor:colors.bordercolor}}>
+
+                          <View>
+                              <Text style={{ color: colors.text,marginLeft:20,fontWeight:'bold'}}>MEDIOS DE PAGOS</Text>
+                              
+                          </View>
+                          {botonfaltantes &&(<TouchableOpacity 
+                                                style={{width:35,height:35,borderRadius:20,alignItems:'center',
+                                                        justifyContent:'center',backgroundColor:'rgb(218,165,32)',marginRight:20,marginTop:2}}
+                                                onPress={cargarfaltantes}>
+                                                <FontAwesome6 name="add" size={24} color="white" />
+                            
+                                            </TouchableOpacity>)}
+                  </View>
+
                 
-                  <ScrollView style={{ padding:10,maxHeight:1000,minHeight:40,width:'90%', borderWidth:1,borderColor:'gray',
+                  
+                  <ScrollView style={{ padding:10,maxHeight:160,minHeight:40,width:'90%', borderWidth:1,borderColor:'gray',
                   marginLeft:'5%',borderTopLeftRadius:20,borderTopRightRadius:20 }}>
                     
                       
@@ -533,56 +534,58 @@ function GastosTransaccion({ navigation }){
                   </ScrollView>
 
                   <View style={{height:40, 
-                                // backgroundColor:'rgba(31,211,164,255)',
-                                backgroundColor:'rgba(32,93,93,255)',
-                                // backgroundColor:'rgba(101,172,227,255)',
-                                alignContent:'center',alignItems:'center',
-                                justifyContent:'center',marginLeft:20,marginRight:20,
-                                borderBottomLeftRadius:20,borderBottomRightRadius:20,
-                                // marginBottom:50,
-                                borderWidth:1,borderColor:colors.bordercolor}}>
+                                  // backgroundColor:'rgba(31,211,164,255)',
+                                  backgroundColor:colors.subtitulo,
+                                  // backgroundColor:'rgba(101,172,227,255)',
+                                  // backgroundColor:'rgba(44,148,228,0.7)',
+                                  alignContent:'center',alignItems:'center',
+                                  justifyContent:'center',marginLeft:20,marginRight:20,
+                                  borderBottomLeftRadius:20,borderBottomRightRadius:20,
+                                  // marginBottom:50,
+                                  borderWidth:1,borderColor:colors.bordercolor}}>
 
-                        <View>
-                            
-                            <Text style={{ color: colors.text,marginLeft:20,fontWeight:'bold'}}>TOTAL GASTO Gs.: {Number(monto).toLocaleString('es-ES')} </Text>
-                        </View>
+                          <View>
+                              
+                              <Text style={{ color: colors.text,marginLeft:20,fontWeight:'bold'}}>TOTAL GASTO Gs.: {Number(monto).toLocaleString('es-ES')} </Text>
+                          </View>
+                          
+                  </View>
+
+                    
+                  
+                  <TextInput style={[styles.inputtextactivo,{color: colors.text,
+                                      backgroundColor:colors.backgroundInpunt, 
+                                      marginTop:20,marginLeft:'5%',marginRight:10,marginBottom:30,
+                                      borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive 
+                                    }]}
+                                      placeholder='Observacion'
+                                      placeholderTextColor='gray'
+                                      //label='Obserbacion'
+                                      value={anotacion}
+                                      // textAlignVertical="center"
+                                      onChangeText={anotacion => textoanotacion(anotacion)}
+                                      onFocus={() => setIsFocusedobs(true)}
+                                      onBlur={() => setIsFocusedobs(false)}
+                                      underlineColorAndroid="transparent"
+                    />
+
+
+                  <Button 
+                        style={{marginTop:10,marginBottom:10,marginLeft:10,marginRight:10,
+                          backgroundColor:'rgba(44,148,228,0.7)'
+                        }} 
                         
-                </View>
+                        icon={() => {
+                          return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
+                        }}
+                        mode="elevated" 
+                        textColor="white"
+                        onPress={registrar_egreso}>
+                        REGISTRAR 
+                  </Button>
+              
 
-                  
-                
-                <TextInput style={[styles.inputtextactivo,{color: colors.text,
-                                    backgroundColor:colors.backgroundInpunt, 
-                                    marginTop:20,marginLeft:'5%',marginRight:10,
-                                    borderBottomColor: isFocusedobs ? colors.textbordercoloractive : colors.textbordercolorinactive 
-                                  }]}
-                                    placeholder='Observacion'
-                                    placeholderTextColor='gray'
-                                    //label='Obserbacion'
-                                    value={anotacion}
-                                    // textAlignVertical="center"
-                                    onChangeText={anotacion => textoanotacion(anotacion)}
-                                    onFocus={() => setIsFocusedobs(true)}
-                                    onBlur={() => setIsFocusedobs(false)}
-                                    underlineColorAndroid="transparent"
-                  />
-
-
-                <Button 
-                      style={{marginTop:10,marginBottom:10,marginLeft:10,backgroundColor:'rgba(44,148,228,0.7)'
-                      }} 
-                      
-                      icon={() => {
-                        return <MaterialCommunityIcons name="content-save-check" size={30} color="white" />
-                      }}
-                      mode="elevated" 
-                      textColor="white"
-                      onPress={registrar_egreso}>
-                      REGISTRAR 
-                </Button>
-             
-
-                  
+                    
                   <Modal visible={estadomodal} 
                           transparent={true} 
                           onRequestClose={toggleModal}
@@ -646,11 +649,12 @@ function GastosTransaccion({ navigation }){
                       
                           </View>
                   </Modal>
+                  
                 
-               
 
-            </View>
-          </PaperProvider>
+              </View>
+            </PaperProvider>
+          </ScrollView>
         )
     }
 }

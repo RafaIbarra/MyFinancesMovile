@@ -205,9 +205,11 @@ function Gastos ({ navigation  }){
                     )
                     }
 
-                      
+
                       <TouchableOpacity style={[styles.botoncabecera,
-                                              { backgroundColor:'rgb(218,165,32)'
+                                              { 
+                                                // backgroundColor:'rgb(218,165,32)'
+                                              backgroundColor:colors.botoncolor
                                               }]} onPress={handlePress}
                       >
                           <Animated.View style={{ transform: [{ rotate: spin }] }}>

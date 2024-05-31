@@ -101,6 +101,8 @@ const MyTheme = {
       commentText:'red',
       bordercolor:'#d6d7b3',
       iconcolor:'white',
+      botoncolor:'rgb(44,148,228)',
+      subtitulo:'rgba(32,93,93,255)'
       
     },
     
