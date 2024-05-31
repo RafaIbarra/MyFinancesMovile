@@ -42,6 +42,10 @@ import CategoriaGastos from "./componentes/CategoriaGastos/CategoriaGastos";
 import CategoriaGastosDetalle from "./componentes/CategoriaGastos/CategoriaGastosDetalle";
 import CategoriaGastosRegistro from "./componentes/CategoriaGastos/CategoriaGastosRegistro";
 
+import MediosPagos from "./componentes/MediosPagos/MediosPagos";
+import MediosPagosDetalle from "./componentes/MediosPagos/MediosPagosDetalle";
+import MediosPagosRegistro from "./componentes/MediosPagos/MediosPagosRegistro";
+
 import DatosPersonales from "./componentes/DatosPersonales/DatosPersonales";
 import Procesando from "./componentes/Procesando/Procesando";
 
@@ -190,8 +194,8 @@ function DrawerInicio({navigation}){
 
         />
 
-      <Drawer.Screen name="MediosPagos" 
-        component={GastosStackGroup}
+      <Drawer.Screen name="MediosPagosStackGroup" 
+        component={MediosPagosStackGroup}
         options={{
           drawerLabel: 'Medios de Pagos',
           title: 'Medios de Pagos',
@@ -609,7 +613,54 @@ function CategoriaGastosStackGroup(){
   )
 }
 
+const MediosPagosStack=createNativeStackNavigator();
+function MediosPagosStackGroup(){
+  
+  return(
 
+    <MediosPagosStack.Navigator
+     
+     >
+        
+        <MediosPagosStack.Screen name="MediosPagos" 
+          component={MediosPagos} 
+          options={{headerShown:false}}
+        />
+
+      <MediosPagosStack.Screen name="MediosPagosDetalle" 
+                component={MediosPagosDetalle} 
+                options={{headerTitle:'Detalle Medio Pago',
+                          headerTitleAlign:'left',
+                          headerRight: () => (
+                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                              <TouchableOpacity style={{ marginRight: 20 }}>
+                                  <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                              </TouchableOpacity>
+
+                              <TouchableOpacity style={{ marginRight: 10 }} >
+                                <AntDesign name="edit" size={30} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          ),
+
+                        }}    
+              />
+              
+
+      
+        <MediosPagosStack.Screen name="MediosPagosRegistro" 
+                          component={MediosPagosRegistro} 
+                          options={{headerTitle:'Registro Medio Pago',
+                          headerTitleAlign:'center',
+                          
+                        }}
+        />
+        
+    
+    
+  </MediosPagosStack.Navigator>
+  )
+}
 
 const TabEstadisticas=createMaterialTopTabNavigator()
 function OpcionesTabEstadisticas({navigation}){

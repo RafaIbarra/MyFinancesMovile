@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
     categoriagasto:true,
     conceptosingresos:true,
     conceptosgastos:true,
+    mediospagoscomp:true
 
   })
 
