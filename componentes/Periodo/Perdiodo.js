@@ -14,6 +14,7 @@ import Procesando from "../Procesando/Procesando";
 function Periodo({navigation}){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const {periodo, setPeriodo} = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
     const { colors } = useTheme();
     const { navigate } = useNavigation();
     const [cargacompleta,setCargacopleta]=useState(false)
@@ -60,6 +61,7 @@ function Periodo({navigation}){
         await new Promise(resolve => setTimeout(resolve, 1000))
         setPeriodo(mesactual +'-' + annoactual)
         setGuardando(false)
+        reiniciarvalorestransaccion()
         navigate("Gastos")
     }
 

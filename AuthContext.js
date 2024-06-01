@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   
 
-  const [versionsys,setVersionsys]=useState('Version 1.4')
+  const [versionsys,setVersionsys]=useState('Version 1.6')
 
   const [updstastsaldo, setUpdstastsaldo] = useState(true);
   const [imgestadisticasaldo,setImgestadisticasaldo]=useState([])

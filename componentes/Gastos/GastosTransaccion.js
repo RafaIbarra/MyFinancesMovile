@@ -379,15 +379,16 @@ function GastosTransaccion({ navigation }){
                   </Portal>
                   
                   <View style={{height:40, 
-                                backgroundColor:'rgba(32,93,93,255)',
+                                backgroundColor:colors.subtitulo,
                                 alignContent:'center',
-                                justifyContent:'center',marginLeft:5,marginRight:5,borderRadius:5,
-                                borderWidth:0.3,borderColor:colors.bordercolor,marginBottom:5}}>
+                                justifyContent:'center',marginLeft:10,marginRight:10,borderTopLeftRadius:5,borderTopRightRadius:5,
+                                borderWidth:0.3,borderColor:colors.bordercolor}}>
 
                     <Text style={{ color: colors.text,marginLeft:20,fontWeight:'bold'}}>DATOS DEL GASTO</Text>
                   </View>
 
-                  <View style={{width:'90%', borderWidth:1,borderColor:'gray',marginLeft:'5%',borderRadius:20 }}>
+                  <View style={{ borderColor:'gray',marginLeft:10,marginRight:10,borderLeftWidth:1,
+                              borderRightWidth:1,borderBottomWidth:1,borderBottomLeftRadius:20,borderBottomRightRadius:20,}}>
 
                       <ScrollView style={{padding:10,maxHeight:160,marginLeft:10,marginRight:10,marginTop:10}}>
                           
@@ -470,11 +471,11 @@ function GastosTransaccion({ navigation }){
                   </View>
 
                   <View style={{height:40, 
-                                  backgroundColor:'rgba(32,93,93,255)',
+                                  backgroundColor:colors.subtitulo,
                                   alignContent:'center',alignItems:'center',
                                   justifyContent:'space-between',flexDirection:'row',
-                                  marginLeft:5,marginRight:5,marginBottom:5,marginTop:20,
-                                  borderRadius:5,borderWidth:0.3,borderColor:colors.bordercolor}}>
+                                  marginLeft:10,marginRight:10,marginTop:20,borderTopLeftRadius:5,borderTopRightRadius:5,
+                                  borderWidth:0.3,borderColor:colors.bordercolor}}>
 
                           <View>
                               <Text style={{ color: colors.text,marginLeft:20,fontWeight:'bold'}}>MEDIOS DE PAGOS</Text>
@@ -482,7 +483,7 @@ function GastosTransaccion({ navigation }){
                           </View>
                           {botonfaltantes &&(<TouchableOpacity 
                                                 style={{width:35,height:35,borderRadius:20,alignItems:'center',
-                                                        justifyContent:'center',backgroundColor:'rgb(218,165,32)',marginRight:20,marginTop:2}}
+                                                        justifyContent:'center',backgroundColor:'rgb(218,165,32)',marginRight:10,marginTop:2}}
                                                 onPress={cargarfaltantes}>
                                                 <FontAwesome6 name="add" size={24} color="white" />
                             
@@ -491,15 +492,28 @@ function GastosTransaccion({ navigation }){
 
                 
                   
-                  <ScrollView style={{ padding:10,maxHeight:160,minHeight:40,width:'90%', borderWidth:1,borderColor:'gray',
-                  marginLeft:'5%',borderTopLeftRadius:20,borderTopRightRadius:20 }}>
+                  <ScrollView style={{ padding:10,maxHeight:160,minHeight:40,
+                                      
+                                      borderColor:'gray',
+                                      // borderWidth:1,borderTopLeftRadius:20,borderTopRightRadius:20
+                                      borderLeftWidth:1,borderRightWidth:1
+                                      ,marginLeft:10,marginRight:10 }}>
                     
                       
                         {Object.keys(distribucion).map((key) => (
                           <View  key={key} style={{flexDirection:'row',alignContent:'center',alignItems:'center',justifyContent:'space-between',marginBottom:20}}> 
-                              <Text style={{ color: colors.text,width:'35%'}}>  {distribucion[key].nombre}</Text>
+
+                              {/* <Text style={{ color: colors.text,width:'50%', flexShrink: 1,textAlign:'left',textAlignVertical:'top' }}> 
+                                {distribucion[key].nombre.trim()}
+                               </Text> */}
+                               <View style={{ flexDirection: 'row', width: '45%'}}>
+                                  <Text style={{ color: colors.text, flexShrink: 1 }}>
+                                      {distribucion[key].nombre} 
+                                    </Text>
+                                </View>
+                              
                               <TextInputMask style={{color: colors.text,backgroundColor:colors.backgroundInpunt, 
-                                                      width:'50%',borderBottomWidth: 2,
+                                                      width:'40%',borderBottomWidth: 2,
                                                     borderBottomColor: isFocusedgasto ? colors.textbordercoloractive : colors.textbordercolorinactive }}
                                 type={'money'}
                                 options={{
@@ -539,7 +553,7 @@ function GastosTransaccion({ navigation }){
                                   // backgroundColor:'rgba(101,172,227,255)',
                                   // backgroundColor:'rgba(44,148,228,0.7)',
                                   alignContent:'center',alignItems:'center',
-                                  justifyContent:'center',marginLeft:20,marginRight:20,
+                                  justifyContent:'center',marginLeft:10,marginRight:10,
                                   borderBottomLeftRadius:20,borderBottomRightRadius:20,
                                   // marginBottom:50,
                                   borderWidth:1,borderColor:colors.bordercolor}}>

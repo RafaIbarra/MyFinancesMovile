@@ -222,10 +222,10 @@ function GastosDetalle ({ navigation }){
                         
                         <Divider />
                         <View style={{flexDirection: 'row', alignItems: 'center',height:50,paddingLeft:20,paddingRight:20,justifyContent:'space-between',
-                        borderTopWidth:2,borderTopColor:'white',  backgroundColor:colors.subtitulo}}>
+                        borderTopWidth:2,borderTopColor:'white',borderBottomWidth:0.5,borderBottomColor:'white' , backgroundColor:colors.subtitulo}}>
 
                             
-                                <Text style={[{ color: colors.text,fontWeight:'bold'}]}>MEDIOS DE PAGOS:</Text>
+                                <Text style={[{ color: colors.text,fontWeight:'bold'}]}>MEDIOS DE PAGOS</Text>
                                 
                             
                             

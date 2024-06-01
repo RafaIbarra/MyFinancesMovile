@@ -1,5 +1,5 @@
 import React from "react";
-import {NavigationContainer,DefaultTheme} from "@react-navigation/native";
+import {NavigationContainer,DefaultTheme,DarkTheme as NavigationDarkTheme} from "@react-navigation/native";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -9,16 +9,14 @@ import RegistroUsuario from "./screens/RegistroUsuario";
 
 
 const MyTheme = {
-    ...DefaultTheme,
-      dark: true,
+    ...NavigationDarkTheme,
+      
       colors: {
-        ...DefaultTheme.colors,
-        // background: 'rgba(28,44,52,0.7)',
+        ...NavigationDarkTheme.colors,
         background: 'rgb(28,44,52)',
         backgroundInpunt: 'rgb(28,44,52)',
         textbordercoloractive:'rgb(44,148,228)',
         textbordercolorinactive:'gray',
-        //background: 'red',
         text:'white',
         color:'red',
         primary:'white',
@@ -26,12 +24,13 @@ const MyTheme = {
         card: 'rgb(28,44,52)', //color de la barra de navegadores
         commentText:'red',
         bordercolor:'#d6d7b3',
-        // iconcolor:'#cddae8cb'
         iconcolor:'white',
+        botoncolor:'rgb(44,148,228)',
+        subtitulo:'rgba(32,93,93,255)'
         
       },
+      
   };
-
 const LoginStack=createNativeStackNavigator();
 function LoginStackGroup(){
     return(
