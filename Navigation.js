@@ -46,6 +46,14 @@ import MediosPagos from "./componentes/MediosPagos/MediosPagos";
 import MediosPagosDetalle from "./componentes/MediosPagos/MediosPagosDetalle";
 import MediosPagosRegistro from "./componentes/MediosPagos/MediosPagosRegistro";
 
+import EntidadesBeneficios from "./componentes/EntidadesBeneficios/EntidadesBeneficios";
+import EntidadesBeneficiosDetalle from "./componentes/EntidadesBeneficios/EntidadesBeneficiosDetalle";
+import EntidadesBeneficiosRegistro from "./componentes/EntidadesBeneficios/EntidadesBeneficiosRegistro";
+
+import Movimientos from "./componentes/MovimientosBeneficios/Movimientos";
+import MovimientosTransaccion from "./componentes/MovimientosBeneficios/MovimientosTransaccion";
+import MovimientosDetalle from "./componentes/MovimientosBeneficios/MovimientosDetalle";
+
 import DatosPersonales from "./componentes/DatosPersonales/DatosPersonales";
 import Procesando from "./componentes/Procesando/Procesando";
 
@@ -61,6 +69,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 // const MyTheme = {
 //   ...DefaultTheme,
@@ -203,6 +212,33 @@ function DrawerInicio({navigation}){
           title: 'Medios de Pagos',
           drawerIcon: ({size, color})=>(
             <FontAwesome6 name="hand-holding-dollar" size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+          }}
+
+        />
+      <Drawer.Screen name="EntidadesStackGroup" 
+        component={EntidadesStackGroup}
+        options={{
+          drawerLabel: 'Entidades Beneficios',
+          title: 'Entidades Beneficios',
+          drawerIcon: ({size, color})=>(
+            // <FontAwesome6 name="hand-holding-dollar" size={sizeicon} color={colors.iconcolor} />
+            <FontAwesome name="institution" size={sizeicon} color={colors.iconcolor} />
+          ),
+          drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
+          }}
+
+        />
+
+      <Drawer.Screen name="MovimeintosBeneficiosGroup" 
+        component={MovimeintosBeneficiosGroup}
+        options={{
+          drawerLabel: 'Movimientos Beneficios',
+          title: 'Movimientos Beneficios',
+          drawerIcon: ({size, color})=>(
+            // <FontAwesome6 name="hand-holding-dollar" size={sizeicon} color={colors.iconcolor} />
+            <MaterialCommunityIcons name="gift-open" size={sizeicon} color={colors.iconcolor} />
           ),
           drawerItemStyle:{borderBottomWidth:1,borderBottomColor:'white' }
           }}
@@ -663,6 +699,107 @@ function MediosPagosStackGroup(){
   </MediosPagosStack.Navigator>
   )
 }
+
+
+
+const EntidadesStack=createNativeStackNavigator();
+function EntidadesStackGroup(){
+  
+  return(
+
+    <EntidadesStack.Navigator
+     
+     >
+        
+        <EntidadesStack.Screen name="EntidadesBeneficios" 
+          component={EntidadesBeneficios} 
+          options={{headerShown:false}}
+        />
+
+      <EntidadesStack.Screen name="EntidadesBeneficiosDetalle" 
+                component={EntidadesBeneficiosDetalle} 
+                options={{headerTitle:'Detalle Entidad',
+                          headerTitleAlign:'left',
+                          headerRight: () => (
+                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                              <TouchableOpacity style={{ marginRight: 20 }}>
+                                  <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                              </TouchableOpacity>
+
+                              <TouchableOpacity style={{ marginRight: 10 }} >
+                                <AntDesign name="edit" size={30} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          ),
+
+                        }}    
+              />
+              
+
+      
+        <EntidadesStack.Screen name="EntidadesBeneficiosRegistro" 
+                          component={EntidadesBeneficiosRegistro} 
+                          options={{headerTitle:'Registro Entidad',
+                          headerTitleAlign:'center',
+                          
+                        }}
+        />
+        
+    
+    
+  </EntidadesStack.Navigator>
+  )
+}
+
+const MovimeintosBeneficiosStack=createNativeStackNavigator();
+function MovimeintosBeneficiosGroup(){
+  
+  return(
+
+    <MovimeintosBeneficiosStack.Navigator
+     
+     >
+        
+        <MovimeintosBeneficiosStack.Screen name="Movimientos" 
+          component={Movimientos} 
+          options={{headerShown:false}}
+        />
+
+      <MovimeintosBeneficiosStack.Screen name="MovimientosDetalle" 
+                component={MovimientosDetalle} 
+                options={{headerTitle:'Detalle Beneficio',
+                          headerTitleAlign:'left',
+                          headerRight: () => (
+                            <View style={{flexDirection: 'row',alignItems: 'center'}}>
+                              <TouchableOpacity style={{ marginRight: 20 }}>
+                                  <AntDesign name="delete" size={30} color="rgb(205,92,92)" />
+                              </TouchableOpacity>
+
+                              <TouchableOpacity style={{ marginRight: 10 }} >
+                                <AntDesign name="edit" size={30} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          ),
+
+                        }}    
+              />
+              
+
+      
+        <MovimeintosBeneficiosStack.Screen name="MovimientosTransaccion" 
+                          component={MovimientosTransaccion} 
+                          options={{headerTitle:'Registro Beneficio',
+                          headerTitleAlign:'center',
+                          
+                        }}
+        />
+        
+    
+    
+  </MovimeintosBeneficiosStack.Navigator>
+  )
+}
+
 
 const TabEstadisticas=createMaterialTopTabNavigator()
 function OpcionesTabEstadisticas({navigation}){

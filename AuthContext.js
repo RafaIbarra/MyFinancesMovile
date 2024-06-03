@@ -35,10 +35,15 @@ export const AuthProvider = ({ children }) => {
     compsaldos:true,
     datasaldos:[],
 
+    compmovimientos:true,
+    datamovimientos:[],
+
     categoriagasto:true,
     conceptosingresos:true,
     conceptosgastos:true,
-    mediospagoscomp:true
+
+    mediospagoscomp:true,
+    entidadesbeneficioscomp:true
 
   })
 
@@ -62,6 +67,11 @@ export const AuthProvider = ({ children }) => {
     actualizarEstadocomponente('categoriagasto',true)
     actualizarEstadocomponente('conceptosingresos',true)
     actualizarEstadocomponente('conceptosgastos',true)
+    
+    actualizarEstadocomponente('compmovimientos',true)
+    actualizarEstadocomponente('mediospagoscomp',true)
+    actualizarEstadocomponente('entidadesbeneficioscomp',true)
+
   }
 
   const reiniciarvalorestransaccion=()=>{
@@ -73,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     actualizarEstadocomponente('compingresos',true)
     actualizarEstadocomponente('compresumen',true)
     actualizarEstadocomponente('compsaldos',true)
-
+    
   }
 
   return (
