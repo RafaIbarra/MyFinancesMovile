@@ -1,5 +1,6 @@
 import React,{useState,useEffect,useContext } from "react";
 import {  View,Text, StyleSheet,FlatList   } from "react-native";
+import {  ScrollView } from "react-native-gesture-handler";
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import Procesando from "../Procesando/Procesando";
@@ -36,7 +37,15 @@ function ResumenPeriodo ({ navigation  }){
             
                         
                         actualizarEstadocomponente('compresumen',false)
-                        registros=result['data']
+                        data_resumen=result['data']['resumen']
+
+                        const registros = data_resumen.map((item, index) => {
+                            return {
+                                ...item,
+                                key: index
+                            };
+                            });
+                        console.log(registros)
                         setDatadetalle(registros)
                         actualizarEstadocomponente('dataresumen',registros)
                         let totalgasto=0
@@ -109,7 +118,7 @@ function ResumenPeriodo ({ navigation  }){
             </View>
             
 
-            <View style={{borderLeftWidth:1,borderRightWidth:1,borderBottomWidth:1,borderColor:'white',marginLeft:5,marginRight:5,maxHeight:'63%'}}>
+            {/* <View style={{borderLeftWidth:1,borderRightWidth:1,borderBottomWidth:1,borderColor:'white',marginLeft:5,marginRight:5,maxHeight:'63%'}}>
 
                 <FlatList
                     data={datadetalle}
@@ -137,8 +146,52 @@ function ResumenPeriodo ({ navigation  }){
                     )}
                     keyExtractor={item => item.Descripcion.toString()}
                     />
-            </View>
-            
+            </View> */}
+            <ScrollView style={{maxHeight:200}}>
+                {Object.keys(datadetalle).map((key) => (
+                                        // <View  key={key} style={{flexDirection:'row',alignContent:'center',
+                                        //         alignItems:'center',justifyContent:'space-between',
+                                        //         borderBottomWidth:0.5,paddingBottom:5,borderColor:'white',
+                                        //         marginTop:10,marginBottom:10,marginRight:5
+                                        //         }}> 
+                                        //     <Text style={{ color: colors.text,width:'35%'}}>  {distribucionmediopagos[key].descripcionmedio}</Text>
+
+                                        //     <Text style={{ color: colors.text,fontWeight:'bold'}}>
+                                    
+                                        //         Gs. {Number(distribucionmediopagos[key].monto).toLocaleString('es-ES')}
+                                        //     </Text>
+
+                                            
+                                            
+
+
+                                        // </View>
+
+                                        <View style={styles.contenedordatos}>
+                                             <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{datadetalle[key].Descripcion}</Text>
+                                            </View>
+
+                                            <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                                <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(datadetalle[key].MontoIngreso).toLocaleString('es-ES')}</Text>
+                                            </View>
+                                            <View style={{borderRightWidth:0.5,borderRightColor:'white',width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(datadetalle[key].MontoEgreso).toLocaleString('es-ES')}</Text>
+                                            </View>
+                                            <View style={{width:'12%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+
+                                                <View style={{borderWidth:2,borderColor:'white',marginLeft:2,width:22,borderRadius:100,backgroundColor:'white',alignItems:'center'}}> 
+
+                                                        <AntDesign name= { datadetalle[key].MontoIngreso > 0 ? "upcircle": "downcircle" } size={18} color={ datadetalle[key].MontoIngreso > 0 ? "green": "rgb(255,115,96)" } />
+                                                </View>
+                                            </View>
+                                        </View>
+
+                                        ))}
+
+
+
+            </ScrollView>
 
             <View style={{marginLeft:2,borderRightWidth:2,borderLeftWidth:2,borderBottomWidth:2,borderColor:colors.bordercolor,marginLeft:5,marginRight:5}}>
 
