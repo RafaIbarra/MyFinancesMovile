@@ -8,6 +8,9 @@
       "distribution": "internal"
     },
     "preview": {
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://myfinancesbackend.onrender.com/api"
+      },
       "ios":{
         "simulator":true
       },
