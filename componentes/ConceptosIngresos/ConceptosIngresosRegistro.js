@@ -15,6 +15,7 @@ import {  ScrollView } from "react-native-gesture-handler";
 function ConceptosIngresosRegistro({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
     const { colors } = useTheme();
     
     const {params: { concepto },} = useRoute();
@@ -68,6 +69,7 @@ function ConceptosIngresosRegistro({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
           actualizarEstadocomponente('conceptosingresos',!estadocomponente.conceptosingresos)
+          reiniciarvalorestransaccion()
           concepto.recarga='si'
       
   

@@ -1,4 +1,5 @@
-import APIBASE from './baseurls'
+
+import { APIBASE } from '@env';
 async function ApiRegistroUsuario(datausuario){
     // const APIBASE='http://127.0.0.1:8000/api'
     

@@ -14,6 +14,7 @@ import { AuthContext } from "../../AuthContext";
 function MediosPagosDetalle ({ navigation }){
     const {params: { concepto },} = useRoute();
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
     const { colors } = useTheme();
     const [guardando,setGuardando]=useState(false)
     
@@ -53,6 +54,7 @@ function MediosPagosDetalle ({ navigation }){
         if (respuesta === 200) {
             setGuardando(false)
             actualizarEstadocomponente('mediospagoscomp',!estadocomponente.mediospagoscomp)
+            reiniciarvalorestransaccion()
             navigation.goBack();
             hideDialog()
           

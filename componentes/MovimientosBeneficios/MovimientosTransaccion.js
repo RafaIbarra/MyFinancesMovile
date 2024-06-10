@@ -25,6 +25,7 @@ import { FlatList, ScrollView } from "react-native-gesture-handler";
 function MovimientosTransaccion({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
 
     const { colors } = useTheme();
     
@@ -143,6 +144,7 @@ function MovimientosTransaccion({ navigation }){
         if (respuesta === 200) {
           
           actualizarEstadocomponente('compmovimientos',!estadocomponente.compmovimientos)
+          reiniciarvalorestransaccion()
           item.recarga='si'
       
   

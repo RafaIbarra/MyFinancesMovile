@@ -1,4 +1,5 @@
-import APIBASE from "./baseurls";
+
+import { APIBASE } from '@env';
 async function Iniciarsesion(usuario,password){
     
     let data={}

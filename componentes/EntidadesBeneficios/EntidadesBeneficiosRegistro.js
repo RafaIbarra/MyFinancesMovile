@@ -15,6 +15,7 @@ import {  ScrollView } from "react-native-gesture-handler";
 function EntidadesBeneficiosRegistro({ navigation }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
     const { colors } = useTheme();
     
     const {params: { concepto },} = useRoute();
@@ -76,6 +77,7 @@ function EntidadesBeneficiosRegistro({ navigation }){
         const respuesta=result['resp']
         if (respuesta === 200) {
           actualizarEstadocomponente('entidadesbeneficioscomp',!estadocomponente.entidadesbeneficioscomp)
+          reiniciarvalorestransaccion()
           concepto.recarga='si'
       
   

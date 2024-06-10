@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   
 
-  const [versionsys,setVersionsys]=useState('Version 1.7')
+  const [versionsys,setVersionsys]=useState('Version 1.8')
 
   const [updstastsaldo, setUpdstastsaldo] = useState(true);
   const [imgestadisticasaldo,setImgestadisticasaldo]=useState([])
@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }) => {
 
     compresumen:true,
     dataresumen:[],
+    dataresumenmedios:[],
+    dataresumenconceptos:[],
 
     compsaldos:true,
     datasaldos:[],

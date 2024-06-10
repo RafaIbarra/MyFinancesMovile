@@ -14,6 +14,7 @@ import { AuthContext } from "../../AuthContext";
 function CategoriaGastosDetalle ({ navigation }){
     const {params: { concepto },} = useRoute();
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
     const { colors } = useTheme();
     const [guardando,setGuardando]=useState(false)
     const [visibledialogo, setVisibledialogo] = useState(false)
@@ -47,6 +48,7 @@ function CategoriaGastosDetalle ({ navigation }){
         if (respuesta === 200) {
             setGuardando(false)
             actualizarEstadocomponente('categoriagasto',!estadocomponente.categoriagasto)
+            reiniciarvalorestransaccion()
             navigation.goBack();
             hideDialog()
           

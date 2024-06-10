@@ -14,6 +14,7 @@ import { useTheme } from '@react-navigation/native';
 function ConceptosGastosDetalle ({ navigation }){
     const {params: { concepto },} = useRoute();
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const { colors } = useTheme();
     const [visibledialogo, setVisibledialogo] = useState(false)
@@ -47,6 +48,7 @@ function ConceptosGastosDetalle ({ navigation }){
         if (respuesta === 200) {
             setGuardando(false)
             actualizarEstadocomponente('conceptosgastos',!estadocomponente.conceptosgastos)
+            reiniciarvalorestransaccion()
             navigation.goBack();
             hideDialog()
           //setRecargadatos(!recargadatos)

@@ -1,5 +1,6 @@
-import APIBASE from "./baseurls";
+
 import Handelstorage from "../../Storage/handelstorage";
+import { APIBASE } from '@env';
 
 
 async function Generarpeticion(endpoint,metodo,bodyoptions){

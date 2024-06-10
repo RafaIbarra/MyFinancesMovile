@@ -1,4 +1,5 @@
-import APIBASE from "./baseurls";
+
+import { APIBASE } from '@env';
 import Handelstorage from "../../Storage/handelstorage";
 
 const fetchWithTimeout = (url, options, timeout = 7000) => {

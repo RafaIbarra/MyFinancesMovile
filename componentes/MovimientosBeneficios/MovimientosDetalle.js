@@ -17,6 +17,7 @@ function MovimientosDetalle ({ navigation }){
     
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { reiniciarvalorestransaccion } = useContext(AuthContext);
 
     const { colors } = useTheme();
     const [visibledialogo, setVisibledialogo] = useState(false)
@@ -52,7 +53,7 @@ function MovimientosDetalle ({ navigation }){
             
             actualizarEstadocomponente('compmovimientos',!estadocomponente.compmovimientos)
             setGuardando(false)
-           
+            reiniciarvalorestransaccion()
             navigation.goBack();
             hideDialog()
             //setRecargadatos(!recargadatos)
