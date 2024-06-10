@@ -1,5 +1,5 @@
 
-import { APIBASE } from '@env';
+import { EXPO_PUBLIC_API_URL } from '@env';
 async function Iniciarsesion(usuario,password){
     
     let data={}
@@ -17,7 +17,7 @@ async function Iniciarsesion(usuario,password){
                   }),
         }
     
-    const response = await fetch(`${APIBASE}/${endpoint}`, requestOptions);  
+    const response = await fetch(`${EXPO_PUBLIC_API_URL}/${endpoint}`, requestOptions);  
         data= await response.json();
         resp= response.status;
         

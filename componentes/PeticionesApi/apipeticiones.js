@@ -1,6 +1,6 @@
 
 import Handelstorage from "../../Storage/handelstorage";
-import { APIBASE } from '@env';
+import { EXPO_PUBLIC_API_URL } from '@env';
 
 
 async function Generarpeticion(endpoint,metodo,bodyoptions){
@@ -34,7 +34,7 @@ async function Generarpeticion(endpoint,metodo,bodyoptions){
   }
   
 
-  const response = await fetch(`${APIBASE}/${endpoint}`, requestOptions);  
+  const response = await fetch(`${EXPO_PUBLIC_API_URL}/${endpoint}`, requestOptions);  
   
   data= await response.json();
   

@@ -1,7 +1,8 @@
 
-import { APIBASE } from '@env';
+import { EXPO_PUBLIC_API_URL } from '@env';
+
 async function ApiRegistroUsuario(datausuario){
-    // const APIBASE='http://127.0.0.1:8000/api'
+    
     
     let data={}
     let resp=0
@@ -23,7 +24,7 @@ async function ApiRegistroUsuario(datausuario){
           }),
         }
 
-    const response = await fetch(`${APIBASE}/${endpoint}`, requestOptions);  
+    const response = await fetch(`${EXPO_PUBLIC_API_URL}/${endpoint}`, requestOptions);  
         data= await response.json();
         resp= response.status;
         

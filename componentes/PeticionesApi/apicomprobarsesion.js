@@ -1,5 +1,5 @@
 
-import { APIBASE } from '@env';
+import { EXPO_PUBLIC_API_URL } from '@env';
 import Handelstorage from "../../Storage/handelstorage";
 
 const fetchWithTimeout = (url, options, timeout = 7000) => {
@@ -43,7 +43,7 @@ async function Comprobarsesion(endpoint,metodo,bodyoptions){
     }
     
     try {
-        const response = await fetchWithTimeout(`${APIBASE}/${endpoint}`, requestOptions); 
+        const response = await fetchWithTimeout(`${EXPO_PUBLIC_API_URL}/${endpoint}`, requestOptions); 
         
         if (!response.ok) {
           
