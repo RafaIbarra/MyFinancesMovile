@@ -1,5 +1,6 @@
 import React,{useState,useEffect,useContext } from "react";
-import {  View,Text, StyleSheet,FlatList   } from "react-native";
+import {  View,Text, StyleSheet,TouchableOpacity   } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import {  Divider } from 'react-native-paper';
 import {  ScrollView } from "react-native-gesture-handler";
 import Handelstorage from "../../Storage/handelstorage";
@@ -8,12 +9,12 @@ import Procesando from "../Procesando/Procesando";
 import { useTheme } from '@react-navigation/native';
 import { AuthContext } from "../../AuthContext";
 import AntDesign from '@expo/vector-icons/AntDesign'
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import Feather from '@expo/vector-icons/Feather'
+import Fontisto from '@expo/vector-icons/Fontisto';
 
 function ResumenPeriodo ({ navigation  }){
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
-    
+    const { navigate } = useNavigation();
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
     const [guardando,setGuardando]=useState(false)
     const { colors } = useTheme();
@@ -61,7 +62,8 @@ function ResumenPeriodo ({ navigation  }){
                 registrosmedios = data_medios.map((item, index) => {
                 return {
                     ...item,
-                    key: 'm'+index
+                    key: 'm'+index,
+                    tipo:'medio'
                 };
                 });
                 actualizarEstadocomponente('dataresumenmedios',registrosmedios)
@@ -88,6 +90,7 @@ function ResumenPeriodo ({ navigation  }){
                 return {
                     ...item,
                     key: 'c'+index
+                    
                 };
                 });
                 actualizarEstadocomponente('dataresumenconceptos',registrosconceptos)
@@ -289,18 +292,24 @@ function ResumenPeriodo ({ navigation  }){
                 {Object.keys(detallemedios).map((key) => (
                                        
 
-                    <View style={styles.contenedordatos} key={key}>
-                        <View style={{width:'55%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{detallemedios[key].MedioPago}</Text>
-                        </View>
+                    <View style={styles.contenedordatos} key={key}  >
+                        <TouchableOpacity style={{width:'100%',flexDirection:'row'}} onPress={() => {navigate('ResumenPeriodoDetalle', { detalle: detallemedios[key] });}}>
 
-                        <View style={{width:'30%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(detallemedios[key].MontoMedio).toLocaleString('es-ES')}</Text>
-                        </View>
-                        <View style={{width:'15%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(detallemedios[key].CantidadRegistros).toLocaleString('es-ES')}</Text>
-                        </View>
-                        
+                            <View style={{width:'55%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{detallemedios[key].MedioPago}</Text>
+                            </View>
+
+                            <View style={{width:'30%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(detallemedios[key].MontoMedio).toLocaleString('es-ES')}</Text>
+                            </View>
+                            <View style={{width:'10%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(detallemedios[key].CantidadRegistros).toLocaleString('es-ES')}</Text>
+                            </View>
+                            <View style={{paddingBottom:10,paddingTop:12}}>
+                                {/* <Feather name="more-vertical" size={12} color="white" /> */}
+                                <Fontisto name="more-v" size={12} color="white" />
+                            </View>
+                        </TouchableOpacity>
                     </View>
 
                 ))}
