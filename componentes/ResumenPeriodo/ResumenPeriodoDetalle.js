@@ -89,7 +89,7 @@ function ResumenPeriodoDetalle({ navigation  }){
         
           const cargardatos=async()=>{
             setGuardando(true)
-            
+            console.log(detalle)
             
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
@@ -147,9 +147,11 @@ function ResumenPeriodoDetalle({ navigation  }){
                 </TouchableOpacity>
                 <Text style={{marginLeft:60,fontSize: 20,fontWeight: 'bold',textAlign: 'center', color: colors.text}}>{titulo}</Text>
             </View>
-            <Text style={{fontSize: 18,fontWeight: 'bold',textAlign: 'left', color: colors.text,marginTop:15,marginBottom:15,marginLeft:10}}> {subtitulo} {valorbusqueda}</Text>
-            <Divider />
-            <Divider />
+            <View style={{backgroundColor:colors.subtitulo,height:45,alignContent:'center',marginRight:5,justifyContent:'center',marginBottom:2}}>
+                <Text style={{marginLeft:10,fontSize: 18,fontWeight: 'bold',textAlign: 'left', color: colors.text}}> {subtitulo} {valorbusqueda}</Text>
+            </View>
+            {/* <Divider /> */}
+            {/* <Divider /> */}
 
 
             <View style={styles.container}>

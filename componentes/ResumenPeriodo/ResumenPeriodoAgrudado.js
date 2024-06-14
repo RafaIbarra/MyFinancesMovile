@@ -3,16 +3,21 @@ import {  View,Text, StyleSheet,FlatList,TouchableOpacity,SafeAreaView,Animated,
 import { Divider } from 'react-native-paper';
 import { useRoute } from "@react-navigation/native";
 import { useTheme } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 import Handelstorage from "../../Storage/handelstorage";
 import Generarpeticion from "../PeticionesApi/apipeticiones";
 import { AuthContext } from "../../AuthContext";
 import Procesando from "../Procesando/Procesando";
 import moment from 'moment';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import AntDesign from '@expo/vector-icons/AntDesign'
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 function ResumenPeriodoAgrudado({ navigation  }){
     const { colors } = useTheme();
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
     const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const { navigate } = useNavigation();
     const [codigo,setCodigo]=useState()
     const [titulo,setTitulo]=useState('')
     const [subtitulo,setSubtitulo]=useState()
@@ -85,12 +90,14 @@ function ResumenPeriodoAgrudado({ navigation  }){
             setDetallecomponente(nuevoObjeto)
     }
     const cargaragrupacionconcepto= async (data)=>{
+        setTitulo('Datos Egreso')
+        setSubtitulo('Cat. Seleccionada: ')
+        setValorbusqueda(agrupacion.Descripcion)
         data=estadocomponente.dataresumenconceptos
-        console.log(agrupacion.Codigo)
         setCodigo(agrupacion.Codigo)
         const valor=agrupacion.Descripcion.toLowerCase()
         let detalleFiltrado = data.filter(item => item.CategoriaGasto.toLowerCase()=== valor);
-        console.log(detalleFiltrado)
+        
         const nuevoObjeto = detalleFiltrado.map((item,index) => ({
             id: index,
             key: item.key,
@@ -99,7 +106,8 @@ function ResumenPeriodoAgrudado({ navigation  }){
             fecha_gasto: '',
             fecha_registro: '',
             monto: item.MontoConcepto,
-            CantidadReg:item.CantidadRegistros
+            CantidadReg:item.CantidadRegistros,
+            tipo:'concepto'
             }));
         setDetallecomponente(nuevoObjeto)
     }
@@ -107,7 +115,7 @@ function ResumenPeriodoAgrudado({ navigation  }){
         
           const cargardatos=async()=>{
             setGuardando(true)
-            setTitulo('AGRUPADO')
+            
             
             if(agrupacion.MontoEgreso >0){
                 cargaragrupacionconcepto(agrupacion)
@@ -172,9 +180,12 @@ function ResumenPeriodoAgrudado({ navigation  }){
                 </TouchableOpacity>
                 <Text style={{marginLeft:60,fontSize: 20,fontWeight: 'bold',textAlign: 'center', color: colors.text}}>{titulo}</Text>
             </View>
-            <Text style={{fontSize: 18,fontWeight: 'bold',textAlign: 'left', color: colors.text,marginTop:15,marginBottom:15,marginLeft:10}}> {subtitulo} {valorbusqueda}</Text>
-            <Divider />
-            <Divider />
+
+            <View style={{backgroundColor:colors.subtitulo,height:45,alignContent:'center',marginRight:5,justifyContent:'center',marginBottom:2}}>
+                <Text style={{marginLeft:10,fontSize: 18,fontWeight: 'bold',textAlign: 'left', color: colors.text}}> {subtitulo} {valorbusqueda}</Text>
+            </View>
+            {/* <Divider />
+            <Divider /> */}
 
 
             <View style={styles.container}>
@@ -190,23 +201,27 @@ function ResumenPeriodoAgrudado({ navigation  }){
                                                         borderBottomColor:'rgba(235,234,233,0.1)'
                                                     }]} 
                             
-                            //  onPress={() => {navigate('GastosDetalle', { item });}}
+                                                onPress={() => {navigate('ResumenPeriodoDetalle', { detalle: item });}}
                             
                             >
-                                <View style={[styles.columna, { flex: 2 }]}> 
+                                <View style={{flexDirection:'row',width:'100%'}}>
 
-                                    { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> ID Transaccion: {item.id}</Text> :null}
-                                    <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
-                                    <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
-                                    <Text style={[styles.textocontenido,{ color: colors.text,fontWeight:'bold'}]}> Gs. {Number(item.monto).toLocaleString('es-ES')} {labelmonto} </Text>
-                                    { codigo===2 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Cantidad Registros: {Number(item.CantidadReg).toLocaleString('es-ES')}  </Text>:null}
-                                    { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>: null}
-                                    { codigo===1 ?<Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>: null}
-                                    
-                                    
-                                    
-                                    
-                                    
+                                    <View style={{width:'85%'}}> 
+
+                                        { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> ID Transaccion: {item.id}</Text> :null}
+                                        <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
+                                        <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
+                                        <Text style={[styles.textocontenido,{ color: colors.text,fontWeight:'bold'}]}> Gs. {Number(item.monto).toLocaleString('es-ES')} {labelmonto} </Text>
+                                        { codigo===2 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Cantidad Registros: {Number(item.CantidadReg).toLocaleString('es-ES')}  </Text>:null}
+                                        { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>: null}
+                                        { codigo===1 ?<Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>: null}
+                                    </View>
+
+                                    <View style={{marginTop:25,width:30,height: 30, borderRadius:50,backgroundColor:'white',justifyContent: 'center', alignItems: 'center'}}>
+                                        
+                                        <FontAwesome6 name="circle-chevron-right" size={30} color={colors.subtitulo} />
+                                        
+                                    </View>
                                 </View>
 
                             
