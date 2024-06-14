@@ -15,6 +15,7 @@ import { View,Text,TouchableOpacity } from "react-native";
 //Componentes///////////////
 import ResumenPeriodo from "./componentes/ResumenPeriodo/ResumenPeriodo";
 import ResumenPeriodoDetalle from "./componentes/ResumenPeriodo/ResumenPeriodoDetalle";
+import ResumenPeriodoAgrudado from "./componentes/ResumenPeriodo/ResumenPeriodoAgrudado";
 
 import Gastos from "./componentes/Gastos/Gastos";
 import GastosDetalle from "./componentes/Gastos/GastosDetalle";
@@ -434,6 +435,15 @@ function HomeStackGroup(){
         <HomeStack.Screen name="Resumen" component={TabsGroup} options={{ headerShown: false }}/>
         <HomeStack.Screen name="ResumenPeriodoDetalle" 
           component={ResumenPeriodoDetalle}
+          options={{headerTitle:'',
+            headerTitleAlign:'left',
+            headerShown: false
+
+          }}
+          
+          />
+        <HomeStack.Screen name="ResumenPeriodoAgrudado" 
+          component={ResumenPeriodoAgrudado}
           options={{headerTitle:'',
             headerTitleAlign:'left',
             headerShown: false

@@ -30,6 +30,10 @@ function ResumenPeriodo ({ navigation  }){
     const [detalleconceptos,setDetalleconceptos]=useState([])
     const [montototalconceptos,setMontototalconceptos]=useState(0)
     const [cantidadtotalconceptos,setCantidadtotalconceptos]=useState(0)
+
+    const navegarresumen =()=>{
+        navigate('ResumenPeriodoAgrudado', { detalle: datadetalle[key] })
+    }
     const cargarbalance=(data,resp)=>{
         let registros=[]
         if (resp===200){
@@ -38,6 +42,7 @@ function ResumenPeriodo ({ navigation  }){
                 return {
                     ...item,
                     key: index
+                    
                 };
                 });
                 actualizarEstadocomponente('dataresumen',registros)
@@ -89,7 +94,8 @@ function ResumenPeriodo ({ navigation  }){
             registrosconceptos = data_conceptos.map((item, index) => {
                 return {
                     ...item,
-                    key: 'c'+index
+                    key: 'c'+index,
+                    tipo:'concepto'
                     
                 };
                 });
@@ -137,6 +143,7 @@ function ResumenPeriodo ({ navigation  }){
                         cargardatosmedios(data_medios,respuesta)
 
                         data_conceptos=result['data']['conceptos']
+                        
                         cargardatosconceptos(data_conceptos,respuesta)
 
                         setGuardando(false)  
@@ -206,34 +213,40 @@ function ResumenPeriodo ({ navigation  }){
                                        
 
                     <View style={styles.contenedordatos} key={key}>
-                            <View style={{width:'45%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{datadetalle[key].Descripcion}</Text>
-                        </View>
 
-                        <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(datadetalle[key].MontoIngreso).toLocaleString('es-ES')}</Text>
-                        </View>
-                        <View style={{borderRightWidth:0.5,borderRightColor:'white',width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(datadetalle[key].MontoEgreso).toLocaleString('es-ES')}</Text>
-                        </View>
-                        <View style={{width:'12%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                        <TouchableOpacity style={{width:'100%',flexDirection:'row'}} 
+                        onPress={() => {navigate('ResumenPeriodoAgrudado', { agrupacion: datadetalle[key] });}}
+                        
+                        >
 
-                            <View style={{borderWidth:2,borderColor:'white',marginLeft:2,width:22,borderRadius:100,backgroundColor:'white',alignItems:'center'}}> 
+                                <View style={{paddingLeft:10,paddingRight:5,paddingBottom:10,paddingTop:12}}>
+                                    <Fontisto name="more-v" size={12} color="white" />
+                                </View>
+                                <View style={{width:'40%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                    <Text style={[ styles.textocontenido, { color: colors.text}]}>{datadetalle[key].Descripcion}</Text>
+                                </View>
 
-                                    {/* <AntDesign name= { datadetalle[key].MontoIngreso > 0 ? "upcircle": "downcircle" } size={18} color={ datadetalle[key].MontoIngreso > 0 ? "green": "rgb(255,115,96)" } /> */}
-                                    {datadetalle[key].MontoEgreso === 0 && datadetalle[key].MontoIngreso === 0 ? (
-                                        <AntDesign name="minuscircle" size={18} color="rgb(218,165,32)" />
-                                        ) : (
-                                        <AntDesign
-                                            name={datadetalle[key].MontoIngreso > 0 ? "upcircle" : "downcircle"}
-                                            size={18}
-                                            color={
-                                            datadetalle[key].MontoIngreso > 0 ? "green" : "rgb(255,115,96)"
-                                            }
-                                        />
-                                    )}
-                            </View>
-                        </View>
+                                <View style={{width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                    <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(datadetalle[key].MontoIngreso).toLocaleString('es-ES')}</Text>
+                                </View>
+                                <View style={{borderRightWidth:0.5,borderRightColor:'white',width:'22.5%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                    <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(datadetalle[key].MontoEgreso).toLocaleString('es-ES')}</Text>
+                                </View>
+                                <View style={{width:'12%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+
+                                    <View style={{borderWidth:2,borderColor:'white',marginLeft:2,width:22,borderRadius:100,backgroundColor:'white',alignItems:'center'}}> 
+                                            {datadetalle[key].MontoEgreso === 0 && datadetalle[key].MontoIngreso === 0 ? (
+                                                <AntDesign name="minuscircle" size={18} color="rgb(218,165,32)" />
+                                                ) : (
+                                                <AntDesign name={datadetalle[key].MontoIngreso > 0 ? "upcircle" : "downcircle"} size={18} color={datadetalle[key].MontoIngreso > 0 ? "green" : "rgb(255,115,96)"}
+                                                />
+                                            )}
+                                    </View>
+                                </View>
+                        </TouchableOpacity>
+
+
+
                     </View>
 
                 ))}
@@ -295,19 +308,19 @@ function ResumenPeriodo ({ navigation  }){
                     <View style={styles.contenedordatos} key={key}  >
                         <TouchableOpacity style={{width:'100%',flexDirection:'row'}} onPress={() => {navigate('ResumenPeriodoDetalle', { detalle: detallemedios[key] });}}>
 
-                            <View style={{width:'55%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                            <View style={{paddingLeft:10,paddingRight:5,paddingBottom:10,paddingTop:12}}>
+                                
+                                <Fontisto name="more-v" size={12} color="white" />
+                            </View>
+                            <View style={{width:'50%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
                                 <Text style={[ styles.textocontenido, { color: colors.text}]}>{detallemedios[key].MedioPago}</Text>
                             </View>
 
                             <View style={{width:'30%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
                                 <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(detallemedios[key].MontoMedio).toLocaleString('es-ES')}</Text>
                             </View>
-                            <View style={{width:'10%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                            <View style={{width:'15%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
                                 <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(detallemedios[key].CantidadRegistros).toLocaleString('es-ES')}</Text>
-                            </View>
-                            <View style={{paddingBottom:10,paddingTop:12}}>
-                                {/* <Feather name="more-vertical" size={12} color="white" /> */}
-                                <Fontisto name="more-v" size={12} color="white" />
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -361,16 +374,23 @@ function ResumenPeriodo ({ navigation  }){
                                     
 
                     <View style={styles.contenedordatos} key={key}>
-                        <View style={{width:'55%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{detalleconceptos[key].NombreGasto}</Text>
-                        </View>
+                        <TouchableOpacity style={{width:'100%',flexDirection:'row'}} onPress={() => {navigate('ResumenPeriodoDetalle', { detalle: detalleconceptos[key] });}}>
+                            <View style={{paddingLeft:10,paddingRight:5,paddingBottom:10,paddingTop:12}}>
+                                
+                                <Fontisto name="more-v" size={12} color="white" />
+                            </View>
+                            <View style={{width:'50%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{detalleconceptos[key].NombreGasto}</Text>
+                            </View>
 
-                        <View style={{width:'30%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(detalleconceptos[key].MontoConcepto).toLocaleString('es-ES')}</Text>
-                        </View>
-                        <View style={{width:'15%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
-                            <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(detalleconceptos[key].CantidadRegistros).toLocaleString('es-ES')}</Text>
-                        </View>
+                            <View style={{width:'30%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text,}]}>{Number(detalleconceptos[key].MontoConcepto).toLocaleString('es-ES')}</Text>
+                            </View>
+                            <View style={{width:'15%',paddingBottom:10,paddingTop:10,paddingLeft:5}}> 
+                                <Text style={[ styles.textocontenido, { color: colors.text}]}>{Number(detalleconceptos[key].CantidadRegistros).toLocaleString('es-ES')}</Text>
+                            </View>
+                            
+                        </TouchableOpacity>
                         
                     </View>
 

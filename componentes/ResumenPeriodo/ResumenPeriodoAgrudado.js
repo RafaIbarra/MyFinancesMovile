@@ -9,16 +9,18 @@ import { AuthContext } from "../../AuthContext";
 import Procesando from "../Procesando/Procesando";
 import moment from 'moment';
 import Ionicons from '@expo/vector-icons/Ionicons';
-function ResumenPeriodoDetalle({ navigation  }){
+function ResumenPeriodoAgrudado({ navigation  }){
     const { colors } = useTheme();
     const { activarsesion, setActivarsesion } = useContext(AuthContext);
+    const { estadocomponente, actualizarEstadocomponente } = useContext(AuthContext);
+    const [codigo,setCodigo]=useState()
     const [titulo,setTitulo]=useState('')
     const [subtitulo,setSubtitulo]=useState()
     const [labelmonto,setLabelmonto]=useState()
     const [detallecomponente,setDetallecomponente]=useState([])
     const [valorbusqueda,setValorbusqueda]=useState()
     const [guardando,setGuardando]=useState(false) 
-    const {params: { detalle },} = useRoute();
+    const {params: { agrupacion },} = useRoute();
     const[montototal,setMontototal]=useState()
     const[canttotal,setcanttotal]=useState()
     const volver=()=>{
@@ -62,10 +64,7 @@ function ResumenPeriodoDetalle({ navigation  }){
         const valor=detalle.NombreGasto.toLowerCase()
             
 
-            let detalleFiltrado = data.filter(item => 
-                    item.NombreGasto.toLowerCase()=== valor
-                    
-                    );
+            let detalleFiltrado = data.filter(item => item.NombreGasto.toLowerCase()=== valor);
             
 
             const nuevoObjeto = detalleFiltrado.map(item => ({
@@ -85,11 +84,36 @@ function ResumenPeriodoDetalle({ navigation  }){
             setcanttotal(cantgasto)
             setDetallecomponente(nuevoObjeto)
     }
+    const cargaragrupacionconcepto= async (data)=>{
+        data=estadocomponente.dataresumenconceptos
+        console.log(agrupacion.Codigo)
+        setCodigo(agrupacion.Codigo)
+        const valor=agrupacion.Descripcion.toLowerCase()
+        let detalleFiltrado = data.filter(item => item.CategoriaGasto.toLowerCase()=== valor);
+        console.log(detalleFiltrado)
+        const nuevoObjeto = detalleFiltrado.map((item,index) => ({
+            id: index,
+            key: item.key,
+            CategoriaGasto: item.CategoriaGasto,
+            NombreGasto: item.NombreGasto,
+            fecha_gasto: '',
+            fecha_registro: '',
+            monto: item.MontoConcepto,
+            CantidadReg:item.CantidadRegistros
+            }));
+        setDetallecomponente(nuevoObjeto)
+    }
     useEffect(() => {
         
           const cargardatos=async()=>{
             setGuardando(true)
+            setTitulo('AGRUPADO')
             
+            if(agrupacion.MontoEgreso >0){
+                cargaragrupacionconcepto(agrupacion)
+            }
+            
+
             
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']
@@ -104,12 +128,13 @@ function ResumenPeriodoDetalle({ navigation  }){
                 const registros=result['data']
 
 
-                if(detalle.tipo==='medio'){
-                    await cargardetallemedio(registros)
-                }
-                if(detalle.tipo==='concepto'){
-                    await cargardetalleconcepto(registros)
-                }
+                // if(detalle.tipo==='medio'){
+                //     await cargardetallemedio(registros)
+                // }
+                // if(detalle.tipo==='concepto'){
+                //     await cargardetalleconcepto(registros)
+                // }
+                
                 
                 
             }else if(respuesta === 403 || respuesta === 401){
@@ -170,12 +195,13 @@ function ResumenPeriodoDetalle({ navigation  }){
                             >
                                 <View style={[styles.columna, { flex: 2 }]}> 
 
-                                    <Text style={[styles.textocontenido,{ color: colors.text}]}> ID Transaccion: {item.id}</Text>
-                                    <Text style={[styles.textocontenido,{ color: colors.text,fontWeight:'bold'}]}> Gs. {Number(item.monto).toLocaleString('es-ES')} {labelmonto} </Text>
+                                    { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> ID Transaccion: {item.id}</Text> :null}
                                     <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
                                     <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
-                                    <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
-                                    <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                    <Text style={[styles.textocontenido,{ color: colors.text,fontWeight:'bold'}]}> Gs. {Number(item.monto).toLocaleString('es-ES')} {labelmonto} </Text>
+                                    { codigo===2 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Cantidad Registros: {Number(item.CantidadReg).toLocaleString('es-ES')}  </Text>:null}
+                                    { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>: null}
+                                    { codigo===1 ?<Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>: null}
                                     
                                     
                                     
@@ -274,4 +300,4 @@ const styles = StyleSheet.create({
    
 })
 
-export default ResumenPeriodoDetalle
+export default ResumenPeriodoAgrudado
