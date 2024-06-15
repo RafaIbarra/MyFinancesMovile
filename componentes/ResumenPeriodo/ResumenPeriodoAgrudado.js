@@ -310,9 +310,9 @@ function ResumenPeriodoAgrudado({ navigation  }){
                                     </View>
                                     {
                                         codigo===2 &&(
-                                            <View style={{marginTop:25,width:30,height: 30, borderRadius:50,backgroundColor:'white',justifyContent: 'center', alignItems: 'center',justifyContent:'center'}}>
+                                            <View style={{marginTop:25,width:35,height: 35, borderRadius:50,backgroundColor:'white',justifyContent: 'center', alignItems: 'center',justifyContent:'center'}}>
                                         
-                                                <FontAwesome6 name="circle-chevron-right" size={30} color={colors.subtitulo} />
+                                                <FontAwesome6 name="circle-chevron-right" size={35} color={colors.subtitulo} />
                                                 
                                             </View>
                                         )

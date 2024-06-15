@@ -257,28 +257,31 @@ export default function LoginR1({ navigation  }){
                 </Portal>
             <View>
              <Image source={require('../assets/ahorro6.png')}  style={styles.image}/>                         
-             </View>
+            </View>
              <Text style={styles.welcomeText}>¡Bienvenido!</Text>
 
-             <View style={styles.containerSecundario}>                    
+            <View style={styles.containerSecundario}>                    
              <TextInput
                   style={styles.Input}
                   mode="outlined"
                   textColor="white"
                   label="Usuario"
-                   placeholder="Usuario"
-                    onChangeText={handleUserChange} 
-                    theme={{ colors: { primary: 'rgb(218, 165, 33)' },color:'white' }}
+                  placeholder="Usuario"
+                  onChangeText={handleUserChange} 
+                  
+                  
+                  theme={{ colors: { primary: 'rgb(218, 165, 33)' },color:'white',roundness:17 }}
                 />
+                
                  <TextInput
                   mode="outlined"
                   textColor="white"
                   label="Ingrese la Contraseña"
                   placeholder="Contraseña"
-                  style={styles.Input} 
+                  style={[ styles.Input, { marginBottom: 30}]}
                   value={contrasena}
                   onChangeText={handleContrasenaChange}
-                  theme={{ colors: { primary: 'rgb(218, 165, 33)' } }}
+                  theme={{ colors: { primary: 'rgb(218, 165, 33)' },roundness:17,  }}
                   secureTextEntry={!mostrarContrasena}
                   right={
                     <TextInput.Icon
@@ -302,16 +305,27 @@ export default function LoginR1({ navigation  }){
                   </Button>
                 )
               }
-
-              <Text style={styles.textPulsa}>
-              ¿No tienes una cuenta?{' '}
-              <TouchableOpacity onPress={() => registrarse()}>
-                <Text style={styles.linkText}>Regístrate aquí.</Text>
-              </TouchableOpacity>
-              </Text>
-              <Text style={{color: colors.text,fontSize:12,marginTop:7}}> {versionsys} </Text>
               
             </View> 
+              {
+                !isKeyboardVisible && (
+
+                  <View style={{alignContent:'center',alignItems:'center',marginTop:50}}>
+
+                    <Text style={styles.textPulsa}>
+                    ¿No tienes una cuenta?{' '}
+                    <TouchableOpacity onPress={() => registrarse()}>
+                      <Text style={styles.linkText}>Regístrate aquí.</Text>
+                    </TouchableOpacity>
+                    </Text>
+                    <Text style={{color: colors.text,fontSize:12,marginTop:7}}> {versionsys} </Text>
+
+                  </View>
+                )
+
+              }
+              
+              
 
             {
                 comprobando &&(
@@ -360,7 +374,7 @@ const styles = StyleSheet.create({
   },
   containerSecundario: {
     width: "98%",
-    height: "40%",
+    // height: "30%",
     marginTop:40,
     alignItems: "center",
     borderRadius:50,
@@ -370,12 +384,14 @@ const styles = StyleSheet.create({
    // backgroundColor: 'rgb(206, 207, 219)',
   },
   Input:{
-    borderColor: 'white',
+    
     width: '80%',
     paddingStart: 10,
     marginTop: 20,
     backgroundColor: 'black',
-    color:'white'
+    color:'white',
+    
+    
     
     },
   image: {
@@ -387,15 +403,16 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     width: 300,
-    marginTop: 90,
+    // marginTop: 90,
   },
   button:{
     width:'80%',
-    height: '18%',
+    // height: '18%',
+    height:60,
     backgroundColor: '#e3e7e3',
     justifyContent: 'center',
-    marginTop: 30,
-    margin:5,
+    
+    marginBottom:30
    },
    buttonText:{
     alignItems: "center",
@@ -411,10 +428,9 @@ const styles = StyleSheet.create({
     // backgroundColor: '#8fbc8f',
     backgroundColor:'rgba(44,148,228,0.7)',
     width:'80%',
-    height: '18%',
+    height:60,
     justifyContent: 'center',
-    marginTop: 30,   
-    margin:5, 
+    marginBottom:30
   },
   buttonActivadoText: { 
     alignItems: "center",
