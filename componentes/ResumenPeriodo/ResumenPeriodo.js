@@ -237,8 +237,8 @@ function ResumenPeriodo ({ navigation  }){
                                     <View style={{borderWidth:2,borderColor:'white',marginLeft:2,width:22,borderRadius:100,backgroundColor:'white',alignItems:'center'}}> 
                                             {datadetalle[key].MontoEgreso === 0 && datadetalle[key].MontoIngreso === 0 ? (
                                                 <AntDesign name="minuscircle" size={18} color="rgb(218,165,32)" />
-                                                ) : (
-                                                <AntDesign name={datadetalle[key].MontoIngreso > 0 ? "upcircle" : "downcircle"} size={18} color={datadetalle[key].MontoIngreso > 0 ? "green" : "rgb(255,115,96)"}
+                                                ) : ( 
+                                                <AntDesign name={datadetalle[key].MontoIngreso > 0 ? "downcircle" : "upcircle"} size={18} color={datadetalle[key].MontoIngreso > 0 ? "green" : "rgb(255,115,96)"}
                                                 />
                                             )}
                                     </View>

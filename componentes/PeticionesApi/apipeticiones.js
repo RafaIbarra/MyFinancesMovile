@@ -1,10 +1,11 @@
 
 import Handelstorage from "../../Storage/handelstorage";
 import {EXPO_PUBLIC_API_URL} from '@env';
-console.log(EXPO_PUBLIC_API_URL)
+// console.log('peticiones')
+// console.log(EXPO_PUBLIC_API_URL)
 
 async function Generarpeticion(endpoint,metodo,bodyoptions){
-    console.log(EXPO_PUBLIC_API_URL)
+    // console.log(EXPO_PUBLIC_API_URL)
   let data={}
   let resp=0
   let datos={}

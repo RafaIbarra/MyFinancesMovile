@@ -1,8 +1,9 @@
 
-import { EXPO_PUBLIC_API_URL } from '@env';
-console.log(EXPO_PUBLIC_API_URL)
+import {EXPO_PUBLIC_API_URL} from '@env';
+// console.log('inicio sesion')
+// console.log(EXPO_PUBLIC_API_URL)
 async function Iniciarsesion(usuario,password){
-    console.log(EXPO_PUBLIC_API_URL)
+    // console.log(EXPO_PUBLIC_API_URL)
     let data={}
     let resp=0
     let datos={}

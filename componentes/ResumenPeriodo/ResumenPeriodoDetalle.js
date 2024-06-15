@@ -89,7 +89,7 @@ function ResumenPeriodoDetalle({ navigation  }){
         
           const cargardatos=async()=>{
             setGuardando(true)
-            console.log(detalle)
+            
             
             const datestorage=await Handelstorage('obtenerdate');
             const mes_storage=datestorage['datames']

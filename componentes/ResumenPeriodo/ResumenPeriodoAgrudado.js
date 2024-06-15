@@ -21,13 +21,18 @@ function ResumenPeriodoAgrudado({ navigation  }){
     const [codigo,setCodigo]=useState()
     const [titulo,setTitulo]=useState('')
     const [subtitulo,setSubtitulo]=useState()
-    const [labelmonto,setLabelmonto]=useState()
+    
     const [detallecomponente,setDetallecomponente]=useState([])
     const [valorbusqueda,setValorbusqueda]=useState()
     const [guardando,setGuardando]=useState(false) 
     const {params: { agrupacion },} = useRoute();
     const[montototal,setMontototal]=useState()
     const[canttotal,setcanttotal]=useState()
+
+    const [labelmonto,setLabelmonto]=useState()
+    const [labelcategoria,setLabelcategoria]=useState()
+    const [labelconcepto,setLabelconcepto]=useState()
+    const [labelfecha,setLabellabelfecha]=useState()
     const volver=()=>{
         navigation.goBack();
     }
@@ -93,6 +98,8 @@ function ResumenPeriodoAgrudado({ navigation  }){
         setTitulo('Datos Egreso')
         setSubtitulo('Cat. Seleccionada: ')
         setValorbusqueda(agrupacion.Descripcion)
+        setLabelcategoria('Categoria: ')
+        setLabelconcepto('Concepto: ')
         data=estadocomponente.dataresumenconceptos
         setCodigo(agrupacion.Codigo)
         const valor=agrupacion.Descripcion.toLowerCase()
@@ -111,47 +118,112 @@ function ResumenPeriodoAgrudado({ navigation  }){
             }));
         setDetallecomponente(nuevoObjeto)
     }
+
+    const cargardetallebeneficios= async (data)=>{
+        setTitulo('Datos Beneficios')
+        setSubtitulo('Beneficios ')
+        setValorbusqueda('')
+        setLabelcategoria('Entidad: ')
+        setLabelconcepto('Anotacion: ')
+        setLabellabelfecha('Fecha Beneficio: ')
+        
+        setCodigo(agrupacion.Codigo)
+        const valor=agrupacion.Descripcion.toLowerCase()
+        // let detalleFiltrado = data.filter(item => item.CategoriaGasto.toLowerCase()=== valor);
+        
+        const nuevoObjeto = data.map((item) => ({
+            id: item.id,
+            key: item.id,
+            CategoriaGasto: item.NombreEntidad,
+            NombreGasto: item.anotacion,
+            fecha_gasto: item.fecha_beneficio,
+            fecha_registro: item.fecha_beneficio,
+            monto: item.monto,
+            CantidadReg:1,
+            tipo:'beneficio'
+            }));
+        setDetallecomponente(nuevoObjeto)
+    }
+    const cargardetalleingresos= async (data)=>{
+        setTitulo('Datos Ingresos')
+        setSubtitulo('Ingresos ')
+        setValorbusqueda('')
+        setLabelcategoria('Concepto: ')
+        setLabelconcepto('Tipo: ')
+        setLabellabelfecha('Fecha Ingreso: ')
+        
+        setCodigo(agrupacion.Codigo)
+        const valor=agrupacion.Descripcion.toLowerCase()
+        // let detalleFiltrado = data.filter(item => item.CategoriaGasto.toLowerCase()=== valor);
+        
+        const nuevoObjeto = data.map((item) => ({
+            id: item.id,
+            key: item.id,
+            CategoriaGasto: item.NombreIngreso,
+            NombreGasto: item.TipoIngreso,
+            fecha_gasto: item.fecha_ingreso,
+            fecha_registro: item.fecha_registro,
+            monto: item.monto_ingreso,
+            CantidadReg:1,
+            tipo:'ingreso'
+            }));
+        setDetallecomponente(nuevoObjeto)
+    }
     useEffect(() => {
         
           const cargardatos=async()=>{
             setGuardando(true)
             
             
-            if(agrupacion.MontoEgreso >0){
+            if(agrupacion.Codigo===2){
                 cargaragrupacionconcepto(agrupacion)
+            }else{
+                const datestorage=await Handelstorage('obtenerdate');
+                const mes_storage=datestorage['datames']
+                const anno_storage=datestorage['dataanno']
+                let endpoint=''
+                
+                const body = {};
+                if(agrupacion.Descripcion==='Beneficios'){
+                    endpoint='MisMovimientosBeneficios/' + anno_storage +'/' + mes_storage + '/0/'
+
+                }else{
+                    endpoint='MovileMisIngresos/' + anno_storage +'/' + mes_storage + '/'
+                }
+
+                
+                
+                const result = await Generarpeticion(endpoint, 'POST', body);
+                const respuesta=result['resp']
+                
+                if (respuesta === 200){
+                    const registros=result['data']
+                    
+
+                    if(agrupacion.Descripcion==='Beneficios'){
+                        await cargardetallebeneficios(registros)
+    
+                    }else{
+                        
+                        await cargardetalleingresos(registros)
+                    }
+                    
+                    
+                    
+                }else if(respuesta === 403 || respuesta === 401){
+                    
+                    setGuardando(false)
+                    await Handelstorage('borrar')
+                    await new Promise(resolve => setTimeout(resolve, 1000))
+                    setActivarsesion(false)
+                }
+
+
             }
-            
+        
 
             
-            const datestorage=await Handelstorage('obtenerdate');
-            const mes_storage=datestorage['datames']
-            const anno_storage=datestorage['dataanno']
             
-            const body = {};
-            const endpoint='MovileMisEgresos/' + anno_storage +'/' + mes_storage + '/'
-            const result = await Generarpeticion(endpoint, 'POST', body);
-            const respuesta=result['resp']
-            
-            if (respuesta === 200){
-                const registros=result['data']
-
-
-                // if(detalle.tipo==='medio'){
-                //     await cargardetallemedio(registros)
-                // }
-                // if(detalle.tipo==='concepto'){
-                //     await cargardetalleconcepto(registros)
-                // }
-                
-                
-                
-            }else if(respuesta === 403 || respuesta === 401){
-                
-                setGuardando(false)
-                await Handelstorage('borrar')
-                await new Promise(resolve => setTimeout(resolve, 1000))
-                setActivarsesion(false)
-            }
             setGuardando(false)
               
               
@@ -201,7 +273,11 @@ function ResumenPeriodoAgrudado({ navigation  }){
                                                         borderBottomColor:'rgba(235,234,233,0.1)'
                                                     }]} 
                             
-                                                onPress={() => {navigate('ResumenPeriodoDetalle', { detalle: item });}}
+                                                    onPress={() => {
+                                                        if (codigo === 2) {
+                                                          navigate('ResumenPeriodoDetalle', { detalle: item });
+                                                        }
+                                                      }}
                             
                             >
                                 <View style={{flexDirection:'row',width:'100%'}}>
@@ -209,19 +285,23 @@ function ResumenPeriodoAgrudado({ navigation  }){
                                     <View style={{width:'85%'}}> 
 
                                         { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> ID Transaccion: {item.id}</Text> :null}
-                                        <Text style={[styles.textocontenido,{ color: colors.text}]}> Categoria: {item.CategoriaGasto}</Text>
-                                        <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
+                                        <Text style={[styles.textocontenido,{ color: colors.text}]}> {labelcategoria} {item.CategoriaGasto}</Text>
+                                        <Text style={[styles.textocontenido,{ color: colors.text}]}> {labelconcepto} {item.NombreGasto}</Text>
                                         <Text style={[styles.textocontenido,{ color: colors.text,fontWeight:'bold'}]}> Gs. {Number(item.monto).toLocaleString('es-ES')} {labelmonto} </Text>
                                         { codigo===2 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Cantidad Registros: {Number(item.CantidadReg).toLocaleString('es-ES')}  </Text>:null}
-                                        { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>: null}
+                                        { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> {labelfecha} {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>: null}
                                         { codigo===1 ?<Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>: null}
                                     </View>
-
-                                    <View style={{marginTop:25,width:30,height: 30, borderRadius:50,backgroundColor:'white',justifyContent: 'center', alignItems: 'center'}}>
+                                    {
+                                        codigo===2 &&(
+                                            <View style={{marginTop:25,width:30,height: 30, borderRadius:50,backgroundColor:'white',justifyContent: 'center', alignItems: 'center',justifyContent:'center'}}>
                                         
-                                        <FontAwesome6 name="circle-chevron-right" size={30} color={colors.subtitulo} />
-                                        
-                                    </View>
+                                                <FontAwesome6 name="circle-chevron-right" size={30} color={colors.subtitulo} />
+                                                
+                                            </View>
+                                        )
+                                    }
+                                    
                                 </View>
 
                             

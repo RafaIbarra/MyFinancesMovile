@@ -1,7 +1,8 @@
 
-import { EXPO_PUBLIC_API_URL } from '@env';
+import {EXPO_PUBLIC_API_URL} from '@env';
 import Handelstorage from "../../Storage/handelstorage";
-console.log(EXPO_PUBLIC_API_URL)
+// console.log('comprobar sesion')
+// console.log(EXPO_PUBLIC_API_URL)
 const fetchWithTimeout = (url, options, timeout = 7000) => {
     return Promise.race([
       fetch(url, options),
@@ -12,7 +13,7 @@ const fetchWithTimeout = (url, options, timeout = 7000) => {
   };
 
 async function Comprobarsesion(endpoint,metodo,bodyoptions){
-    console.log(EXPO_PUBLIC_API_URL)
+    // console.log(EXPO_PUBLIC_API_URL)
     let data={}
     let resp=0
     let datos={}
