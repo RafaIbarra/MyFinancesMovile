@@ -117,6 +117,12 @@ function ResumenPeriodoAgrudado({ navigation  }){
             tipo:'concepto'
             }));
         setDetallecomponente(nuevoObjeto)
+        let totalgasto=0
+        let cantgasto=0
+
+        nuevoObjeto.forEach(({ monto,CantidadReg }) => {totalgasto += monto,cantgasto+=CantidadReg})
+        setMontototal(totalgasto)
+        setcanttotal(cantgasto)
     }
 
     const cargardetallebeneficios= async (data)=>{
@@ -143,6 +149,11 @@ function ResumenPeriodoAgrudado({ navigation  }){
             tipo:'beneficio'
             }));
         setDetallecomponente(nuevoObjeto)
+        let totalgasto=0
+        let cantgasto=0
+        nuevoObjeto.forEach(({ monto }) => {totalgasto += monto,cantgasto+=1})
+        setMontototal(totalgasto)
+        setcanttotal(cantgasto)
     }
     const cargardetalleingresos= async (data)=>{
         setTitulo('Datos Ingresos')
@@ -168,6 +179,11 @@ function ResumenPeriodoAgrudado({ navigation  }){
             tipo:'ingreso'
             }));
         setDetallecomponente(nuevoObjeto)
+        let totalgasto=0
+        let cantgasto=0
+        nuevoObjeto.forEach(({ monto }) => {totalgasto += monto,cantgasto+=1})
+        setMontototal(totalgasto)
+        setcanttotal(cantgasto)
     }
     useEffect(() => {
         
