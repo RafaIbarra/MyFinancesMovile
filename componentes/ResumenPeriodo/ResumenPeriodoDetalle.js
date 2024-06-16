@@ -43,8 +43,10 @@ function ResumenPeriodoDetalle({ navigation  }){
                 CategoriaGasto: item.CategoriaGasto,
                 NombreGasto: item.NombreGasto,
                 fecha_gasto: item.fecha_gasto,
-                fecha_registro: item.fecha_registro
-                ,monto: item.Distribucion.find(distribucion => distribucion.descripcionmedio.toLowerCase() === valor).monto
+                fecha_registro: item.fecha_registro,
+                monto: item.Distribucion.find(distribucion => distribucion.descripcionmedio.toLowerCase() === valor).monto,
+                anotacion:item.anotacion
+
                 }));
 
             let totalgasto=0
@@ -74,8 +76,9 @@ function ResumenPeriodoDetalle({ navigation  }){
                 CategoriaGasto: item.CategoriaGasto,
                 NombreGasto: item.NombreGasto,
                 fecha_gasto: item.fecha_gasto,
-                fecha_registro: item.fecha_registro
-                ,monto: item.monto_gasto
+                fecha_registro: item.fecha_registro,
+                monto: item.monto_gasto,
+                anotacion:item.anotacion
                 }));
 
             let totalgasto=0
@@ -178,6 +181,7 @@ function ResumenPeriodoDetalle({ navigation  }){
                                     <Text style={[styles.textocontenido,{ color: colors.text}]}> Concepto: {item.NombreGasto}</Text>
                                     <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Gasto: {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>
                                     <Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>
+                                    <Text style={[styles.textocontenido,{ color: colors.text}]}> Anotacion: {item.anotacion}</Text>
                                     
                                     
                                     

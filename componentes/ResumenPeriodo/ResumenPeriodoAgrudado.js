@@ -36,64 +36,7 @@ function ResumenPeriodoAgrudado({ navigation  }){
     const volver=()=>{
         navigation.goBack();
     }
-    const cargardetallemedio = async (data)=>{
-        setTitulo('Detalle Medio Pago')
-        setSubtitulo('Medio Seleccionado: ')
-        setValorbusqueda(detalle.MedioPago)
-        setLabelmonto('(Según Medio Sel.)')
-        const valor=detalle.MedioPago.toLowerCase()
-            const detalleFiltrado = data.filter(item =>
-                item.Distribucion.some(
-                    distribucion => distribucion.descripcionmedio.toLowerCase() === valor
-                )
-                )
-            
 
-            const nuevoObjeto = detalleFiltrado.map(item => ({
-                id: item.id,
-                key: item.id,
-                CategoriaGasto: item.CategoriaGasto,
-                NombreGasto: item.NombreGasto,
-                fecha_gasto: item.fecha_gasto,
-                fecha_registro: item.fecha_registro
-                ,monto: item.Distribucion.find(distribucion => distribucion.descripcionmedio.toLowerCase() === valor).monto
-                }));
-
-            let totalgasto=0
-            let cantgasto=0
-            nuevoObjeto.forEach(({ monto }) => {totalgasto += monto,cantgasto+=1})
-            setMontototal(totalgasto)
-            setcanttotal(cantgasto)
-            setDetallecomponente(nuevoObjeto)
-    }
-    const cargardetalleconcepto = async (data)=>{
-        setTitulo('Detalle Concepto')
-        setSubtitulo('Concepto Seleccionado: ')
-        setValorbusqueda(detalle.NombreGasto)
-        setLabelmonto('(Total Gasto.)')
-        const valor=detalle.NombreGasto.toLowerCase()
-            
-
-            let detalleFiltrado = data.filter(item => item.NombreGasto.toLowerCase()=== valor);
-            
-
-            const nuevoObjeto = detalleFiltrado.map(item => ({
-                id: item.id,
-                key: item.id,
-                CategoriaGasto: item.CategoriaGasto,
-                NombreGasto: item.NombreGasto,
-                fecha_gasto: item.fecha_gasto,
-                fecha_registro: item.fecha_registro
-                ,monto: item.monto_gasto
-                }));
-
-            let totalgasto=0
-            let cantgasto=0
-            nuevoObjeto.forEach(({ monto }) => {totalgasto += monto,cantgasto+=1})
-            setMontototal(totalgasto)
-            setcanttotal(cantgasto)
-            setDetallecomponente(nuevoObjeto)
-    }
     const cargaragrupacionconcepto= async (data)=>{
         setTitulo('Datos Egreso')
         setSubtitulo('Cat. Seleccionada: ')
@@ -114,7 +57,8 @@ function ResumenPeriodoAgrudado({ navigation  }){
             fecha_registro: '',
             monto: item.MontoConcepto,
             CantidadReg:item.CantidadRegistros,
-            tipo:'concepto'
+            tipo:'concepto',
+            anotacion:''
             }));
         setDetallecomponente(nuevoObjeto)
         let totalgasto=0
@@ -146,7 +90,8 @@ function ResumenPeriodoAgrudado({ navigation  }){
             fecha_registro: item.fecha_beneficio,
             monto: item.monto,
             CantidadReg:1,
-            tipo:'beneficio'
+            tipo:'beneficio',
+            anotacion:item.anotacion
             }));
         setDetallecomponente(nuevoObjeto)
         let totalgasto=0
@@ -176,7 +121,8 @@ function ResumenPeriodoAgrudado({ navigation  }){
             fecha_registro: item.fecha_registro,
             monto: item.monto_ingreso,
             CantidadReg:1,
-            tipo:'ingreso'
+            tipo:'ingreso',
+            anotacion:item.anotacion
             }));
         setDetallecomponente(nuevoObjeto)
         let totalgasto=0
@@ -307,6 +253,8 @@ function ResumenPeriodoAgrudado({ navigation  }){
                                         { codigo===2 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> Cantidad Registros: {Number(item.CantidadReg).toLocaleString('es-ES')}  </Text>:null}
                                         { codigo===1 ? <Text style={[styles.textocontenido,{ color: colors.text}]}> {labelfecha} {moment(item.fecha_gasto).format('DD/MM/YYYY')}</Text>: null}
                                         { codigo===1 ?<Text style={[styles.textocontenido,{ color: colors.text}]}> Fecha Registro: {moment(item.fecha_registro).format('DD/MM/YYYY HH:mm:ss')}</Text>: null}
+                                        { codigo===1 ?<Text style={[styles.textocontenido,{ color: colors.text}]}> Anotacion: {item.anotacion}</Text>: null}
+
                                     </View>
                                     {
                                         codigo===2 &&(
